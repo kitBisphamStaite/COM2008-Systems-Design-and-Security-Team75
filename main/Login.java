@@ -38,6 +38,11 @@ public class Login implements ActionListener {
         passwordText.setBounds(100,50,165,25);
         panel.add(passwordText);
 
+        //REGISTER NEW ACCOUNT LABEL 
+        JLabel registerAccountButton = new JLabel("Register Account");
+		registerAccountButton.setForeground(Color.BLUE.darker());
+		registerAccount.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+
         //ADDING SUBMIT BUTTON
         button = new JButton("Login");
         button.setBounds(10,80,80,25);
