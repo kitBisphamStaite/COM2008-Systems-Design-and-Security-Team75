@@ -40,8 +40,8 @@ public class Login implements ActionListener {
 
         //REGISTER NEW ACCOUNT LABEL 
         JLabel registerAccountButton = new JLabel("Register Account");
-		registerAccountButton.setForeground(Color.BLUE.darker());
-		registerAccount.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+	registerAccountButton.setForeground(Color.BLUE.darker());
+	registerAccount.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
         //ADDING SUBMIT BUTTON
         button = new JButton("Login");
