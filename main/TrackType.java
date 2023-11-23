@@ -1,4 +1,5 @@
 public enum TrackType {
+    ALL,
     SINGLE_STRIGHT,
     DOUBLE_STRIGHT,
     SINGLE_CURVE, 

@@ -6,7 +6,7 @@ public class TrainSet extends Product {
     private TrackPack[] trackPacks;
 
     public TrainSet(String productCode, String productName, String manufacturerName,int retailPrice, int stock, Gauge gauge, Scale scale, String eraCode, Controller controller, Locomotive[] locomotives, RollingStock[] rollingStocks, TrackPack[] trackPacks){
-        super(productCode, productName, manufacturerName, retailPrice, stock, gauge, scale);
+        super(productCode, productName, manufacturerName, retailPrice, stock, gauge, scale, ProductType.TRAINSET);
         this.controller = controller;
         this.locomotives = locomotives;
         this.rollingStocks = rollingStocks;

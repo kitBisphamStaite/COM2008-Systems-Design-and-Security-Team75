@@ -6,8 +6,12 @@ public class Product {
     private int stock;
     private Gauge gauge;
     private Scale scale;
+    private ProductType productType;
 
-    public Product(String productCode, String productName, String manufacturerName,int retailPrice, int stock, Gauge gauge, Scale scale){
+
+    // Track codes start with R, controller codes with C, locomotives with L, rolling stock with S, train sets with M, and track packs with P
+
+    public Product(String productCode, String productName, String manufacturerName,int retailPrice, int stock, Gauge gauge, Scale scale, ProductType productType){
         this.productCode = productCode;
         this.productName = productName;
         this.manufacturerName = manufacturerName;
@@ -15,6 +19,7 @@ public class Product {
         this.stock = stock;
         this.gauge = gauge;
         this.scale = scale;
+        this.productType = productType;
     }
     public String getProductCode() {
         return productCode;
@@ -37,6 +42,9 @@ public class Product {
     public Scale getScale() {
         return scale;
     }
+    public ProductType getProductType() {
+        return productType;
+    }
     public void setProductCode(String productCode) {
         this.productCode = productCode;
     }
@@ -58,6 +66,33 @@ public class Product {
     public void setScale(Scale scale) {
         this.scale = scale;
     }
+    public void setProductType(ProductType productType) {
+        this.productType = productType;
+    }
+
+    public boolean inStock(){
+        if (stock > 0) {
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
+    public boolean inPriceRange(int maxPrice){
+        if (maxPrice >= this.retailPrice) {
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
+    @Override
+    public String toString() {
+        return productCode + ", " + productName + ", " + manufacturerName + ", £" + retailPrice + ", " + productType.toString();
+    }
+
 }
 
 
