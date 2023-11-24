@@ -138,7 +138,6 @@ public class SelectedCategoryScreen extends JFrame {
 
             if (matchesSearchTerm && matchesProductType && matchesGauge && matchesScale && product.inStock() && inPriceRange) {
                 listModel.addElement(product);
-                System.out.println(product.toString());
             }
         }
     }

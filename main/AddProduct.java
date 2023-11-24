@@ -82,42 +82,35 @@ public class AddProduct extends JFrame {
     }
 
     private void goBack(){
-        System.out.println("Go back to product screen");
         parentScreen.setVisible(true);
         this.dispose();
     }
     private void addController(){
-        System.out.println("AddController");
         AddController addController = new AddController(this);
         addController.setVisible(true);
         this.setVisible(false);
     }
     private void addLocomotive(){
-        System.out.println("AddLocomotive");
         AddLocomotive addLocomotive = new AddLocomotive(this);
         addLocomotive.setVisible(true);
         this.setVisible(false);
     }
     private void addRollingStock(){
-        System.out.println("AddRollingStock");
         AddRollingStock addRollingStock = new AddRollingStock(this);
         addRollingStock.setVisible(true);
         this.setVisible(false);
     }
     private void addTrack(){
-        System.out.println("AddTrack");
         AddTrack addTrack = new AddTrack(this);
         addTrack.setVisible(true);
         this.setVisible(false);
     }
     private void addTrackPack(){
-        System.out.println("AddTrackPack");
         AddTrackPack addTrackPack = new AddTrackPack(this);
         addTrackPack.setVisible(true);
         this.setVisible(false);
     }
     private void addTrainSet(){
-        System.out.println("AddTrainSet");
         AddTrainSet addTrainSet = new AddTrainSet(this);
         addTrainSet.setVisible(true);
         this.setVisible(false);

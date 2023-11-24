@@ -100,10 +100,48 @@ public class ProductRecords extends JFrame {
 
     private void editProductDetails(Product product) {
         System.out.println("Edit Product");
-        ProductDetails detailsScreen = new ProductDetails(product, this);
-        //opens a screen for each specific type of product
-        detailsScreen.setVisible(true);
-        this.setVisible(false);
+        if (product.getProductType() == ProductType.CONTROLLER) {
+            AddProduct detailsScreen = new AddProduct(this);
+            AddController addController = new AddController(detailsScreen);
+            addController.editProduct((Controller) product);
+            addController.setVisible(true);
+            this.setVisible(false);
+        }
+        if (product.getProductType() == ProductType.LOCOMOTIVE) {
+            AddProduct detailsScreen = new AddProduct(this);
+            AddLocomotive addController = new AddLocomotive(detailsScreen);
+            addController.editProduct((Locomotive) product);
+            addController.setVisible(true);
+            this.setVisible(false);
+        }
+        if (product.getProductType() == ProductType.ROLLINGSTOCK) {
+            AddProduct detailsScreen = new AddProduct(this);
+            AddRollingStock addController = new AddRollingStock(detailsScreen);
+            addController.editProduct((RollingStock) product);
+            addController.setVisible(true);
+            this.setVisible(false);
+        }
+        if (product.getProductType() == ProductType.TRACK) {
+            AddProduct detailsScreen = new AddProduct(this);
+            AddTrack addController = new AddTrack(detailsScreen);
+            addController.editProduct((Track) product);
+            addController.setVisible(true);
+            this.setVisible(false);
+        }
+        if (product.getProductType() == ProductType.TRACKPACK) {
+            AddProduct detailsScreen = new AddProduct(this);
+            AddTrackPack addController = new AddTrackPack(detailsScreen);
+            addController.editProduct((TrackPack) product);
+            addController.setVisible(true);
+            this.setVisible(false);
+        }
+        if (product.getProductType() == ProductType.TRAINSET) {
+            AddProduct detailsScreen = new AddProduct(this);
+            AddTrainSet addController = new AddTrainSet(detailsScreen);
+            addController.editProduct((TrainSet) product);
+            addController.setVisible(true);
+            this.setVisible(false);
+        }
     }
     
     private void returnHome(){
@@ -142,7 +180,6 @@ public class ProductRecords extends JFrame {
 
             if (matchesSearchTerm && matchesProductType && matchesGauge && matchesScale && product.inStock() && inPriceRange) {
                 listModel.addElement(product);
-                System.out.println(product.toString());
             }
         }
     }
