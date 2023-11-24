@@ -15,13 +15,6 @@ public class SelectedCategoryScreen extends JFrame {
     private JComboBox<Gauge> gaugeComboBox;
     private JComboBox<Scale> scaleComboBox;
 
-    /*
-     * getProduct(productCode) // gets details for the product
-     * AddToOrder(productCode, orderID, quantity)
-     * 
-     * Would be nice if the product type specific details could be searched
-     */
-
     public SelectedCategoryScreen() {
         // Sample product data
         productList = new ArrayList<>();
@@ -35,13 +28,12 @@ public class SelectedCategoryScreen extends JFrame {
 
         // Set up the UI components
         productListUI = new JList<>(listModel);
-
         searchField = new JTextField(20); 
         productTypeComboBox = new JComboBox<ProductType>(ProductType.values());
         gaugeComboBox = new JComboBox<Gauge>(Gauge.values());
         scaleComboBox = new JComboBox<Scale>(Scale.values());
         priceField = new JTextField("0", 6); 
-
+        
         JButton searchButton = new JButton("Search");
         searchButton.addActionListener(new ActionListener() {
             @Override
@@ -49,18 +41,35 @@ public class SelectedCategoryScreen extends JFrame {
                 searchProducts();
             }
         });
-
-        JButton testButton = new JButton("Add product to order");
-        testButton.addActionListener(new ActionListener() {
+        
+        JButton productButton = new JButton("View Product");
+        productButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println(productListUI.getSelectedValue());
+                if (productListUI.getSelectedValue() != null) {
+                    openProductDetails(productListUI.getSelectedValue());
+                }
+            }
+        });
+
+        JButton orderPageButton = new JButton("View Orders");
+        orderPageButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                openOrderPage();
+            }
+        });
+
+        JButton returnHomeButton = new JButton("Return to Home");
+        returnHomeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                returnHome();
             }
         });
 
         // Set up the layout
         setLayout(new BorderLayout());
-
         JPanel topPanel = new JPanel();
         topPanel.add(new JLabel("Search:"));
         topPanel.add(searchField);
@@ -73,12 +82,14 @@ public class SelectedCategoryScreen extends JFrame {
         topPanel.add(new JLabel("Max Price (£):"));
         topPanel.add(priceField);
         topPanel.add(searchButton);
-        topPanel.add(testButton);
-
+        JPanel bottomPanel = new JPanel();
+        bottomPanel.add(productButton);
+        bottomPanel.add(orderPageButton);
+        bottomPanel.add(returnHomeButton);
 
         add(topPanel, BorderLayout.NORTH);
-
         add(new JScrollPane(productListUI), BorderLayout.CENTER);
+        add(bottomPanel, BorderLayout.SOUTH);
 
         // Set up the frame
         setTitle("Selected Category Screen");
@@ -87,6 +98,20 @@ public class SelectedCategoryScreen extends JFrame {
         setVisible(true);
     }
 
+    private void openProductDetails(Product product) {
+        ProductPopup detailsScreen = new ProductPopup(product, this);
+        detailsScreen.setVisible(true);
+        this.setVisible(false);
+    }
+
+    private void openOrderPage(){
+        System.out.println("Open order page");
+        //Sends you to the basket page, which someone else is making
+    }
+    
+    private void returnHome(){
+        System.out.println("Return Home");
+    }
     private void searchProducts() {
         String searchTerm = searchField.getText().toLowerCase();
         int productPrice = Integer.parseInt(priceField.getText());
@@ -105,7 +130,6 @@ public class SelectedCategoryScreen extends JFrame {
                     || product.getManufacturerName().toLowerCase().contains(searchTerm)
                     || product.getProductCode().toLowerCase().contains(searchTerm)
                     || product.getProductName().toLowerCase().contains(searchTerm);
-                    
 
             boolean matchesProductType = selectedProductType.equals(ProductType.ALL) || product.getProductType().equals(selectedProductType);
             boolean matchesGauge = selectedGauge.equals(Gauge.ALL) || product.getGauge().equals(selectedGauge);

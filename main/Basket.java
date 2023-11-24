@@ -25,10 +25,13 @@ public class Basket {
         return retailPrice;
     }
 
-    public void addProduct(Product product){
-        if (product.getStock() > 0) {
-            products.add(product);
-            retailPrice += product.getRetailPrice();
+    public void addProduct(Product product, int quantity){
+        if (product.getStock() >= quantity) {
+            for (int i = 0; i < quantity; i++) {
+                products.add(product);
+                retailPrice += product.getRetailPrice();
+            }
+            System.out.println("Product Added");
         }
         else{
             System.out.println("No enought in stock"); //probably should error in a better way
