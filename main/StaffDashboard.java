@@ -2,21 +2,28 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Vector;
+//SQL Packages
+import java.sql.Statement;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
 
 public class StaffDashboard extends JFrame {	
     public StaffDashboard() {
-    	// Set Up Frame
+    	//Set Up Frame
         setTitle("Staff Dashboard");
         setSize(1024, 768);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
         
-        // Create Header and Footer Panels
+        //Create Header and Footer Panels
         JPanel headerPanel = new JPanel(new BorderLayout());
         JPanel footerPanel = new JPanel(new GridLayout(0,2));
         
-        // Create Header Panel Items
+        //Create Header Panel Items
         //*Buttons
         JButton backButton = new JButton("Back");
         backButton.addActionListener(new ActionListener() {
@@ -26,7 +33,6 @@ public class StaffDashboard extends JFrame {
                 setVisible(false);
             }
         });
-        
         JButton viewManagerDashboardButton = new JButton("Manager Dashboard");
         viewManagerDashboardButton.addActionListener(new ActionListener() {
             @Override
@@ -37,29 +43,33 @@ public class StaffDashboard extends JFrame {
                 setVisible(false);
             }
         });
-        
-        
-        
-        
-        
         //*Labels
         JLabel trainsOfSheffieldHeader = new JLabel("Trains Of Sheffield - Staff Dashboard");
         trainsOfSheffieldHeader.setHorizontalAlignment(JLabel.CENTER);
         
-        // Add Items To Header Panel
+        //Add Items To Header Panel
         headerPanel.add(backButton, BorderLayout.WEST);
         headerPanel.add(trainsOfSheffieldHeader, BorderLayout.CENTER);
         headerPanel.add(viewManagerDashboardButton, BorderLayout.EAST);
         
-        // Create Footer Panel Items
+        //Create Footer Panel Items
         JButton viewProductRecordsButton = new JButton("Product Records");
+        viewProductRecordsButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            	StaffOrderQueue staffOrderQueueScreen = new StaffOrderQueue();
+            	staffOrderQueueScreen.setLocationRelativeTo(null);
+            	staffOrderQueueScreen.setVisible(true);
+                setVisible(false);
+            }
+        });
         JButton viewOrderQueueButton = new JButton("Order Queue");
         
-        // Add Items to Footer Panel
+        //Add Items to Footer Panel
         footerPanel.add(viewProductRecordsButton);
         footerPanel.add(viewOrderQueueButton);
         
-        // Add Panels To Frame
+        //Add Panels To Frame
         add(headerPanel, BorderLayout.NORTH);
         add(footerPanel, BorderLayout.CENTER);
         setVisible(true);
@@ -67,13 +77,16 @@ public class StaffDashboard extends JFrame {
 
     
     public static void main(String[] args) {
+        String url = "jdbc:mysql://stusql.dcs.shef.ac.uk:3306/team075";
+        String username = "team075";
+        String password = "mood6Phah";
+        //Establish connection
+        try {
+            Connection connection = DriverManager.getConnection(url, username, password); 
+            System.out.println("Successfully connected to the database.");
+        } catch (SQLException e) {
+            System.out.println("Error in connecting to the database");
+        }
         new StaffDashboard();
-    }
-    
-    
-    
-    
-    
-    
-    
+    }   
 }
