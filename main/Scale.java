@@ -1,0 +1,6 @@
+public enum Scale {
+    ALL,
+    SEVENTYSIXTH,
+    HUNDREDANDTWENTYTH,
+    HUNDREDANDFOURTYEIGHTTH
+}
