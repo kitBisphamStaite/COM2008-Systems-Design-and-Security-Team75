@@ -1,64 +1,84 @@
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
-
-public class Login implements ActionListener {
-    private static JLabel userLabel;
-    private static JTextField userText;
-    private static JLabel passwordLabel;
-    private static JPasswordField passwordText;
-    private static JButton button;
-    private static JLabel success;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.*;
+import com.sheffield.DatabaseConnectionHandler;
+import com.sheffield.DatabaseOperations;
 
 
-    public static void main (String[] args) {
-        JFrame frame = new JFrame();
+public class Login {
+    public static void main(String[] args) {
+        DatabaseConnectionHandler databaseConnectionHandler = new DatabaseConnectionHandler();
+        DatabaseOperations databaseOperations = new DatabaseOperations();
+        try {
+            // Connect to the database
+            databaseConnectionHandler.openConnection();
+            // Create the login frame
+            SwingUtilities.invokeLater(Login::createLoginFrame);
+        } catch (Throwable e) {
+            e.printStackTrace();
+        } finally {
+            databaseConnectionHandler.closeConnection();
+        }
+    }
+
+    private static void createLoginFrame() {
+        JFrame loginFrame = new JFrame("Login Page");
+        loginFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        loginFrame.setSize(300, 150);
+
         JPanel panel = new JPanel();
-        frame.setSize(350,200);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.add(panel);
+        loginFrame.add(panel);
+        placeComponents(panel);
 
+        loginFrame.setVisible(true);
+    }
+
+    private static void placeComponents(JPanel panel) {
         panel.setLayout(null);
 
-        //ADDING USER LABEL AND TEXTBOX
-        userLabel = new JLabel("User");
-        userLabel.setBounds(10,20,80,25);
+        JLabel userLabel = new JLabel("Username:");
+        userLabel.setBounds(10, 20, 80, 25);
         panel.add(userLabel);
 
-        userText = new JTextField();
-        userText.setBounds(100,20,165,25);
+        JTextField userText = new JTextField(20);
+        userText.setBounds(100, 20, 165, 25);
         panel.add(userText);
 
-        //ADDING PASSWORD LABEL AND TEXTBOX
-        passwordLabel = new JLabel("Password");
-        passwordLabel.setBounds(10,50,80,25);
+        JLabel passwordLabel = new JLabel("Password:");
+        passwordLabel.setBounds(10, 50, 80, 25);
         panel.add(passwordLabel);
 
-        passwordText = new JPasswordField();
-        passwordText.setBounds(100,50,165,25);
+        JPasswordField passwordText = new JPasswordField(20);
+        passwordText.setBounds(100, 50, 165, 25);
         panel.add(passwordText);
 
-        //ADDING SUBMIT BUTTON
-        button = new JButton("Login");
-        button.setBounds(10,80,80,25);
-        button.addActionListener(new Login());
-        panel.add(button);
+        JButton loginButton = new JButton("login");
+        loginButton.setBounds(10, 80, 80, 25);
+        panel.add(loginButton);
 
-        success = new JLabel("");
-        success.setBounds(10,110,300,25);
-        panel.add(success);
-
-
-
-        frame.setVisible(true);
+        loginButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String username = userText.getText();
+                String password = new String(passwordText.getPassword());
+            }
+        });
     }
 
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        String user = userText.getText();
-        String password = passwordText.getText();
-        System.out.println(user + password);
 
+    private static void openHomePage(String username) {
+        JFrame homeFrame = new JFrame("Home Page");
+        homeFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        homeFrame.setSize(300, 150);
+
+        JPanel panel = new JPanel();
+        homeFrame.add(panel);
+
+        JLabel welcomeLabel = new JLabel("Welcome, " + username + "!");
+        panel.add(welcomeLabel);
+
+        homeFrame.setVisible(true);
     }
 }
