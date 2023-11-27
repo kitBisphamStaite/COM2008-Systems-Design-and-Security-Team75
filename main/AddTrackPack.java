@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 public class AddTrackPack extends JFrame {
     private AddProduct parentScreen;
@@ -12,7 +13,10 @@ public class AddTrackPack extends JFrame {
     JTextArea stockTextArea = new JTextArea();
     JComboBox<Gauge> gaugeComboBox = new JComboBox<Gauge>(Gauge.values());
     JComboBox<Scale> scaleComboBox = new JComboBox<Scale>(Scale.values());
-    JList<Product> trackProductCodeList = new JList<Product>(); //Check it starts with "P"
+    private ArrayList<ProductPair> trackList;
+    private DefaultListModel<ProductPair> trackListModel;
+    private JList<ProductPair> trackListUI;
+
     private boolean isEditing = true;
 
     public AddTrackPack(AddProduct parentScreen) {
@@ -20,6 +24,19 @@ public class AddTrackPack extends JFrame {
         setTitle("Track Pack");
         setSize(600, 600);
         setLocationRelativeTo(null);
+
+
+        // Sample product data
+        trackList = new ArrayList<>();
+
+        //making an initial product list
+        trackListModel = new DefaultListModel<>();
+        for (ProductPair productPair : trackList) {
+            trackListModel.addElement(productPair);
+        }
+
+        // Set up the UI components
+        trackListUI = new JList<>(trackListModel);
 
         JPanel detailsPanel = new JPanel(new GridLayout(10, 1));
         JPanel tempPanel1 = new JPanel(new GridLayout(1, 2));
@@ -62,7 +79,8 @@ public class AddTrackPack extends JFrame {
         removeTrackButton.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
-                //Removes currently selected item from the list
+                int currentlySelected = trackListUI.getSelectedIndex();
+                trackListUI.remove(currentlySelected);
             }   
         });
         
@@ -81,7 +99,7 @@ public class AddTrackPack extends JFrame {
         tempPanel7.add(new JLabel("scaleComboBox:"));
         tempPanel7.add(scaleComboBox);
         tempPanel8.add(new JLabel("trackProductCodeList:"));
-        tempPanel8.add(trackProductCodeList);
+        tempPanel8.add(trackListUI);
         tempPanel9.add(addTrackButton);
         tempPanel9.add(removeTrackButton);
         tempPanel10.add(addProducButton);
@@ -106,14 +124,44 @@ public class AddTrackPack extends JFrame {
         this.dispose();
     }
 
+    public void addTrackFromButton(ProductPair productPair){
+        if (productPair.getProduct().getProductType() == ProductType.TRACK) {
+            trackListModel.addElement(productPair);
+        }
+        else{
+            System.out.println("Wrong Product Type");
+        }
+    }
+
     private void addProduct(){
-        //Check that all field are full
-        //Check that the product code isnt already in inventory, if it is then return an error of some sort
-        System.out.println("Added Product");
-        //Create a product object
-        //Put the product into inventory
-        parentScreen.setVisible(true);
-        this.dispose();
+        String productCodeText = productCodeTextArea.getText().strip();
+        Boolean validProductCode = Inventory.getInstance().validProductCode(productCodeText, ProductType.CONTROLLER);
+
+        String productNameText = productNameTextArea.getText().strip();
+        Boolean validProductName = Inventory.getInstance().validProductName(productNameText);
+
+        String manufacturerNameText = manufacturerNameTextArea.getText().strip();
+        boolean validManufacturerName = Inventory.getInstance().validManufacturerName(manufacturerNameText);
+
+        String retailPriceText = retailPriceTextArea.getText().strip();
+        boolean validRetailPrice = Inventory.getInstance().validRetailPrice(retailPriceText);
+
+        String stockText = stockTextArea.getText().strip();
+        boolean validStock = Inventory.getInstance().validStock(stockText);
+
+        Boolean validGauge = Inventory.getInstance().validGauge((Gauge) gaugeComboBox.getSelectedItem());
+        Boolean validScale = Inventory.getInstance().validScale((Scale) scaleComboBox.getSelectedItem());
+
+        Boolean validTrackList = Inventory.getInstance().validProductList(trackList, ProductType.TRACK, 1);
+
+        if (validProductCode && validProductName && validManufacturerName && validRetailPrice && validStock && validGauge && validScale && validTrackList) {
+            Inventory.getInstance().addProduct(new TrackPack(productCodeText, productNameText, manufacturerNameText, 
+                                                Integer.parseInt(retailPriceText), Integer.parseInt(stockText), 
+                                                (Gauge) gaugeComboBox.getSelectedItem(), (Scale) scaleComboBox.getSelectedItem(), 
+                                                trackList));
+            parentScreen.setVisible(true);
+            this.dispose();
+        }
     }
 
     public void editProduct(TrackPack product){
@@ -124,7 +172,7 @@ public class AddTrackPack extends JFrame {
         retailPriceTextArea.setText(Integer.toString(product.getStock()));
         gaugeComboBox.setSelectedItem(product.getGauge());
         scaleComboBox.setSelectedItem(product.getScale());
-        //trackProductCodeList make it make sence
+        trackList = product.getTracks();
         isEditing = false;
     }
 }

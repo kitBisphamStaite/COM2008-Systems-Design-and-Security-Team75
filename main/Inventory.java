@@ -16,11 +16,11 @@ public class Inventory {
 
     // Track codes start with R, controller codes with C, locomotives with L, rolling stock with S, train sets with M, and track packs with P
     public void createDefaultProductList(){
+        ArrayList<ProductPair> locomotives = new ArrayList<ProductPair>();
+        ArrayList<ProductPair> trackPacks = new ArrayList<ProductPair>();
+        ArrayList<ProductPair> rollingStocks = new ArrayList<ProductPair>();
 
-        Locomotive[] locomotives = new Locomotive[1];
-        TrackPack[] trackPacks = new TrackPack[1];
-        RollingStock[] rollingStocks = new RollingStock[1];
-        Track[] tracks = new Track[1];
+        ArrayList<ProductPair> tracks = new ArrayList<ProductPair>();
 
         products.clear();
         products.add(new Controller("C001", "Controller 1", "John", 5, 1, Gauge.N, Scale.SEVENTYSIXTH, ChipType.ANALOGUE));
@@ -72,7 +72,6 @@ public class Inventory {
                     } else if (productType == ProductType.TRAINSET && productCode.startsWith("M")) {
                         return true;
                     }
-                    //maybe check if only the first char is a letter and the rest are numbers
                 }
             }
         }
@@ -145,7 +144,39 @@ public class Inventory {
         return curveRadius != CurveRadius.ALL;
     }
     
-    public boolean ValidTrackType(TrackType trackType){
+    public boolean validTrackType(TrackType trackType){
         return trackType != TrackType.ALL;
     }
+
+    public boolean validProduct(String productCode, ProductType productType){
+        for (Product product : products) {
+            if (product.getProductCode() == productCode && product.getProductType() == productType) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public Product getProduct(String productCode){ //Assumes that there is a valid product since it should be called only after validProduct is called
+        for (Product product : products) {
+            if (product.getProductCode() == productCode) {
+                return product;
+            }
+        }
+        System.out.println("Product Not Found");
+        return null;
+    }
+
+    public boolean validProductList(ArrayList<ProductPair> productList, ProductType productType, int minimumListLength){
+        for (ProductPair productPair : productList) {
+            if (productPair.getProduct().getProductType() != productType) {
+                return false;
+            }
+        }
+        if (productList.size() < minimumListLength) {
+            return false;
+        }
+        return true;
+    }
+
 }
