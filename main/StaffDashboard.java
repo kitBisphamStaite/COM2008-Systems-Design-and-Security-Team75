@@ -65,6 +65,17 @@ public class StaffDashboard extends JFrame {
             }
         });
         JButton viewOrderQueueButton = new JButton("Pending Order Queue");
+        viewOrderQueueButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            	PendingOrderQueue pendingOrderQueue = new PendingOrderQueue();
+            	pendingOrderQueue.setLocationRelativeTo(null);
+            	pendingOrderQueue.setVisible(true);
+                setVisible(false);
+            }
+        });
+        
+        
         
         //Add Items to Footer Panel
         footerPanel.add(viewProductRecordsButton);

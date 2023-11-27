@@ -8,17 +8,16 @@ import com.sheffield.DatabaseOperations;
 
 public class Login {
     public static void main(String[] args) {
-        DatabaseConnectionHandler databaseConnectionHandler = new DatabaseConnectionHandler();
-        DatabaseOperations databaseOperations = new DatabaseOperations();
+    	//Database Details
+        String urlDB = "jdbc:mysql://stusql.dcs.shef.ac.uk:3306/team075";
+        String usernameDB = "team075";
+        String passwordDB = "mood6Phah";
+        //Try To Establish Connection With DB
         try {
-            // Connect to the database
-            databaseConnectionHandler.openConnection();
-            // Create the login frame
-            SwingUtilities.invokeLater(Login::createLoginFrame);
-        } catch (Throwable e) {
-            e.printStackTrace();
-        } finally {
-            databaseConnectionHandler.closeConnection();
+            Connection connection = DriverManager.getConnection(urlDB, usernameDB, passwordDB); 
+            System.out.println("Successfully connected to the database.");
+        } catch (SQLException e) {
+            System.out.println("Error in connecting to the database");
         }
     }
 
