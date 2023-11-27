@@ -5,16 +5,16 @@ import java.awt.event.ActionListener;
 
 public class AddLocomotive extends JFrame{
     private AddProduct parentScreen;
-    JTextArea productCodeTextArea = new JTextArea(); //Check it starts with "L"
-    JTextArea productNameTextArea = new JTextArea();
-    JTextArea manufacturerNameTextArea = new JTextArea();
-    JTextArea retailPriceTextArea = new JTextArea();
-    JTextArea stockTextArea = new JTextArea();
-    JComboBox<Gauge> gaugeComboBox = new JComboBox<Gauge>(Gauge.values());
-    JComboBox<Scale> scaleComboBox = new JComboBox<Scale>(Scale.values());
-    JTextArea eraCodeTextArea = new JTextArea();
-    JComboBox<ControlType> controlTypeComboBox = new JComboBox<ControlType>(ControlType.values());
-    private boolean isEditing = true;
+    private JTextArea productCodeTextArea = new JTextArea();
+    private JTextArea productNameTextArea = new JTextArea();
+    private JTextArea manufacturerNameTextArea = new JTextArea();
+    private JTextArea retailPriceTextArea = new JTextArea();
+    private JTextArea stockTextArea = new JTextArea();
+    private JComboBox<Gauge> gaugeComboBox = new JComboBox<Gauge>(Gauge.values());
+    private JComboBox<Scale> scaleComboBox = new JComboBox<Scale>(Scale.values());
+    private JTextArea eraCodeTextArea = new JTextArea();
+    private JComboBox<ControlType> controlTypeComboBox = new JComboBox<ControlType>(ControlType.values());
+    private boolean isEditing = false;
 
     public AddLocomotive(AddProduct parentScreen) {
         this.parentScreen = parentScreen;
@@ -50,7 +50,7 @@ public class AddLocomotive extends JFrame{
             }        
         });
 
-        tempPanel1.add(new JLabel("productCodeTextArea:"));
+        tempPanel1.add(new JLabel("productCodeTextArea (Should Start with a 'L'):"));
         tempPanel1.add(productCodeTextArea);
         tempPanel2.add(new JLabel("productNameTextArea:"));
         tempPanel2.add(productNameTextArea);
@@ -92,36 +92,43 @@ public class AddLocomotive extends JFrame{
 
     private void addProduct(){
         String productCodeText = productCodeTextArea.getText().strip();
-        Boolean validProductCode = Inventory.getInstance().validProductCode(productCodeText, ProductType.CONTROLLER);
+        Boolean validProductCode = ProductValidator.getInstance().validProductCode(productCodeText, ProductType.CONTROLLER);
 
         String productNameText = productNameTextArea.getText().strip();
-        Boolean validProductName = Inventory.getInstance().validProductName(productNameText);
+        Boolean validProductName = ProductValidator.getInstance().validProductName(productNameText);
 
         String manufacturerNameText = manufacturerNameTextArea.getText().strip();
-        boolean validManufacturerName = Inventory.getInstance().validManufacturerName(manufacturerNameText);
+        boolean validManufacturerName = ProductValidator.getInstance().validManufacturerName(manufacturerNameText);
 
         String retailPriceText = retailPriceTextArea.getText().strip();
-        boolean validRetailPrice = Inventory.getInstance().validRetailPrice(retailPriceText);
+        boolean validRetailPrice = ProductValidator.getInstance().validRetailPrice(retailPriceText);
 
         String stockText = stockTextArea.getText().strip();
-        boolean validStock = Inventory.getInstance().validStock(stockText);
+        boolean validStock = ProductValidator.getInstance().validStock(stockText);
 
-        Boolean validGauge = Inventory.getInstance().validGauge((Gauge) gaugeComboBox.getSelectedItem());
-        Boolean validScale = Inventory.getInstance().validScale((Scale) scaleComboBox.getSelectedItem());
+        Boolean validGauge = ProductValidator.getInstance().validGauge((Gauge) gaugeComboBox.getSelectedItem());
+        Boolean validScale = ProductValidator.getInstance().validScale((Scale) scaleComboBox.getSelectedItem());
 
         String eraCodeText = eraCodeTextArea.getText().strip();
-        Boolean validEraCode = Inventory.getInstance().validProductName(eraCodeText);
+        Boolean validEraCode = ProductValidator.getInstance().validProductName(eraCodeText);
 
-        Boolean validControlType = Inventory.getInstance().validControlType((ControlType) controlTypeComboBox.getSelectedItem());
+        Boolean validControlType = ProductValidator.getInstance().validControlType((ControlType) controlTypeComboBox.getSelectedItem());
 
-        if (validProductCode && validProductName && validManufacturerName && validRetailPrice && validStock && validGauge && validScale && validEraCode && validControlType) {
+        if (!isEditing && validProductCode && validProductName && validManufacturerName && validRetailPrice && validStock && validGauge && validScale && validEraCode && validControlType) {
             Inventory.getInstance().addProduct(new Locomotive(productCodeText, productNameText, manufacturerNameText, 
                                                 Integer.parseInt(retailPriceText), Integer.parseInt(stockText), 
                                                 (Gauge) gaugeComboBox.getSelectedItem(), (Scale) scaleComboBox.getSelectedItem(), 
                                                 eraCodeText, (ControlType) controlTypeComboBox.getSelectedItem()));
             parentScreen.setVisible(true);
             this.dispose();
-        }
+        } else if (isEditing && validProductCode && validProductName && validManufacturerName && validRetailPrice && validStock && validGauge && validScale && validEraCode && validControlType) {
+            Inventory.getInstance().updateProduct(new Locomotive(productCodeText, productNameText, manufacturerNameText, 
+                                                Integer.parseInt(retailPriceText), Integer.parseInt(stockText), 
+                                                (Gauge) gaugeComboBox.getSelectedItem(), (Scale) scaleComboBox.getSelectedItem(), 
+                                                eraCodeText, (ControlType) controlTypeComboBox.getSelectedItem()));
+            parentScreen.setVisible(true);
+            this.dispose();
+        } 
 
     }
 
@@ -135,6 +142,6 @@ public class AddLocomotive extends JFrame{
         scaleComboBox.setSelectedItem(product.getScale());
         eraCodeTextArea.setText(product.getEraCode());
         controlTypeComboBox.setSelectedItem(product.getControlType());
-        isEditing = false;
+        isEditing = true;
     }
 }
