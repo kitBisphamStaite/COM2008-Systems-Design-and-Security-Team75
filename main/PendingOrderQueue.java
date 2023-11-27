@@ -10,11 +10,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Vector;
-import javax.swing.JList;
-import javax.swing.JScrollPane;
+
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.DefaultListModel;
 
 public class PendingOrderQueue extends JFrame {	
 	String selectedValue;
@@ -55,23 +53,26 @@ public class PendingOrderQueue extends JFrame {
             setSize(1024, 768);
             setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             setLayout(new BorderLayout());
-            // Create Header, Promote User, Demote User Panels
+            //Create Panels
             JPanel headerPanel = new JPanel(new BorderLayout());
             JPanel pendingOrderPanel = new JPanel(new BorderLayout());
+            JPanel fulfillDeletePanel = new JPanel(new GridLayout(0,2));
+            JPanel orderDetails = new JPanel(new BorderLayout());
             
             
-            JPanel promoteUserPanel = new JPanel(new BorderLayout());
+            
+            
             JPanel promotePanel = new JPanel(new BorderLayout());
-            // Add Panels To Frame
+            //Add Panels To Main Frame
             add(headerPanel, BorderLayout.NORTH);
-            
-            
-            
-            
             add(pendingOrderPanel, BorderLayout.CENTER);
-            add(promoteUserPanel, BorderLayout.SOUTH);
-            promoteUserPanel.add(promotePanel, BorderLayout.CENTER);
-            pendingOrderPanel.add(promotePanel, BorderLayout.CENTER);
+            //Add sub panels to pendingOrderPanel
+            pendingOrderPanel.add(orderDetails, BorderLayout.CENTER);
+            pendingOrderPanel.add(fulfillDeletePanel, BorderLayout.SOUTH);
+            
+            JLabel orderInfo = new JLabel("Order Info:");
+            orderInfo.setFont(new Font("Serif", Font.PLAIN, 14));
+            orderDetails.add(orderInfo, BorderLayout.NORTH);
             
             // Create Header Panel Items
             //*Back Button
@@ -98,6 +99,25 @@ public class PendingOrderQueue extends JFrame {
             
             
             
+            //*FULFILL AND DELETE ORDER BUTTONS
+            JButton fulfillOrderButton = new JButton("Fulfill Order");
+            fulfillOrderButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+
+                }
+            });
+            JButton deleteOrderButton = new JButton("Delete Order");
+            deleteOrderButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+
+                }
+            });
+            //Add buttons to fullfillDelete panel
+            fulfillDeletePanel.add(fulfillOrderButton);
+            fulfillDeletePanel.add(deleteOrderButton);
+            
             
             
             //Create Pending Orders Items
@@ -106,11 +126,6 @@ public class PendingOrderQueue extends JFrame {
             pendingOrderPanel.add(pendingOrderLabel, BorderLayout.NORTH);
             pendingOrderPanel.add(pendingOrderScrollableList, BorderLayout.WEST);
 
-            
-            
-            
-            
-            
             setVisible(true);
         } catch (SQLException e) {
         	//ERROR IN CONNECTING TO DATABASE
