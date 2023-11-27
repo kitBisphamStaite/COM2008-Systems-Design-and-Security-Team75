@@ -25,11 +25,10 @@ public class ManagerDashboard extends JFrame {
         String urlDB = "jdbc:mysql://stusql.dcs.shef.ac.uk:3306/team075";
         String usernameDB = "team075";
         String passwordDB = "mood6Phah";
-        
         //GET LIST OF STAFF ACCOUNTS AND CREATE A LIST WITH THEM
         try {
-            Connection conn = DriverManager.getConnection(urlDB, usernameDB, passwordDB);
-            Statement getAllStaffstmt = conn.createStatement();
+            Connection connection = DriverManager.getConnection(urlDB, usernameDB, passwordDB);
+            Statement getAllStaffstmt = connection.createStatement();
             //Get All Accounts of Type STAFF
             ResultSet staffListResultSet = getAllStaffstmt.executeQuery("SELECT * FROM Accounts WHERE type='STAFF'");
 
@@ -100,7 +99,7 @@ public class ManagerDashboard extends JFrame {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                 	try {
-						PreparedStatement removeUserFromStaffstmt = conn.prepareStatement("UPDATE Accounts SET type = 'CUSTOMER' WHERE email ='" + selectedValueEmail + "'");
+						PreparedStatement removeUserFromStaffstmt = connection.prepareStatement("UPDATE Accounts SET type = 'CUSTOMER' WHERE email ='" + selectedValueEmail + "'");
 			            int rowsUpdated = removeUserFromStaffstmt.executeUpdate();
 			            if (rowsUpdated > 0) {
 			                System.out.println("An existing user was updated successfully!");
@@ -132,7 +131,7 @@ public class ManagerDashboard extends JFrame {
                 public void actionPerformed(ActionEvent e) {
                 	try {
                 		System.out.println(promoteCustomerInputBox.getText());
-						PreparedStatement promoteUsertmt = conn.prepareStatement("UPDATE Accounts SET type = 'STAFF' WHERE email ='" + promoteCustomerInputBox.getText() + "' AND type='CUSTOMER'");
+						PreparedStatement promoteUsertmt = connection.prepareStatement("UPDATE Accounts SET type = 'STAFF' WHERE email ='" + promoteCustomerInputBox.getText() + "' AND type='CUSTOMER'");
 			            int rowsUpdated = promoteUsertmt.executeUpdate();
 			            if (rowsUpdated > 0) {
 			                System.out.println("An existing user was updated successfully!");

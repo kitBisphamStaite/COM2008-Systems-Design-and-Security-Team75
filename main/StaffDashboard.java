@@ -29,7 +29,7 @@ public class StaffDashboard extends JFrame {
         backButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-            	//Take user back to the main screen
+            	//Take user back to the main screen - Sets the StaffDashboard frame to be invisible
                 setVisible(false);
             }
         });
@@ -43,7 +43,7 @@ public class StaffDashboard extends JFrame {
                 setVisible(false);
             }
         });
-        //*Labels
+        //*HEADER LABELS
         JLabel trainsOfSheffieldHeader = new JLabel("Trains Of Sheffield - Staff Dashboard");
         trainsOfSheffieldHeader.setHorizontalAlignment(JLabel.CENTER);
         
@@ -53,6 +53,7 @@ public class StaffDashboard extends JFrame {
         headerPanel.add(viewManagerDashboardButton, BorderLayout.EAST);
         
         //Create Footer Panel Items
+        //*FOOTER BUTTONS
         JButton viewProductRecordsButton = new JButton("Product Records");
         viewProductRecordsButton.addActionListener(new ActionListener() {
             @Override
@@ -63,7 +64,7 @@ public class StaffDashboard extends JFrame {
                 setVisible(false);
             }
         });
-        JButton viewOrderQueueButton = new JButton("Order Queue");
+        JButton viewOrderQueueButton = new JButton("Pending Order Queue");
         
         //Add Items to Footer Panel
         footerPanel.add(viewProductRecordsButton);
@@ -77,12 +78,13 @@ public class StaffDashboard extends JFrame {
 
     
     public static void main(String[] args) {
-        String url = "jdbc:mysql://stusql.dcs.shef.ac.uk:3306/team075";
-        String username = "team075";
-        String password = "mood6Phah";
-        //Establish connection
+    	//Database Details
+        String urlDB = "jdbc:mysql://stusql.dcs.shef.ac.uk:3306/team075";
+        String usernameDB = "team075";
+        String passwordDB = "mood6Phah";
+        //Try To Establish Connection With DB
         try {
-            Connection connection = DriverManager.getConnection(url, username, password); 
+            Connection connection = DriverManager.getConnection(urlDB, usernameDB, passwordDB); 
             System.out.println("Successfully connected to the database.");
         } catch (SQLException e) {
             System.out.println("Error in connecting to the database");
