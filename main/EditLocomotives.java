@@ -50,7 +50,7 @@ public class EditLocomotives extends JFrame {
             locomotiveListResultSet = getAllLocomotivestmt.executeQuery("SELECT * FROM Products INNER JOIN Locomotive ON Products.product_code = Locomotive.product_code");
             
             while (locomotiveListResultSet.next()) {
-                String row = locomotiveListResultSet.getString("product_code") + ", " + locomotiveListResultSet.getString("product_name") + ", " + locomotiveListResultSet.getString("eraCode");
+                String row = locomotiveListResultSet.getString("product_code") + ", " + locomotiveListResultSet.getString("product_name") + ", " + locomotiveListResultSet.getString("era_code");
                 String productRow = locomotiveListResultSet.getString("product_name") + ", £" + locomotiveListResultSet.getString("retail_price") + ", " + locomotiveListResultSet.getString("stock") + ", " + locomotiveListResultSet.getString("gauge") + ", " + locomotiveListResultSet.getString("scale");
                 productInformationVector.add(productRow);
                 locomotiveVector.add(row);
@@ -346,7 +346,7 @@ public class EditLocomotives extends JFrame {
                                         						createNewProductstmt.setString(7, newProductScale);
         														int rowsUpdated = createNewProductstmt.executeUpdate();
         							                			if (rowsUpdated == 1) {
-        							                				PreparedStatement createNewLocomotivestmt = connection.prepareStatement("INSERT INTO Locomotive (product_code, control_type, eraCode) VALUES (?, ?, ?)");
+        							                				PreparedStatement createNewLocomotivestmt = connection.prepareStatement("INSERT INTO Locomotive (product_code, control_type, era_code) VALUES (?, ?, ?)");
         							                				createNewLocomotivestmt.setString(1, "L" + newProductCode);
         							                				createNewLocomotivestmt.setString(2, newProductControlType);
         							                				createNewLocomotivestmt.setString(3, newProductEraCode);
@@ -361,7 +361,7 @@ public class EditLocomotives extends JFrame {
         							    			                locomotiveListResultSet = getAllLocomotivestmt.executeQuery("SELECT * FROM Products INNER JOIN Locomotive ON Products.product_code = Locomotive.product_code");
         							    			                
         							    			                while (locomotiveListResultSet.next()) {
-        							    			                    String row = locomotiveListResultSet.getString("product_code") + ", " + locomotiveListResultSet.getString("product_name") + ", " + locomotiveListResultSet.getString("eraCode");
+        							    			                    String row = locomotiveListResultSet.getString("product_code") + ", " + locomotiveListResultSet.getString("product_name") + ", " + locomotiveListResultSet.getString("era_code");
         							    			                    String productRow = locomotiveListResultSet.getString("product_name") + ", £" + locomotiveListResultSet.getString("retail_price") + ", " + locomotiveListResultSet.getString("stock") + ", " + locomotiveListResultSet.getString("gauge") + ", " + locomotiveListResultSet.getString("scale");
         							    			                    productInformationVector.add(productRow);
         							    			                    locomotiveVector.add(row);

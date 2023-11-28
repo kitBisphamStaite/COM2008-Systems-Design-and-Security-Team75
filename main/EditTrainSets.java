@@ -30,7 +30,7 @@ public class EditTrainSets extends JFrame {
 	String selectedValue;
 	int selectedIndex;
 	String selectedValueProductCode;
-	JList<String> controllerList = new JList<String>();
+	JList<String> trainSetList = new JList<String>();
 	//New variables depending on category
 	String selectedValueControllerProductCode;
 	String selectedValueEraCode;
@@ -52,7 +52,7 @@ public class EditTrainSets extends JFrame {
             TrainSetListResultSet = getAllTrainSetstmt.executeQuery("SELECT * FROM Products INNER JOIN Train_Set ON Products.product_code = Train_Set.product_code");
             
             while (TrainSetListResultSet.next()) {
-                String row = TrainSetListResultSet.getString("product_code") + ", " + TrainSetListResultSet.getString("controller_product_code") + ", " + TrainSetListResultSet.getString("eraCode");
+                String row = TrainSetListResultSet.getString("product_code") + ", " + TrainSetListResultSet.getString("controller_product_code") + ", " + TrainSetListResultSet.getString("era_code");
                 String productRow = TrainSetListResultSet.getString("product_name") + ", £" + TrainSetListResultSet.getString("retail_price") + ", " + TrainSetListResultSet.getString("stock") + ", " + TrainSetListResultSet.getString("gauge") + ", " + TrainSetListResultSet.getString("scale");
                 productInformationVector.add(productRow);
                 TrainSetVector.add(row);
@@ -104,8 +104,8 @@ public class EditTrainSets extends JFrame {
             JLabel trainSetListLabel = new JLabel("Train Set Product List:");
             JList<String> trainSetList = new JList<String>(TrainSetVector);
             JList<String> productInformationList = new JList<String>(productInformationVector);
-            controllerList.setPreferredSize(new Dimension(200, 200));
-            controllerList.setSelectedIndex(0);
+            trainSetList.setPreferredSize(new Dimension(200, 200));
+            trainSetList.setSelectedIndex(0);
             productInformationList.setSelectedIndex(0);
             selectedValueInformation = productInformationList.getSelectedValue();
             selectedIndex = 0;
@@ -237,7 +237,7 @@ public class EditTrainSets extends JFrame {
                 					if (newProductEraCode == null) {
                 						break;
                 					}
-                					PreparedStatement editProductEraCodestmt = connection.prepareStatement("UPDATE Train_Set SET eraCode = '" + newProductEraCode +"' WHERE product_code ='" + selectedValueProductCode + "'");
+                					PreparedStatement editProductEraCodestmt = connection.prepareStatement("UPDATE Train_Set SET era_code = '" + newProductEraCode +"' WHERE product_code ='" + selectedValueProductCode + "'");
                 					editProductEraCodestmt.executeUpdate();
                 					dispose();
                 					editTrainSets = new EditTrainSets();
@@ -299,13 +299,14 @@ public class EditTrainSets extends JFrame {
                                 				String newProductScale = (String) JOptionPane.showInputDialog(null, "Select Scale", "Add New Track Product", JOptionPane.QUESTION_MESSAGE, null, scaleChoices, scaleChoices[0]);
                                 				if (newProductScale != null) {
                                 					try {
-                                					String newProductControllerCode = (String) JOptionPane.showInputDialog(null, "Select Chip Type", "Add New Train Set Product", JOptionPane.INFORMATION_MESSAGE);
+                                					String newProductControllerCode = (String) JOptionPane.showInputDialog(null, "Select Controller Code", "Add New Train Set Product", JOptionPane.INFORMATION_MESSAGE);
                                 					PreparedStatement getControllerCodesstmt = connection.prepareStatement("SELECT product_code FROM Products WHERE product_code LIKE 'C%'");
                                 					ResultSet controllerCodesResultSet = getControllerCodesstmt.executeQuery();
                                 					List<String> existingControllerCodes = new ArrayList<>();
                                 					while (controllerCodesResultSet.next()) {
                                 						existingControllerCodes.add(controllerCodesResultSet.getString("product_code"));
                                 					}
+                                					System.out.println(existingControllerCodes);
                                 					if (existingControllerCodes.contains(newProductControllerCode)) {
                                     					if (newProductControllerCode != null) {
                                     						String newProductEraCode = JOptionPane.showInputDialog(null, "Enter Era Code", "Add New Train Set Product", JOptionPane.INFORMATION_MESSAGE);
@@ -340,9 +341,10 @@ public class EditTrainSets extends JFrame {
                                             						createNewProductstmt.setString(7, newProductScale);
             														int rowsUpdated = createNewProductstmt.executeUpdate();
             							                			if (rowsUpdated == 1) {
-            							                				PreparedStatement createNewTrainSetstmt = connection.prepareStatement("INSERT INTO Train_Set (product_code, controller_product_code, eraCode) VALUES (?, ?, ?)");
+            							                				PreparedStatement createNewTrainSetstmt = connection.prepareStatement("INSERT INTO Train_Set (product_code, controller_product_code, era_code) VALUES (?, ?, ?)");
             							                				createNewTrainSetstmt.setString(1, "M" + newProductCode);
             							                				createNewTrainSetstmt.setString(2, newProductControllerCode);
+            							                				createNewTrainSetstmt.setString(3, newProductEraCode);
             							                				createNewTrainSetstmt.executeUpdate();
             							    			                System.out.println("Product successfully added.");
             							    			                TrainSetVector.clear();
@@ -353,7 +355,7 @@ public class EditTrainSets extends JFrame {
             							    			                //Get All Track Products
             							    			                TrainSetListResultSet = getAllTrainSetstmt.executeQuery("SELECT * FROM Products INNER JOIN Train_Set ON Products.product_code = Train_Set.product_code");
             							    			                while (TrainSetListResultSet.next()) {
-            							    			                    String row = TrainSetListResultSet.getString("product_code") + ", " + TrainSetListResultSet.getString("controller_product_code" + ", " + TrainSetListResultSet.getString("eraCode"));
+            							    			                    String row = TrainSetListResultSet.getString("product_code") + ", " + TrainSetListResultSet.getString("controller_product_code") + ", " + TrainSetListResultSet.getString("era_code");
             							    			                    String productRow = TrainSetListResultSet.getString("product_name") + ", £" + TrainSetListResultSet.getString("retail_price") + ", " + TrainSetListResultSet.getString("stock") + ", " + TrainSetListResultSet.getString("gauge") + ", " + TrainSetListResultSet.getString("scale");
             							    			                    productInformationVector.add(productRow);
             							    			                    TrainSetVector.add(row);
@@ -464,7 +466,7 @@ public class EditTrainSets extends JFrame {
     			                TrainSetListResultSet = getAllTrainSetstmt.executeQuery("SELECT * FROM Products INNER JOIN Train_Set ON Products.product_code = Train_Set.product_code");
     			                
     			                while (TrainSetListResultSet.next()) {
-    			                    String row = TrainSetListResultSet.getString("product_code") + ", " + TrainSetListResultSet.getString("controller_product_code" + ", " + TrainSetListResultSet.getString("eraCode"));
+    			                    String row = TrainSetListResultSet.getString("product_code") + ", " + TrainSetListResultSet.getString("controller_product_code" + ", " + TrainSetListResultSet.getString("era_code"));
     			                    String productRow = TrainSetListResultSet.getString("product_name") + ", £" + TrainSetListResultSet.getString("retail_price") + ", " + TrainSetListResultSet.getString("stock") + ", " + TrainSetListResultSet.getString("gauge") + ", " + TrainSetListResultSet.getString("scale");
     			                    productInformationVector.add(productRow);
     			                    TrainSetVector.add(row);
@@ -617,7 +619,7 @@ public class EditTrainSets extends JFrame {
 
             
             //Add List to Scrollable Pane
-            JScrollPane staffScrollableList = new JScrollPane(controllerList);
+            JScrollPane staffScrollableList = new JScrollPane(trainSetList);
             //Add Items to Demote User Panel 
             trainSetListPanel.add(trainSetListLabel, BorderLayout.NORTH);
             trainSetListPanel.add(staffScrollableList, BorderLayout.WEST);

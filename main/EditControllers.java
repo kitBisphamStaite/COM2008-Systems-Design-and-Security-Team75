@@ -58,7 +58,7 @@ public class EditControllers extends JFrame {
             }
   
             //Set Up Frame
-            setTitle("Edit Tracks");
+            setTitle("Edit Controllers");
             setSize(1024, 768);
             setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             setLayout(new BorderLayout());
@@ -78,7 +78,7 @@ public class EditControllers extends JFrame {
             //Create Header Panel
             JPanel headerPanel = new JPanel(new BorderLayout());
             //*Trains Of Sheffield Header
-            JLabel trainsOfSheffieldHeader = new JLabel("Trains Of Sheffield - Track Products");
+            JLabel trainsOfSheffieldHeader = new JLabel("Trains Of Sheffield - Controller Products");
             trainsOfSheffieldHeader.setHorizontalAlignment(JLabel.CENTER);
             //Add Items To Header Panel
             headerPanel.add(backButton, BorderLayout.WEST);
@@ -109,7 +109,7 @@ public class EditControllers extends JFrame {
             selectedValueInformation = productInformationList.getSelectedValue();
             selectedIndex = 0;
             selectedValue = controllerList.getSelectedValue();
-            JLabel productInfo = new JLabel("Selected Track Product Info:");
+            JLabel productInfo = new JLabel("Selected Controller Product Info:");
             productInfo.setFont(new Font("Dialog", Font.BOLD, 22));
             selectedProductDetailsPanel.add(productInfo);
             JLabel productName = new JLabel("Product Name: ");
@@ -332,7 +332,7 @@ public class EditControllers extends JFrame {
         														int rowsUpdated = createNewProductstmt.executeUpdate();
         							                			if (rowsUpdated == 1) {
         							                				PreparedStatement createNewControllerstmt = connection.prepareStatement("INSERT INTO Controller (product_code, chip_type) VALUES (?, ?)");
-        							                				createNewControllerstmt.setString(1, "R" + newProductCode);
+        							                				createNewControllerstmt.setString(1, "C" + newProductCode);
         							                				createNewControllerstmt.setString(2, newProductChipType);
         							                				createNewControllerstmt.executeUpdate();
         							    			                System.out.println("Product successfully added.");
