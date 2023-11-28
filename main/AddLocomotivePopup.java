@@ -50,14 +50,24 @@ public class AddLocomotivePopup extends JFrame {
     }
 
     private void addProduct(){
-        Boolean validQuantity = ProductValidator.getInstance().validQuantity(quantityTextArea.getText());
-        Boolean validProduct = ProductValidator.getInstance().validProduct(productCodeTextArea.getText(), ProductType.LOCOMOTIVE);
+        String quantity = quantityTextArea.getText().strip();
+        Boolean validQuantity = ProductValidator.getInstance().validQuantity(quantity);
+        int quantityFinal = Integer.parseInt(quantity);
+
+        String productCode = productCodeTextArea.getText().strip();
+        Boolean validProduct = ProductValidator.getInstance().validProduct(productCode, ProductType.LOCOMOTIVE);
+        Product productFinal = Inventory.getInstance().getProduct(productCode);
+        ProductPair productPair = new ProductPair(productFinal, quantityFinal);
+        productPair.setProduct(productFinal);
+        productPair.setQuantity(quantityFinal);
+
         if (validQuantity && validProduct){
-            parentScreen.addLocomotiveFromButton(new ProductPair(Inventory.getInstance().getProduct(productCodeTextArea.getText()), Integer.parseInt(quantityTextArea.getText())));
+            System.out.println("Valid Product and Code");
+            parentScreen.addLocomotiveFromButton(productPair);
             goBack();
         }
         else{
-            System.out.println("Invalid Product Code");
+            System.out.println("Invalid Product Code and Quantity - Popup");
         }
     }
 }

@@ -77,8 +77,9 @@ public class ProductValidator {
 
     public boolean validQuantity(String quantity){
         if (quantity != null && quantity !="") {
-            //if the quantity is a number
-            return true;
+            if (Integer.parseInt(quantity) > 0){
+                return true;
+            }
         }
         System.out.println("Invalid Stock");
         return false;
@@ -119,7 +120,7 @@ public class ProductValidator {
 
     public boolean validProduct(String productCode, ProductType productType){
         for (Product product : Inventory.getInstance().getProducts()) {
-            if (product.getProductCode() == productCode && product.getProductType() == productType) {
+            if (product.getProductType() == productType && product.getProductCode().equals(productCode)) {
                 return true;
             }
         }

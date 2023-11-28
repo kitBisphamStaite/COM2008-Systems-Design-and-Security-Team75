@@ -159,7 +159,7 @@ public class AddTrackPack extends JFrame {
 
         Boolean validTrackList = ProductValidator.getInstance().validProductList(trackList, ProductType.TRACK, 1);
 
-        if (!isEditing && validProductCode && validProductName && validManufacturerName && validRetailPrice && validStock && validGauge && validScale && validTrackList) {
+        if (!isEditing && validProductName && validManufacturerName && validRetailPrice && validStock && validGauge && validScale && validTrackList) {
             Inventory.getInstance().addProduct(new TrackPack(productCodeText, productNameText, manufacturerNameText, 
                                                 Integer.parseInt(retailPriceText), Integer.parseInt(stockText), 
                                                 (Gauge) gaugeComboBox.getSelectedItem(), (Scale) scaleComboBox.getSelectedItem(), 
@@ -178,6 +178,7 @@ public class AddTrackPack extends JFrame {
 
     public void editProduct(TrackPack product){
         productCodeTextArea.setText(product.getProductCode());
+        productCodeTextArea.setEditable(false);
         productNameTextArea.setText(product.getProductName());
         manufacturerNameTextArea.setText(product.getManufacturerName());
         retailPriceTextArea.setText(Integer.toString(product.getRetailPrice()));

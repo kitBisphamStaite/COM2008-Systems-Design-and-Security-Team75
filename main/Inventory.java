@@ -57,7 +57,8 @@ public class Inventory {
     
     public Product getProduct(String productCode){ //Assumes that there is a valid product since it should be called only after validProduct is called
         for (Product product : products) {
-            if (product.getProductCode() == productCode) {
+            if (product.getProductCode().equals(productCode)) {
+                System.out.println("Product Found");
                 return product;
             }
         }

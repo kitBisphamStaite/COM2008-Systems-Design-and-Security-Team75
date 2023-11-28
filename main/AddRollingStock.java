@@ -116,7 +116,7 @@ public class AddRollingStock extends JFrame {
                                                 eraCodeText));
             parentScreen.setVisible(true);
             this.dispose();
-        } else if (isEditing && validProductCode && validProductName && validManufacturerName && validRetailPrice && validStock && validGauge && validScale && validEraCode) {
+        } else if (isEditing && validProductName && validManufacturerName && validRetailPrice && validStock && validGauge && validScale && validEraCode) {
             Inventory.getInstance().updateProduct(new RollingStock(productCodeText, productNameText, manufacturerNameText, 
                                                 Integer.parseInt(retailPriceText), Integer.parseInt(stockText), 
                                                 (Gauge) gaugeComboBox.getSelectedItem(), (Scale) scaleComboBox.getSelectedItem(), 
@@ -129,6 +129,7 @@ public class AddRollingStock extends JFrame {
 
     public void editProduct(RollingStock product){
         productCodeTextArea.setText(product.getProductCode());
+        productCodeTextArea.setEditable(false);
         productNameTextArea.setText(product.getProductName());
         manufacturerNameTextArea.setText(product.getManufacturerName());
         retailPriceTextArea.setText(Integer.toString(product.getRetailPrice()));

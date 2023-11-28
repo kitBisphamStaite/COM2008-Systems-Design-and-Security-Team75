@@ -112,7 +112,7 @@ public class AddController extends JFrame{
                                                 (ChipType) chipTypeComboBox.getSelectedItem()));
             parentScreen.setVisible(true);
             this.dispose();
-        } else if (isEditing && validProductCode && validProductName && validManufacturerName && validRetailPrice && validStock && validGauge && validScale && validChipType) {
+        } else if (isEditing && validProductName && validManufacturerName && validRetailPrice && validStock && validGauge && validScale && validChipType) {
             Inventory.getInstance().updateProduct(new Controller(productCodeText, productNameText, manufacturerNameText, 
                                                 Integer.parseInt(retailPriceText), Integer.parseInt(stockText), 
                                                 (Gauge) gaugeComboBox.getSelectedItem(), (Scale) scaleComboBox.getSelectedItem(), 
@@ -124,6 +124,7 @@ public class AddController extends JFrame{
 
     public void editProduct(Controller product){
         productCodeTextArea.setText(product.getProductCode());
+        productCodeTextArea.setEditable(false);
         productNameTextArea.setText(product.getProductName());
         manufacturerNameTextArea.setText(product.getManufacturerName());
         retailPriceTextArea.setText(Integer.toString(product.getRetailPrice()));
