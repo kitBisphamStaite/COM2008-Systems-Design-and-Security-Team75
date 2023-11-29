@@ -310,10 +310,27 @@ public class EditControllers extends JFrame {
                                         							existingProductCodes.add(productCodeResultSet.getString("product_code").substring(1));
                                         						}
                                         						for(int i=1; i<10000; i++) {
-                                        							if (existingProductCodes.contains(Integer.toString(i))) {
+                                        							String itemToCheckFor = Integer.toString(i);
+                                        							if (i < 10) {
+                                        								itemToCheckFor = "00" + itemToCheckFor;
+                                        							} else if (i > 9 && i < 100) {
+                                        								itemToCheckFor = "0" + itemToCheckFor;
+                                        							} else {
+                                        								itemToCheckFor = Integer.toString(i);
+                                        							}
+                                        							
+                                        							
+                                        							if (existingProductCodes.contains(itemToCheckFor)) {
                                         								continue;
                                         							} else {
                                         								newProductCode = Integer.toString(i);
+                                        								if (newProductCode.length() == 1) {
+                                        									newProductCode = "00" + newProductCode;
+                                        								} else if (newProductCode.length() == 2) {
+                                        									newProductCode = "0" + newProductCode;
+                                        								} else {
+                                        									newProductCode = Integer.toString(i);
+                                        								}
                                         								break;
                                         							}
                                         						}
