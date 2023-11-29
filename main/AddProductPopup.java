@@ -3,13 +3,15 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class AddTrackPackPopup extends JFrame {
+public class AddProductPopup extends JFrame {
     private AddTrainSet parentScreen;
     private JTextArea productCodeTextArea = new JTextArea();
     private JTextArea quantityTextArea = new JTextArea();
+    private ProductType productType;
 
-    public AddTrackPackPopup(AddTrainSet parentScreen) {
-        this.parentScreen = parentScreen;
+    public AddProductPopup(AddTrainSet parentScreenInit, ProductType productTypeInit) {
+        this.parentScreen = parentScreenInit;
+        this.productType = productTypeInit;
         setTitle("Train Set");
         setSize(600, 600);
         setLocationRelativeTo(null);
@@ -32,7 +34,18 @@ public class AddTrackPackPopup extends JFrame {
             }        
         });
 
-        detailsPanel.add(new JLabel("productCodeTextArea (Product Code should start with 'L'):"));
+        if (productType == ProductType.LOCOMOTIVE){
+            detailsPanel.add(new JLabel("productCodeTextArea (Product Code should start with 'L'):"));
+        }
+
+        if (productType == ProductType.ROLLINGSTOCK){
+            detailsPanel.add(new JLabel("productCodeTextArea (Product Code should start with 'S'):"));
+        }
+
+        if (productType == ProductType.TRACKPACK){
+            detailsPanel.add(new JLabel("productCodeTextArea (Product Code should start with 'P'):"));
+        }
+
         detailsPanel.add(productCodeTextArea);
         detailsPanel.add(new JLabel("quantityTextArea:"));
         detailsPanel.add(quantityTextArea);
@@ -50,14 +63,21 @@ public class AddTrackPackPopup extends JFrame {
     }
 
     private void addProduct(){
-        Boolean validQuantity = ProductValidator.getInstance().validQuantity(quantityTextArea.getText());
-        Boolean validProduct = ProductValidator.getInstance().validProduct(productCodeTextArea.getText(), ProductType.TRACKPACK);
+        String quantity = quantityTextArea.getText().strip();
+        Boolean validQuantity = ProductValidator.getInstance().validQuantity(quantity);
+
+        String productCode = productCodeTextArea.getText().strip();
+        Boolean validProduct = ProductValidator.getInstance().validProduct(productCode, productType);
+
         if (validQuantity && validProduct){
-            parentScreen.addTrackPackFromButton(new ProductPair(Inventory.getInstance().getProduct(productCodeTextArea.getText()), Integer.parseInt(quantityTextArea.getText())));
+            int quantityFinal = Integer.parseInt(quantity);
+            Product productFinal = Inventory.getInstance().getProduct(productCode);
+            System.out.println("Valid Product and Code");
+            parentScreen.addProductFromButton(new ProductPair(productFinal, quantityFinal));
             goBack();
         }
         else{
-            System.out.println("Invalid Product Code");
+            System.out.println("Invalid Product Code and Quantity - AddProductPopup");
         }
     }
 }

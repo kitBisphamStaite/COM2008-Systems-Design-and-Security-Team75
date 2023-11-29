@@ -2,9 +2,9 @@ public class ProductPair {
     private Product product;
     private int quantity;
 
-    ProductPair(Product product, int quantity){
-        product = this.product;
-        quantity = this.quantity;
+    ProductPair(Product productInit, int quantityInit){
+        setProduct(productInit);
+        setQuantity(quantityInit);
     }
 
     public Product getProduct() {

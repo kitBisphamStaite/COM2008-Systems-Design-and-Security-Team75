@@ -115,4 +115,8 @@ public class AddProduct extends JFrame {
         addTrainSet.setVisible(true);
         this.setVisible(false);
     }
+    
+    public ProductRecords getParentScreen(){
+        return parentScreen;
+    }
 }

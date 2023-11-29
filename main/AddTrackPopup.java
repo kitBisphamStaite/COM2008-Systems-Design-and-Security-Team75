@@ -50,14 +50,21 @@ public class AddTrackPopup extends JFrame {
     }
 
     private void addProduct(){
-        Boolean validQuantity = ProductValidator.getInstance().validQuantity(quantityTextArea.getText());
-        Boolean validProduct = ProductValidator.getInstance().validProduct(productCodeTextArea.getText(), ProductType.TRACK);
+        String quantity = quantityTextArea.getText().strip();
+        Boolean validQuantity = ProductValidator.getInstance().validQuantity(quantity);
+
+        String productCode = productCodeTextArea.getText().strip();
+        Boolean validProduct = ProductValidator.getInstance().validProduct(productCode, ProductType.TRACK);
+
         if (validQuantity && validProduct){
-            parentScreen.addTrackFromButton(new ProductPair(Inventory.getInstance().getProduct(productCodeTextArea.getText()), Integer.parseInt(quantityTextArea.getText())));
+            int quantityFinal = Integer.parseInt(quantity);
+            Product productFinal = Inventory.getInstance().getProduct(productCode);
+            System.out.println("Valid Product and Code");
+            parentScreen.addTrackFromButton(new ProductPair(productFinal, quantityFinal));
             goBack();
         }
         else{
-            System.out.println("Invalid Product Code");
+            System.out.println("Invalid Product Code and Quantity - AddTrackPopup");
         }
     }
 }

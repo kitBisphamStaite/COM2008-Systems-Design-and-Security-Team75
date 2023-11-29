@@ -111,6 +111,7 @@ public class AddController extends JFrame{
                                                 (Gauge) gaugeComboBox.getSelectedItem(), (Scale) scaleComboBox.getSelectedItem(), 
                                                 (ChipType) chipTypeComboBox.getSelectedItem()));
             parentScreen.setVisible(true);
+            parentScreen.getParentScreen().searchProducts();
             this.dispose();
         } else if (isEditing && validProductName && validManufacturerName && validRetailPrice && validStock && validGauge && validScale && validChipType) {
             Inventory.getInstance().updateProduct(new Controller(productCodeText, productNameText, manufacturerNameText, 
@@ -118,6 +119,7 @@ public class AddController extends JFrame{
                                                 (Gauge) gaugeComboBox.getSelectedItem(), (Scale) scaleComboBox.getSelectedItem(), 
                                                 (ChipType) chipTypeComboBox.getSelectedItem()));
             parentScreen.setVisible(true);
+            parentScreen.getParentScreen().searchProducts();
             this.dispose();
         }
     }

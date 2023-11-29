@@ -93,7 +93,7 @@ public class AddTrainSet extends JFrame {
         addLocomotiveButton.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
-                locomotivePopup();
+                ProductPopup(ProductType.LOCOMOTIVE);
             }   
         });
         
@@ -109,7 +109,7 @@ public class AddTrainSet extends JFrame {
         addRollingStockButton.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
-                rollingStockPopup();
+                ProductPopup(ProductType.ROLLINGSTOCK);
             }   
         });
         
@@ -126,7 +126,7 @@ public class AddTrainSet extends JFrame {
         addTrackPackButton.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
-                trackPackPopup();
+                ProductPopup(ProductType.TRACKPACK);
             }   
         });
 
@@ -196,53 +196,27 @@ public class AddTrainSet extends JFrame {
         this.dispose();
     }
     
-    private void locomotivePopup(){
-        AddLocomotivePopup detailsScreen = new AddLocomotivePopup(this);
+    private void ProductPopup(ProductType productType){
+        AddProductPopup detailsScreen = new AddProductPopup(this, productType);
         detailsScreen.setVisible(true);
         this.setVisible(false);
     }
 
-    private void rollingStockPopup(){
-        AddRollingStockPopup detailsScreen = new AddRollingStockPopup(this);
-        detailsScreen.setVisible(true);
-        this.setVisible(false);
-    }
-
-    private void trackPackPopup(){
-        AddTrackPackPopup detailsScreen = new AddTrackPackPopup(this);
-        detailsScreen.setVisible(true);
-        this.setVisible(false);
-    }
-
-    public void addLocomotiveFromButton(ProductPair productPair){
-        if (productPair.getProduct().getProductType() == ProductType.LOCOMOTIVE) {
-            locomotiveListModel.addElement(productPair);
-            locomotiveList.add(productPair);
-        }
-        else{
-            System.out.println("Wrong Product Type");
-        }
-    }
-    
-    public void addRollingStockFromButton(ProductPair productPair){
-        if (productPair.getProduct().getProductType() == ProductType.ROLLINGSTOCK) {
-            rollingStockListModel.addElement(productPair);
-            rollingStockList.add(productPair);
-        }
-        else{
-            System.out.println("Wrong Product Type");
-        }
-    }
-    
-    public void addTrackPackFromButton(ProductPair productPair){
+    public void addProductFromButton(ProductPair productPair){
         if (productPair.getProduct().getProductType() == ProductType.TRACKPACK) {
             trackPackListModel.addElement(productPair);
             trackPackList.add(productPair);
         }
-        else{
-            System.out.println("Wrong Product Type");
+        if (productPair.getProduct().getProductType() == ProductType.ROLLINGSTOCK) {
+            rollingStockListModel.addElement(productPair);
+            rollingStockList.add(productPair);
+        }
+        if (productPair.getProduct().getProductType() == ProductType.LOCOMOTIVE) {
+            locomotiveListModel.addElement(productPair);
+            locomotiveList.add(productPair);
         }
     }
+
     private void addProduct(){
         String productCodeText = productCodeTextArea.getText().strip();
         Boolean validProductCode = ProductValidator.getInstance().validProductCode(productCodeText, ProductType.CONTROLLER);
@@ -274,10 +248,12 @@ public class AddTrainSet extends JFrame {
         if (!isEditing && validProductCode && validProductName && validManufacturerName && validRetailPrice && validStock && validGauge && validScale && validEraCode && validController && validLocomotiveList && validRollingStockList && validTrackPackList) {
             Inventory.getInstance().addProduct(new TrainSet(productCodeText, productNameText, manufacturerNameText, Integer.parseInt(retailPriceText), Integer.parseInt(stockText), (Gauge) gaugeComboBox.getSelectedItem(), (Scale) scaleComboBox.getSelectedItem(), eraCodeText ,(Controller) Inventory.getInstance().getProduct(controllerProductCodeTextArea.getText()) , locomotiveList, rollingStockList,trackPackList));
             parentScreen.setVisible(true);
+            parentScreen.getParentScreen().searchProducts();
             this.dispose();
         } else if (isEditing && validProductName && validManufacturerName && validRetailPrice && validStock && validGauge && validScale && validEraCode && validController && validLocomotiveList && validRollingStockList && validTrackPackList) {
             Inventory.getInstance().updateProduct(new TrainSet(productCodeText, productNameText, manufacturerNameText, Integer.parseInt(retailPriceText), Integer.parseInt(stockText), (Gauge) gaugeComboBox.getSelectedItem(), (Scale) scaleComboBox.getSelectedItem(), eraCodeText ,(Controller) Inventory.getInstance().getProduct(controllerProductCodeTextArea.getText()), locomotiveList, rollingStockList,trackPackList));
             parentScreen.setVisible(true);
+            parentScreen.getParentScreen().searchProducts();
             this.dispose();
         }
     }
@@ -288,7 +264,7 @@ public class AddTrainSet extends JFrame {
         productNameTextArea.setText(product.getProductName());
         manufacturerNameTextArea.setText(product.getManufacturerName());
         retailPriceTextArea.setText(Integer.toString(product.getRetailPrice()));
-        retailPriceTextArea.setText(Integer.toString(product.getStock()));
+        stockTextArea.setText(Integer.toString(product.getStock()));
         gaugeComboBox.setSelectedItem(product.getGauge());
         scaleComboBox.setSelectedItem(product.getScale());
         eraCodeTextArea.setText(product.getEraCode());

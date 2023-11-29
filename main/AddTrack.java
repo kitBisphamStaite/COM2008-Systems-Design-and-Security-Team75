@@ -117,6 +117,7 @@ public class AddTrack extends JFrame {
                                                 (Gauge) gaugeComboBox.getSelectedItem(), (Scale) scaleComboBox.getSelectedItem(), 
                                                 (CurveRadius) curveRadiusComboBox.getSelectedItem(), (TrackType) trackTypeComboBox.getSelectedItem()));
             parentScreen.setVisible(true);
+            parentScreen.getParentScreen().searchProducts();
             this.dispose();
         } else if(isEditing && validProductName && validManufacturerName && validRetailPrice && validStock && validGauge && validScale && validCurveRadius && validTrackType){
             Inventory.getInstance().updateProduct(new Track(productCodeText, productNameText, manufacturerNameText, 
@@ -124,6 +125,7 @@ public class AddTrack extends JFrame {
                                                 (Gauge) gaugeComboBox.getSelectedItem(), (Scale) scaleComboBox.getSelectedItem(), 
                                                 (CurveRadius) curveRadiusComboBox.getSelectedItem(), (TrackType) trackTypeComboBox.getSelectedItem()));
             parentScreen.setVisible(true);
+            parentScreen.getParentScreen().searchProducts();
             this.dispose();
         }
     }
@@ -134,7 +136,7 @@ public class AddTrack extends JFrame {
         productNameTextArea.setText(product.getProductName());
         manufacturerNameTextArea.setText(product.getManufacturerName());
         retailPriceTextArea.setText(Integer.toString(product.getRetailPrice()));
-        retailPriceTextArea.setText(Integer.toString(product.getStock()));
+        stockTextArea.setText(Integer.toString(product.getStock()));
         gaugeComboBox.setSelectedItem(product.getGauge());
         scaleComboBox.setSelectedItem(product.getScale());
         curveRadiusComboBox.setSelectedItem(product.getCurveRadius());

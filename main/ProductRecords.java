@@ -154,7 +154,7 @@ public class ProductRecords extends JFrame {
         this.setVisible(false);
     }
 
-    private void searchProducts() {
+    public void searchProducts() {
         String searchTerm = searchField.getText().toLowerCase();
         int productPrice = Integer.parseInt(priceField.getText());
 

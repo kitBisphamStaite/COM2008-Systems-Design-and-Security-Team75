@@ -120,6 +120,7 @@ public class AddLocomotive extends JFrame{
                                                 (Gauge) gaugeComboBox.getSelectedItem(), (Scale) scaleComboBox.getSelectedItem(), 
                                                 eraCodeText, (ControlType) controlTypeComboBox.getSelectedItem()));
             parentScreen.setVisible(true);
+            parentScreen.getParentScreen().searchProducts();
             this.dispose();
         } else if (isEditing && validProductName && validManufacturerName && validRetailPrice && validStock && validGauge && validScale && validEraCode && validControlType) {
             Inventory.getInstance().updateProduct(new Locomotive(productCodeText, productNameText, manufacturerNameText, 
@@ -127,6 +128,7 @@ public class AddLocomotive extends JFrame{
                                                 (Gauge) gaugeComboBox.getSelectedItem(), (Scale) scaleComboBox.getSelectedItem(), 
                                                 eraCodeText, (ControlType) controlTypeComboBox.getSelectedItem()));
             parentScreen.setVisible(true);
+            parentScreen.getParentScreen().searchProducts();
             this.dispose();
         } 
 
@@ -138,7 +140,7 @@ public class AddLocomotive extends JFrame{
         productNameTextArea.setText(product.getProductName());
         manufacturerNameTextArea.setText(product.getManufacturerName());
         retailPriceTextArea.setText(Integer.toString(product.getRetailPrice()));
-        retailPriceTextArea.setText(Integer.toString(product.getStock()));
+        stockTextArea.setText(Integer.toString(product.getStock()));
         gaugeComboBox.setSelectedItem(product.getGauge());
         scaleComboBox.setSelectedItem(product.getScale());
         eraCodeTextArea.setText(product.getEraCode());

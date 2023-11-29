@@ -165,6 +165,7 @@ public class AddTrackPack extends JFrame {
                                                 (Gauge) gaugeComboBox.getSelectedItem(), (Scale) scaleComboBox.getSelectedItem(), 
                                                 trackList));
             parentScreen.setVisible(true);
+            parentScreen.getParentScreen().searchProducts();
             this.dispose();
         } else if (isEditing && validProductCode && validProductName && validManufacturerName && validRetailPrice && validStock && validGauge && validScale && validTrackList) {
             Inventory.getInstance().updateProduct(new TrackPack(productCodeText, productNameText, manufacturerNameText, 
@@ -172,6 +173,7 @@ public class AddTrackPack extends JFrame {
                                                 (Gauge) gaugeComboBox.getSelectedItem(), (Scale) scaleComboBox.getSelectedItem(), 
                                                 trackList));
             parentScreen.setVisible(true);
+            parentScreen.getParentScreen().searchProducts();
             this.dispose();
         }
     }
@@ -182,7 +184,7 @@ public class AddTrackPack extends JFrame {
         productNameTextArea.setText(product.getProductName());
         manufacturerNameTextArea.setText(product.getManufacturerName());
         retailPriceTextArea.setText(Integer.toString(product.getRetailPrice()));
-        retailPriceTextArea.setText(Integer.toString(product.getStock()));
+        stockTextArea.setText(Integer.toString(product.getStock()));
         gaugeComboBox.setSelectedItem(product.getGauge());
         scaleComboBox.setSelectedItem(product.getScale());
         trackList = product.getTracks();
