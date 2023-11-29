@@ -102,7 +102,10 @@ public class StaffDashboard extends JFrame {
         viewRollingStockCategoryButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-            	//Rolling Stock not set up in database
+            	EditRollingStock editRollingStock = new EditRollingStock();
+            	editRollingStock.setLocationRelativeTo(null);
+            	editRollingStock.setVisible(true);
+            	setVisible(false);
             }
         });
         JButton viewTrainSetsCategoryButton = new JButton("Train Sets");

@@ -172,6 +172,19 @@ public class EditLocomotives extends JFrame {
                 					if (newControlType == null) {
                 						break;
                 					}
+                					switch (newControlType) {
+                					case "ANALOGUE":
+                						newControlType = "1";
+                						break;
+                					case "DCC-READY":
+                						newControlType = "2";
+                						break;
+                					case "DCC-FITTED":
+                						newControlType = "3";
+                						break;
+                					case "DCC-SOUND":
+                						newControlType = "4";
+                					}
                 					PreparedStatement editProductControlTypestmt = connection.prepareStatement("UPDATE Locomotive SET control_type = '" + newControlType +"' WHERE product_code ='" + selectedValueProductCode + "'");
                 					editProductControlTypestmt.executeUpdate();
                 					dispose();
@@ -183,7 +196,7 @@ public class EditLocomotives extends JFrame {
                 					if (newProductEraCode == null) {
                 						break;
                 					}
-                					PreparedStatement editProductEraCodestmt = connection.prepareStatement("UPDATE Locomotive SET eraCode = '" + newProductEraCode +"' WHERE product_code ='" + selectedValueProductCode + "'");
+                					PreparedStatement editProductEraCodestmt = connection.prepareStatement("UPDATE Locomotive SET era_code = '" + newProductEraCode +"' WHERE product_code ='" + selectedValueProductCode + "'");
                 					editProductEraCodestmt.executeUpdate();
                 					dispose();
                 					editLocomotives = new EditLocomotives();
@@ -233,6 +246,17 @@ public class EditLocomotives extends JFrame {
                 					String[] gaugeChoices = {"OO", "TT", "N"};
                 					String newGauge = (String) JOptionPane.showInputDialog(null, "Select New Gauge", "Edit Existing Locomotive Product", JOptionPane.QUESTION_MESSAGE, null, gaugeChoices, gaugeChoices[0]);
                 					if (newGauge == null) {
+                						break;
+                					}
+                					switch (newGauge) {
+                					case "OO":
+                						newGauge = "1";
+                						break;
+                					case "TT":
+                						newGauge = "2";
+                						break;
+                					case "N":
+                						newGauge = "3";
                 						break;
                 					}
                 					PreparedStatement editProductGaugestmt = connection.prepareStatement("UPDATE Products SET gauge = '" + newGauge +"' WHERE product_code ='" + selectedValueProductCode + "'");
@@ -308,12 +332,48 @@ public class EditLocomotives extends JFrame {
                             				String[] gaugeChoices = {"OO", "TT", "N"};
                             				String newProductGauge = (String) JOptionPane.showInputDialog(null, "Select Gauge", "Add New Locomotive Product", JOptionPane.QUESTION_MESSAGE, null, gaugeChoices, gaugeChoices[0]);
                             				if (newProductGauge != null) {
+                            					switch (newProductGauge) {
+                            					case "OO":
+                            						newProductGauge = "1";
+                            						break;
+                            					case "TT":
+                            						newProductGauge = "2";
+                            						break;
+                            					case "N":
+                            						newProductGauge = "3";
+                            						break;
+                            					}
                             					String[] scaleChoices = {"1/76", "1/120", "1/148"};
                                 				String newProductScale = (String) JOptionPane.showInputDialog(null, "Select Scale", "Add New Locomotive Product", JOptionPane.QUESTION_MESSAGE, null, scaleChoices, scaleChoices[0]);
                                 				if (newProductScale != null) {
+                                					switch (newProductScale) {
+                                					case "1/76":
+                                						newProductScale = "1";
+                                						break;
+                                					case "1/120":
+                                						newProductScale = "2";
+                                						break;
+                                					case "1/148":
+                                						newProductScale = "3";
+                                						break;
+                                					}
                                 					String[] controlTypeChoices = {"ANALOGUE", "DCC-READY", "DCC-FITTED", "DCC-SOUND"};
                                 					String newProductControlType = (String) JOptionPane.showInputDialog(null, "Select Control Type", "Add New Locomotive Product", JOptionPane.QUESTION_MESSAGE, null, controlTypeChoices, controlTypeChoices[0]);
                                 					if (newProductControlType != null) {
+                                						switch (newProductControlType) {
+                                						case "ANALOGUE":
+                                							newProductControlType = "1";
+                                							break;
+                                						case "DCC-READY":
+                                							newProductControlType = "2";
+                                							break;
+                                						case "DCC-FITTED":
+                                							newProductControlType = "3";
+                                							break;
+                                						case "DCC-SOUND":
+                                							newProductControlType = "4";
+                                							break;
+                                						}
                                 						String newProductEraCode = JOptionPane.showInputDialog(null, "Enter Era Code", "Add New Locomotive Product", JOptionPane.INFORMATION_MESSAGE);
                                 						if (newProductEraCode != null && newProductEraCode != "") {
                                         					try {
@@ -494,7 +554,7 @@ public class EditLocomotives extends JFrame {
     			                locomotiveListResultSet = getAllLocomotivestmt.executeQuery("SELECT * FROM Products INNER JOIN Locomotive ON Products.product_code = Locomotive.product_code");
     			                
     			                while (locomotiveListResultSet.next()) {
-    			                    String row = locomotiveListResultSet.getString("product_code") + ", " + locomotiveListResultSet.getString("product_name") + ", " + locomotiveListResultSet.getString("eraCode");
+    			                    String row = locomotiveListResultSet.getString("product_code") + ", " + locomotiveListResultSet.getString("product_name") + ", " + locomotiveListResultSet.getString("era_code");
     			                    String productRow = locomotiveListResultSet.getString("product_name") + ", £" + locomotiveListResultSet.getString("retail_price") + ", " + locomotiveListResultSet.getString("stock") + ", " + locomotiveListResultSet.getString("gauge") + ", " + locomotiveListResultSet.getString("scale");
     			                    productInformationVector.add(productRow);
     			                    locomotiveVector.add(row);
@@ -593,7 +653,7 @@ public class EditLocomotives extends JFrame {
                 productGauge.setText("Product Gauge: " + selectedValueGauge);
                 productScale.setText("Product Scale: " + selectedValueScale);
             } else {
-            	productName.setText("Product Name: " + selectedValueName);
+            	productName.setText("Product Name: ");
                 productCode.setText("Product Code: ");
                 controlType.setText("Control Type: ");
                 eraCode.setText("Era Code: ");
@@ -619,7 +679,6 @@ public class EditLocomotives extends JFrame {
                             int secondCommaIndex2 = selectedValue.indexOf(",", firstCommaIndex2 + 1);
                             selectedValueControlType = selectedValue.substring(firstCommaIndex2 + 2, secondCommaIndex2);
                             selectedValueEraCode = selectedValue.substring(secondCommaIndex2 + 2, selectedValue.length());
-                             
                             int firstCommaIndex3 = selectedValueInformation.indexOf(",");
                             selectedValueName = selectedValueInformation.substring(0, firstCommaIndex3);
                             int secondCommaIndex3 = selectedValueInformation.indexOf(",", firstCommaIndex3 + 1);
@@ -650,10 +709,10 @@ public class EditLocomotives extends JFrame {
 
             
             //Add List to Scrollable Pane
-            JScrollPane staffScrollableList = new JScrollPane(locomotiveList);
+            JScrollPane locomotiveScrollableList = new JScrollPane(locomotiveList);
             //Add Items to Demote User Panel 
             locomotivesListPanel.add(locomotiveListLabel, BorderLayout.NORTH);
-            locomotivesListPanel.add(staffScrollableList, BorderLayout.WEST);
+            locomotivesListPanel.add(locomotiveScrollableList, BorderLayout.WEST);
             //Add Items to AddOrDelete Product Panel
             addOrDeletePanel.add(addProductButton);
             addOrDeletePanel.add(deleteProductButton);
