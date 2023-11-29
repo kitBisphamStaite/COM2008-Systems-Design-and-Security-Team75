@@ -214,6 +214,17 @@ public class EditTrainSets extends JFrame {
                 					if (newGauge == null) {
                 						break;
                 					}
+                					switch (newGauge) {
+                					case "OO":
+                						newGauge = "1";
+                						break;
+                					case "TT":
+                						newGauge = "2";
+                						break;
+                					case "N":
+                						newGauge = "3";
+                						break;
+                					}
                 					PreparedStatement editProductGaugestmt = connection.prepareStatement("UPDATE Products SET gauge = '" + newGauge +"' WHERE product_code ='" + selectedValueProductCode + "'");
                 					editProductGaugestmt.executeUpdate();
                 					dispose();
@@ -224,6 +235,17 @@ public class EditTrainSets extends JFrame {
                 					String[] scaleChoices = {"1/76", "1/120", "1/148"};
                 					String newScale = (String) JOptionPane.showInputDialog(null, "Select New Gauge", "Edit Existing Track Product", JOptionPane.QUESTION_MESSAGE, null, scaleChoices, scaleChoices[0]);
                 					if (newScale == null) {
+                						break;
+                					}
+                					switch (newScale) {
+                					case "1/76":
+                						newScale = "1";
+                						break;
+                					case "1/120":
+                						newScale = "2";
+                						break;
+                					case "1/148":
+                						newScale = "3";
                 						break;
                 					}
                 					PreparedStatement editProductScalestmt = connection.prepareStatement("UPDATE Products SET scale = '" + newScale +"' WHERE product_code ='" + selectedValueProductCode + "'");
@@ -295,9 +317,31 @@ public class EditTrainSets extends JFrame {
                             				String[] gaugeChoices = {"OO", "TT", "N"};
                             				String newProductGauge = (String) JOptionPane.showInputDialog(null, "Select Gauge", "Add New Track Product", JOptionPane.QUESTION_MESSAGE, null, gaugeChoices, gaugeChoices[0]);
                             				if (newProductGauge != null) {
+                            					switch (newProductGauge) {
+                            					case "OO":
+                            						newProductGauge = "1";
+                            						break;
+                            					case "TT":
+                            						newProductGauge = "2";
+                            						break;
+                            					case "N":
+                            						newProductGauge = "3";
+                            						break;
+                            					}
                             					String[] scaleChoices = {"1/76", "1/120", "1/148"};
                                 				String newProductScale = (String) JOptionPane.showInputDialog(null, "Select Scale", "Add New Track Product", JOptionPane.QUESTION_MESSAGE, null, scaleChoices, scaleChoices[0]);
                                 				if (newProductScale != null) {
+                                					switch (newProductScale) {
+                                					case "1/76":
+                                						newProductScale = "1";
+                                						break;
+                                					case "1/120":
+                                						newProductScale = "2";
+                                						break;
+                                					case "1/148":
+                                						newProductScale = "3";
+                                						break;
+                                					}
                                 					try {
                                 					String newProductControllerCode = (String) JOptionPane.showInputDialog(null, "Select Controller Code", "Add New Train Set Product", JOptionPane.INFORMATION_MESSAGE);
                                 					PreparedStatement getControllerCodesstmt = connection.prepareStatement("SELECT product_code FROM Products WHERE product_code LIKE 'C%'");
