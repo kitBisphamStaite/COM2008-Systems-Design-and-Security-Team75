@@ -653,7 +653,7 @@ public class EditLocomotives extends JFrame {
                 productGauge.setText("Product Gauge: " + selectedValueGauge);
                 productScale.setText("Product Scale: " + selectedValueScale);
             } else {
-            	productName.setText("Product Name: " + selectedValueName);
+            	productName.setText("Product Name: ");
                 productCode.setText("Product Code: ");
                 controlType.setText("Control Type: ");
                 eraCode.setText("Era Code: ");
@@ -679,7 +679,6 @@ public class EditLocomotives extends JFrame {
                             int secondCommaIndex2 = selectedValue.indexOf(",", firstCommaIndex2 + 1);
                             selectedValueControlType = selectedValue.substring(firstCommaIndex2 + 2, secondCommaIndex2);
                             selectedValueEraCode = selectedValue.substring(secondCommaIndex2 + 2, selectedValue.length());
-                             
                             int firstCommaIndex3 = selectedValueInformation.indexOf(",");
                             selectedValueName = selectedValueInformation.substring(0, firstCommaIndex3);
                             int secondCommaIndex3 = selectedValueInformation.indexOf(",", firstCommaIndex3 + 1);
@@ -710,10 +709,10 @@ public class EditLocomotives extends JFrame {
 
             
             //Add List to Scrollable Pane
-            JScrollPane staffScrollableList = new JScrollPane(locomotiveList);
+            JScrollPane locomotiveScrollableList = new JScrollPane(locomotiveList);
             //Add Items to Demote User Panel 
             locomotivesListPanel.add(locomotiveListLabel, BorderLayout.NORTH);
-            locomotivesListPanel.add(staffScrollableList, BorderLayout.WEST);
+            locomotivesListPanel.add(locomotiveScrollableList, BorderLayout.WEST);
             //Add Items to AddOrDelete Product Panel
             addOrDeletePanel.add(addProductButton);
             addOrDeletePanel.add(deleteProductButton);
