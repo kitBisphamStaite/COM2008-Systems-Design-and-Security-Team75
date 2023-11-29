@@ -54,112 +54,11 @@ public class Inventory {
         }
         return true;
     }
-
-    public boolean validProductCode(String productCode, ProductType productType){
-        if (productCode != null && productCode != "") {
-            if (isNotProduct(productCode)) {
-                if (productCode.length() > 3 && productCode.length() < 6) {
-                    if (productType == ProductType.CONTROLLER && productCode.startsWith("C")) {
-                        return true;                        
-                    } else if (productType == ProductType.LOCOMOTIVE && productCode.startsWith("L")) {
-                        return true;                        
-                    } else if (productType == ProductType.ROLLINGSTOCK && productCode.startsWith("S")) {
-                        return true;
-                    } else if (productType == ProductType.TRACK && productCode.startsWith("R")) {
-                        return true;
-                    } else if (productType == ProductType.TRACKPACK && productCode.startsWith("P")) {
-                        return true;
-                    } else if (productType == ProductType.TRAINSET && productCode.startsWith("M")) {
-                        return true;
-                    }
-                }
-            }
-        }
-        System.out.println("Invalid Product Code");
-        return false;
-    }
-
-    public boolean validProductName(String productname){
-        if (productname != null && productname !="") {
-            return true;
-        }
-        System.out.println("Invalid Product Name");
-        return false;
-    }
-
-    public boolean validManufacturerName(String manufacturerName){
-        if (manufacturerName != null && manufacturerName !="") {
-            return true;
-        }
-        System.out.println("Invalid Manufacturer Name");
-        return false;    
-    }
-
-    public boolean validRetailPrice(String retailPrice){
-        if (retailPrice != null && retailPrice !="") {
-            if (Integer.parseInt(retailPrice) > 0) {
-                return true;
-            }
-        }
-        System.out.println("Invalid Price");
-        return false;
-    }
-
-    public boolean validStock(String stock){
-        if (stock != null && stock !="") {
-            if (Integer.parseInt(stock) >= 0) {
-                return true;
-            }
-        }
-        System.out.println("Invalid Stock");
-        return false;
-    }
-
-    public boolean validGauge(Gauge gauge){
-        return gauge != Gauge.ALL;
-    }
-
-    public boolean validScale(Scale scale){
-        return scale != Scale.ALL;
-    }
-
-    public boolean validChipType(ChipType chipType){
-        return chipType != ChipType.ALL;
-    }
-
-    public boolean validEraCode(String eraCode){
-        if (eraCode != null && eraCode !="") {
-            return true;
-        }
-        System.out.println("Invalid Era code");
-        return false;    
-    }
-
-    public boolean validControlType(ControlType controlType){
-        return controlType != ControlType.ALL;
-    }
-
-    
-    public boolean validCurveRadius(CurveRadius curveRadius){
-        return curveRadius != CurveRadius.ALL;
-    }
-    
-    public boolean validTrackType(TrackType trackType){
-        return trackType != TrackType.ALL;
-    }
-
-    public boolean validProduct(String productCode, ProductType productType){
-        for (Product product : products) {
-            if (product.getProductCode() == productCode && product.getProductType() == productType) {
-                return true;
-            }
-        }
-        return false;
-    }
     
     public Product getProduct(String productCode){ //Assumes that there is a valid product since it should be called only after validProduct is called
         for (Product product : products) {
-            if (product.getProductCode() == productCode) {
+            if (product.getProductCode().equals(productCode)) {
+                System.out.println("Product Found");
                 return product;
             }
         }
@@ -167,16 +66,74 @@ public class Inventory {
         return null;
     }
 
-    public boolean validProductList(ArrayList<ProductPair> productList, ProductType productType, int minimumListLength){
-        for (ProductPair productPair : productList) {
-            if (productPair.getProduct().getProductType() != productType) {
-                return false;
-            }
+    public void updateProduct(Product updatedProduct){
+        //find the product in the list
+        Product oldProduct = getProduct(updatedProduct.getProductCode());
+        //replace all the data
+        oldProduct.setProductName(updatedProduct.getProductName());
+        oldProduct.setManufacturerName(updatedProduct.getManufacturerName());
+        oldProduct.setRetailPrice(updatedProduct.getRetailPrice());
+        oldProduct.setStock(updatedProduct.getStock());
+        oldProduct.setGauge(updatedProduct.getGauge());
+        oldProduct.setScale(updatedProduct.getScale());
+        oldProduct.setProductName(updatedProduct.getProductName());
+        oldProduct.setProductName(updatedProduct.getProductName());
+        oldProduct.setProductName(updatedProduct.getProductName());
+
+        //Controller
+        if (updatedProduct.getProductType() == ProductType.CONTROLLER){
+            updateController((Controller) oldProduct, (Controller) updatedProduct);
         }
-        if (productList.size() < minimumListLength) {
-            return false;
+        //Locomotive
+        if (updatedProduct.getProductType() == ProductType.LOCOMOTIVE){
+            updateLocomotive((Locomotive) oldProduct, (Locomotive) updatedProduct);
         }
-        return true;
+        //Rolling Stock
+        if (updatedProduct.getProductType() == ProductType.ROLLINGSTOCK){
+            updateRollingStock((RollingStock) oldProduct, (RollingStock) updatedProduct);
+        }
+        //Track
+        if (updatedProduct.getProductType() == ProductType.TRACK){
+            updateTrack((Track) oldProduct, (Track) updatedProduct);
+        }
+        //Track Pack
+        if (updatedProduct.getProductType() == ProductType.TRACKPACK){
+            updateTrackPack((TrackPack) oldProduct, (TrackPack) updatedProduct);
+        }
+        //Train Set
+        if (updatedProduct.getProductType() == ProductType.TRAINSET){
+            updateTrainSet((TrainSet) oldProduct, (TrainSet) updatedProduct);
+        }
+        //then need to sort out the database connection
     }
 
+    public void updateController(Controller oldProduct, Controller updatedProduct){
+        oldProduct.SetChipType(updatedProduct.GetChipType());
+    }
+    
+    public void updateLocomotive(Locomotive oldProduct, Locomotive updatedProduct){
+        oldProduct.setEraCode(updatedProduct.getEraCode());
+        oldProduct.setControlType(updatedProduct.getControlType());
+    }
+    
+    public void updateRollingStock(RollingStock oldProduct, RollingStock updatedProduct){
+        oldProduct.setEraCode(updatedProduct.getEraCode());
+    }
+    
+    public void updateTrack(Track oldProduct, Track updatedProduct){
+        oldProduct.setCurveRadius(updatedProduct.getCurveRadius());
+        oldProduct.setTrackType(updatedProduct.getTrackType());
+    }
+    
+    public void updateTrackPack(TrackPack oldProduct, TrackPack updatedProduct){
+        oldProduct.setTracks(updatedProduct.getTracks());
+    }
+
+    public void updateTrainSet(TrainSet oldProduct, TrainSet updatedProduct){
+        oldProduct.setEraCode(updatedProduct.getEraCode());
+        oldProduct.setController(updatedProduct.getController());
+        oldProduct.setLocomotives(updatedProduct.getLocomotives());
+        oldProduct.setRollingStocks(updatedProduct.getRollingStocks());
+        oldProduct.setTrackPacks(updatedProduct.getTrackPacks());
+    }
 }

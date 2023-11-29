@@ -21,7 +21,8 @@ public class StaffDashboard extends JFrame {
         
         //Create Header and Footer Panels
         JPanel headerPanel = new JPanel(new BorderLayout());
-        JPanel footerPanel = new JPanel(new GridLayout(0,2));
+        JPanel productCategoryPanel = new JPanel(new GridLayout(3,2));
+        JPanel footerPanel = new JPanel(new GridLayout(0,1));
         
         //Create Header Panel Items
         //*Buttons
@@ -54,16 +55,6 @@ public class StaffDashboard extends JFrame {
         
         //Create Footer Panel Items
         //*FOOTER BUTTONS
-        JButton viewProductRecordsButton = new JButton("Product Records");
-        viewProductRecordsButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-            	StaffOrderQueue staffOrderQueueScreen = new StaffOrderQueue();
-            	staffOrderQueueScreen.setLocationRelativeTo(null);
-            	staffOrderQueueScreen.setVisible(true);
-                setVisible(false);
-            }
-        });
         JButton viewOrderQueueButton = new JButton("Pending Order Queue");
         viewOrderQueueButton.addActionListener(new ActionListener() {
             @Override
@@ -75,15 +66,83 @@ public class StaffDashboard extends JFrame {
             }
         });
         
+        //Create Product Category Panel Items
+        //*VIEW CATEGORY BUTTONS
+        JButton viewLocomotivesCategoryButton = new JButton("Locomotives");
+        viewLocomotivesCategoryButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            	EditLocomotives editLocomotives = new EditLocomotives();
+            	editLocomotives.setLocationRelativeTo(null);
+            	editLocomotives.setVisible(true);
+                setVisible(false);
+            }
+        });
+        JButton viewTrackCategoryButton = new JButton("Tracks");
+        viewTrackCategoryButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            	EditTracks editTracks = new EditTracks();
+            	editTracks.setLocationRelativeTo(null);
+            	editTracks.setVisible(true);
+                setVisible(false);
+            }
+        });
+        JButton viewControllerCategoryButton = new JButton("Controllers");
+        viewControllerCategoryButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            	EditControllers editControllers = new EditControllers();
+            	editControllers.setLocationRelativeTo(null);
+            	editControllers.setVisible(true);
+                setVisible(false);
+            }
+        });
+        JButton viewRollingStockCategoryButton = new JButton("Rolling Stock");
+        viewRollingStockCategoryButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            	//Rolling Stock not set up in database
+            }
+        });
+        JButton viewTrainSetsCategoryButton = new JButton("Train Sets");
+        viewTrainSetsCategoryButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            	EditTrainSets editTrainSets = new EditTrainSets();
+            	editTrainSets.setLocationRelativeTo(null);
+            	editTrainSets.setVisible(true);
+                setVisible(false);
+            }
+        });
+        JButton viewTrackPacksCategoryButton = new JButton("Track Packs");
+        viewTrackPacksCategoryButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            	EditTrackPacks editTrackPacks = new EditTrackPacks();
+            	editTrackPacks.setLocationRelativeTo(null);
+            	editTrackPacks.setVisible(true);
+                setVisible(false);
+            }
+        });
+        
+        //Add Items to Product Category Panel
+        productCategoryPanel.add(viewLocomotivesCategoryButton);
+        productCategoryPanel.add(viewTrackCategoryButton);
+        productCategoryPanel.add(viewControllerCategoryButton);
+        productCategoryPanel.add(viewRollingStockCategoryButton);
+        productCategoryPanel.add(viewTrainSetsCategoryButton);
+        productCategoryPanel.add(viewTrackPacksCategoryButton);
+        
         
         
         //Add Items to Footer Panel
-        footerPanel.add(viewProductRecordsButton);
         footerPanel.add(viewOrderQueueButton);
         
         //Add Panels To Frame
         add(headerPanel, BorderLayout.NORTH);
-        add(footerPanel, BorderLayout.CENTER);
+        add(productCategoryPanel, BorderLayout.CENTER);
+        add(footerPanel, BorderLayout.SOUTH);
         setVisible(true);
     }
 

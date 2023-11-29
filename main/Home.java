@@ -1,0 +1,65 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Vector;
+//SQL Packages
+import java.sql.Statement;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+
+public class Home extends JFrame {	
+    public Home() {
+    	//Set Up Frame
+        setTitle("Staff Dashboard");
+        setSize(1024, 768);
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLayout(new BorderLayout());
+        
+        //Create Header and Footer Panels
+        JPanel headerPanel = new JPanel(new BorderLayout());
+        JPanel footerPanel = new JPanel(new GridLayout(0,2));
+        
+        //Create Header Panel Items
+        //*Buttons
+        JButton backButton = new JButton("Back");
+        backButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            	//Take user back to the main screen - Sets the StaffDashboard frame to be invisible
+                setVisible(false);
+            }
+        });
+        //*HEADER LABELS
+        JLabel trainsOfSheffieldHeader = new JLabel("Trains Of Sheffield - Home");
+        trainsOfSheffieldHeader.setHorizontalAlignment(JLabel.CENTER);
+        
+        //Add Items To Header Panel
+        headerPanel.add(backButton, BorderLayout.WEST);
+        headerPanel.add(trainsOfSheffieldHeader, BorderLayout.CENTER);
+        
+        //Add Panels To Frame
+        add(headerPanel, BorderLayout.NORTH);
+        add(footerPanel, BorderLayout.CENTER);
+        setVisible(true);
+    }
+
+    
+    public static void main(String[] args) {
+    	//Database Details
+        String urlDB = "jdbc:mysql://stusql.dcs.shef.ac.uk:3306/team075";
+        String usernameDB = "team075";
+        String passwordDB = "mood6Phah";
+        //Try To Establish Connection With DB
+        try {
+            Connection connection = DriverManager.getConnection(urlDB, usernameDB, passwordDB); 
+            System.out.println("Successfully connected to the database.");
+        } catch (SQLException e) {
+            System.out.println("Error in connecting to the database");
+        }
+        new Home();
+    }   
+}

@@ -29,7 +29,6 @@ class ProductDetails extends JFrame {
         goBackButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Add the product to the order (you can implement this logic)
                 goBack();
             }
         });

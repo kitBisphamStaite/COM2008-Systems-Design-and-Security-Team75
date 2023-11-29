@@ -4,17 +4,16 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class AddController extends JFrame{
-
     private AddProduct parentScreen;
-    JTextArea productCodeTextArea = new JTextArea(); //Check it starts with "C"
-    JTextArea productNameTextArea = new JTextArea();
-    JTextArea manufacturerNameTextArea = new JTextArea();
-    JTextArea retailPriceTextArea = new JTextArea();
-    JTextArea stockTextArea = new JTextArea();
-    JComboBox<Gauge> gaugeComboBox = new JComboBox<Gauge>(Gauge.values());
-    JComboBox<Scale> scaleComboBox = new JComboBox<Scale>(Scale.values());
-    JComboBox<ChipType> chipTypeComboBox = new JComboBox<ChipType>(ChipType.values());
-    private boolean isEditing = true;
+    private JTextArea productCodeTextArea = new JTextArea(); //Check it starts with "C"
+    private JTextArea productNameTextArea = new JTextArea();
+    private JTextArea manufacturerNameTextArea = new JTextArea();
+    private JTextArea retailPriceTextArea = new JTextArea();
+    private JTextArea stockTextArea = new JTextArea();
+    private JComboBox<Gauge> gaugeComboBox = new JComboBox<Gauge>(Gauge.values());
+    private JComboBox<Scale> scaleComboBox = new JComboBox<Scale>(Scale.values());
+    private JComboBox<ChipType> chipTypeComboBox = new JComboBox<ChipType>(ChipType.values());
+    private boolean isEditing = false;
 
     public AddController(AddProduct parentScreen) {
         this.parentScreen = parentScreen;
@@ -87,28 +86,34 @@ public class AddController extends JFrame{
     }
 
     private void addProduct(){
-
         String productCodeText = productCodeTextArea.getText().strip();
-        Boolean validProductCode = Inventory.getInstance().validProductCode(productCodeText, ProductType.CONTROLLER);
+        Boolean validProductCode = ProductValidator.getInstance().validProductCode(productCodeText, ProductType.CONTROLLER);
 
         String productNameText = productNameTextArea.getText().strip();
-        Boolean validProductName = Inventory.getInstance().validProductName(productNameText);
+        Boolean validProductName = ProductValidator.getInstance().validProductName(productNameText);
 
         String manufacturerNameText = manufacturerNameTextArea.getText().strip();
-        boolean validManufacturerName = Inventory.getInstance().validManufacturerName(manufacturerNameText);
+        boolean validManufacturerName = ProductValidator.getInstance().validManufacturerName(manufacturerNameText);
 
         String retailPriceText = retailPriceTextArea.getText().strip();
-        boolean validRetailPrice = Inventory.getInstance().validRetailPrice(retailPriceText);
+        boolean validRetailPrice = ProductValidator.getInstance().validRetailPrice(retailPriceText);
 
         String stockText = stockTextArea.getText().strip();
-        boolean validStock = Inventory.getInstance().validStock(stockText);
+        boolean validStock = ProductValidator.getInstance().validStock(stockText);
 
-        Boolean validGauge = Inventory.getInstance().validGauge((Gauge) gaugeComboBox.getSelectedItem());
-        Boolean validScale = Inventory.getInstance().validScale((Scale) scaleComboBox.getSelectedItem());
-        Boolean validChipType = Inventory.getInstance().validChipType((ChipType) chipTypeComboBox.getSelectedItem());
+        Boolean validGauge = ProductValidator.getInstance().validGauge((Gauge) gaugeComboBox.getSelectedItem());
+        Boolean validScale = ProductValidator.getInstance().validScale((Scale) scaleComboBox.getSelectedItem());
+        Boolean validChipType = ProductValidator.getInstance().validChipType((ChipType) chipTypeComboBox.getSelectedItem());
 
-        if (validProductCode && validProductName && validManufacturerName && validRetailPrice && validStock && validGauge && validScale && validChipType) {
+        if (!isEditing && validProductCode && validProductName && validManufacturerName && validRetailPrice && validStock && validGauge && validScale && validChipType) {
             Inventory.getInstance().addProduct(new Controller(productCodeText, productNameText, manufacturerNameText, 
+                                                Integer.parseInt(retailPriceText), Integer.parseInt(stockText), 
+                                                (Gauge) gaugeComboBox.getSelectedItem(), (Scale) scaleComboBox.getSelectedItem(), 
+                                                (ChipType) chipTypeComboBox.getSelectedItem()));
+            parentScreen.setVisible(true);
+            this.dispose();
+        } else if (isEditing && validProductName && validManufacturerName && validRetailPrice && validStock && validGauge && validScale && validChipType) {
+            Inventory.getInstance().updateProduct(new Controller(productCodeText, productNameText, manufacturerNameText, 
                                                 Integer.parseInt(retailPriceText), Integer.parseInt(stockText), 
                                                 (Gauge) gaugeComboBox.getSelectedItem(), (Scale) scaleComboBox.getSelectedItem(), 
                                                 (ChipType) chipTypeComboBox.getSelectedItem()));
@@ -119,6 +124,7 @@ public class AddController extends JFrame{
 
     public void editProduct(Controller product){
         productCodeTextArea.setText(product.getProductCode());
+        productCodeTextArea.setEditable(false);
         productNameTextArea.setText(product.getProductName());
         manufacturerNameTextArea.setText(product.getManufacturerName());
         retailPriceTextArea.setText(Integer.toString(product.getRetailPrice()));
@@ -126,6 +132,6 @@ public class AddController extends JFrame{
         gaugeComboBox.setSelectedItem(product.getGauge());
         scaleComboBox.setSelectedItem(product.getScale());
         chipTypeComboBox.setSelectedItem(product.GetChipType());
-        isEditing = false;
+        isEditing = true;
     }
 }

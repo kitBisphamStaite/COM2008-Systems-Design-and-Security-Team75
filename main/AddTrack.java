@@ -5,16 +5,16 @@ import java.awt.event.ActionListener;
 
 public class AddTrack extends JFrame {
     private AddProduct parentScreen;
-    JTextArea productCodeTextArea = new JTextArea(); //Check it starts with "R"
-    JTextArea productNameTextArea = new JTextArea();
-    JTextArea manufacturerNameTextArea = new JTextArea();
-    JTextArea retailPriceTextArea = new JTextArea();
-    JTextArea stockTextArea = new JTextArea();
-    JComboBox<Gauge> gaugeComboBox = new JComboBox<Gauge>(Gauge.values());
-    JComboBox<Scale> scaleComboBox = new JComboBox<Scale>(Scale.values());
-    JComboBox<CurveRadius> curveRadiusComboBox = new JComboBox<CurveRadius>(CurveRadius.values());
-    JComboBox<TrackType> trackTypeComboBox = new JComboBox<TrackType>(TrackType.values());
-    private boolean isEditing = true;
+    private JTextArea productCodeTextArea = new JTextArea();
+    private JTextArea productNameTextArea = new JTextArea();
+    private JTextArea manufacturerNameTextArea = new JTextArea();
+    private JTextArea retailPriceTextArea = new JTextArea();
+    private JTextArea stockTextArea = new JTextArea();
+    private JComboBox<Gauge> gaugeComboBox = new JComboBox<Gauge>(Gauge.values());
+    private JComboBox<Scale> scaleComboBox = new JComboBox<Scale>(Scale.values());
+    private JComboBox<CurveRadius> curveRadiusComboBox = new JComboBox<CurveRadius>(CurveRadius.values());
+    private JComboBox<TrackType> trackTypeComboBox = new JComboBox<TrackType>(TrackType.values());
+    private boolean isEditing = false;
 
     public AddTrack(AddProduct parentScreen) {
         this.parentScreen = parentScreen;
@@ -51,7 +51,7 @@ public class AddTrack extends JFrame {
 
 
         
-        tempPanel1.add(new JLabel("productCodeTextArea:"));
+        tempPanel1.add(new JLabel("productCodeTextArea (Product Code Should Start with R):"));
         tempPanel1.add(productCodeTextArea);
         tempPanel2.add(new JLabel("productNameTextArea:"));
         tempPanel2.add(productNameTextArea);
@@ -71,7 +71,6 @@ public class AddTrack extends JFrame {
         tempPanel9.add(trackTypeComboBox);
         tempPanel10.add(addProducButton);
         tempPanel10.add(goBackButton);
-
         detailsPanel.add(tempPanel1);
         detailsPanel.add(tempPanel2);
         detailsPanel.add(tempPanel3);
@@ -82,7 +81,6 @@ public class AddTrack extends JFrame {
         detailsPanel.add(tempPanel8);
         detailsPanel.add(tempPanel9);
         detailsPanel.add(tempPanel10);
-
         add(detailsPanel);
     }
 
@@ -94,27 +92,34 @@ public class AddTrack extends JFrame {
 
     private void addProduct(){
         String productCodeText = productCodeTextArea.getText().strip();
-        Boolean validProductCode = Inventory.getInstance().validProductCode(productCodeText, ProductType.CONTROLLER);
+        Boolean validProductCode = ProductValidator.getInstance().validProductCode(productCodeText, ProductType.CONTROLLER);
 
         String productNameText = productNameTextArea.getText().strip();
-        Boolean validProductName = Inventory.getInstance().validProductName(productNameText);
+        Boolean validProductName = ProductValidator.getInstance().validProductName(productNameText);
 
         String manufacturerNameText = manufacturerNameTextArea.getText().strip();
-        boolean validManufacturerName = Inventory.getInstance().validManufacturerName(manufacturerNameText);
+        boolean validManufacturerName = ProductValidator.getInstance().validManufacturerName(manufacturerNameText);
 
         String retailPriceText = retailPriceTextArea.getText().strip();
-        boolean validRetailPrice = Inventory.getInstance().validRetailPrice(retailPriceText);
+        boolean validRetailPrice = ProductValidator.getInstance().validRetailPrice(retailPriceText);
 
         String stockText = stockTextArea.getText().strip();
-        boolean validStock = Inventory.getInstance().validStock(stockText);
+        boolean validStock = ProductValidator.getInstance().validStock(stockText);
 
-        Boolean validGauge = Inventory.getInstance().validGauge((Gauge) gaugeComboBox.getSelectedItem());
-        Boolean validScale = Inventory.getInstance().validScale((Scale) scaleComboBox.getSelectedItem());
-        Boolean validCurveRadius = Inventory.getInstance().validScale((Scale) curveRadiusComboBox.getSelectedItem());
-        Boolean validTrackType = Inventory.getInstance().validScale((Scale) trackTypeComboBox.getSelectedItem());
+        Boolean validGauge = ProductValidator.getInstance().validGauge((Gauge) gaugeComboBox.getSelectedItem());
+        Boolean validScale = ProductValidator.getInstance().validScale((Scale) scaleComboBox.getSelectedItem());
+        Boolean validCurveRadius = ProductValidator.getInstance().validCurveRadius((CurveRadius) curveRadiusComboBox.getSelectedItem());
+        Boolean validTrackType = ProductValidator.getInstance().validTrackType((TrackType) trackTypeComboBox.getSelectedItem());
 
-        if (validProductCode && validProductName && validManufacturerName && validRetailPrice && validStock && validGauge && validScale && validCurveRadius && validTrackType) {
+        if (!isEditing && validProductCode && validProductName && validManufacturerName && validRetailPrice && validStock && validGauge && validScale && validCurveRadius && validTrackType) {
             Inventory.getInstance().addProduct(new Track(productCodeText, productNameText, manufacturerNameText, 
+                                                Integer.parseInt(retailPriceText), Integer.parseInt(stockText), 
+                                                (Gauge) gaugeComboBox.getSelectedItem(), (Scale) scaleComboBox.getSelectedItem(), 
+                                                (CurveRadius) curveRadiusComboBox.getSelectedItem(), (TrackType) trackTypeComboBox.getSelectedItem()));
+            parentScreen.setVisible(true);
+            this.dispose();
+        } else if(isEditing && validProductName && validManufacturerName && validRetailPrice && validStock && validGauge && validScale && validCurveRadius && validTrackType){
+            Inventory.getInstance().updateProduct(new Track(productCodeText, productNameText, manufacturerNameText, 
                                                 Integer.parseInt(retailPriceText), Integer.parseInt(stockText), 
                                                 (Gauge) gaugeComboBox.getSelectedItem(), (Scale) scaleComboBox.getSelectedItem(), 
                                                 (CurveRadius) curveRadiusComboBox.getSelectedItem(), (TrackType) trackTypeComboBox.getSelectedItem()));
@@ -125,6 +130,7 @@ public class AddTrack extends JFrame {
 
     public void editProduct(Track product){
         productCodeTextArea.setText(product.getProductCode());
+        productCodeTextArea.setEditable(false);
         productNameTextArea.setText(product.getProductName());
         manufacturerNameTextArea.setText(product.getManufacturerName());
         retailPriceTextArea.setText(Integer.toString(product.getRetailPrice()));
@@ -133,6 +139,6 @@ public class AddTrack extends JFrame {
         scaleComboBox.setSelectedItem(product.getScale());
         curveRadiusComboBox.setSelectedItem(product.getCurveRadius());
         trackTypeComboBox.setSelectedItem(product.getTrackType());
-        isEditing = false;
+        isEditing = true;
     }
 }

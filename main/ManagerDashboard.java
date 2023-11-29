@@ -19,44 +19,31 @@ import javax.swing.DefaultListModel;
 public class ManagerDashboard extends JFrame {	
 	String selectedValue;
 	String selectedValueEmail;
-	String inputtedEmail;
+	ResultSet staffListResultSet;
+	Connection connection;
+	Statement getAllStaffstmt;
+	Vector<String> staffVector = new Vector<String>();
+    String urlDB = "jdbc:mysql://stusql.dcs.shef.ac.uk:3306/team075";
+    String usernameDB = "team075";
+    String passwordDB = "mood6Phah";
+	
     public ManagerDashboard() {
-    	//Database Details
-        String urlDB = "jdbc:mysql://stusql.dcs.shef.ac.uk:3306/team075";
-        String usernameDB = "team075";
-        String passwordDB = "mood6Phah";
         //GET LIST OF STAFF ACCOUNTS AND CREATE A LIST WITH THEM
         try {
-            Connection connection = DriverManager.getConnection(urlDB, usernameDB, passwordDB);
-            Statement getAllStaffstmt = connection.createStatement();
+            connection = DriverManager.getConnection(urlDB, usernameDB, passwordDB);
+            getAllStaffstmt = connection.createStatement();
             //Get All Accounts of Type STAFF
-            ResultSet staffListResultSet = getAllStaffstmt.executeQuery("SELECT * FROM Accounts WHERE type='STAFF'");
+            staffListResultSet = getAllStaffstmt.executeQuery("SELECT * FROM Accounts WHERE type='STAFF'");
 
-            Vector<String> staffVector = new Vector<String>();
             while (staffListResultSet.next()) {
                 String row = staffListResultSet.getString("email") + ", " + staffListResultSet.getString("forename") + ", " + staffListResultSet.getString("surname");
                 staffVector.add(row);
             }
-            JList<String> staffList = new JList<String>(staffVector);
-            staffList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-            
-            staffList.addListSelectionListener(new ListSelectionListener() {
-                public void valueChanged(ListSelectionEvent e) {
-                    if (!e.getValueIsAdjusting()) {
-                        selectedValue = staffList.getSelectedValue();
-                        selectedValueEmail = selectedValue.substring(0, selectedValue.indexOf(","));
-                        System.out.println(selectedValue);
-                        System.out.println(selectedValueEmail);
-                    }
-                }
-            });
-            //Add List to Scrollable Pane
-            JScrollPane staffScrollableList = new JScrollPane(staffList);
-
+  
             //Set Up Frame
             setTitle("Manager Dashboard");
             setSize(1024, 768);
-            setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             setLayout(new BorderLayout());
             // Create Header, Promote User, Demote User Panels
             JPanel headerPanel = new JPanel(new BorderLayout());
@@ -102,26 +89,24 @@ public class ManagerDashboard extends JFrame {
 						PreparedStatement removeUserFromStaffstmt = connection.prepareStatement("UPDATE Accounts SET type = 'CUSTOMER' WHERE email ='" + selectedValueEmail + "'");
 			            int rowsUpdated = removeUserFromStaffstmt.executeUpdate();
 			            if (rowsUpdated > 0) {
-			                System.out.println("An existing user was updated successfully!");
+			                System.out.println("User demoted successfully.");
+			                staffVector.clear();
+			                getAllStaffstmt = connection.createStatement();
+			                //Get All Accounts of Type STAFF
+			                staffListResultSet = getAllStaffstmt.executeQuery("SELECT * FROM Accounts WHERE type='STAFF'");
+			                while (staffListResultSet.next()) {
+			                    String row = staffListResultSet.getString("email") + ", " + staffListResultSet.getString("forename") + ", " + staffListResultSet.getString("surname");
+			                    staffVector.add(row);
+			                }
+			                repaint();
+			                JOptionPane.showMessageDialog(null, "Successfully demoted user");
 			            }
 					} catch (SQLException e1) {
 						e1.printStackTrace();
 					}
                 }
             });
-            //Add Items to Demote User Panel 
-            demoteUserPanel.add(customerListLabel, BorderLayout.NORTH);
-            demoteUserPanel.add(staffScrollableList, BorderLayout.WEST);
-            demotePanel.add(demoteSelectedUserButton, BorderLayout.CENTER);
 
-            
-            
-            
-            
-            
-            
-            
-            
             //Create Promote User Panel Items
             JTextField promoteCustomerInputBox = new JTextField(36);
             JLabel promoteCustomerListLabel = new JLabel("Enter Email of Customer to Promote:");
@@ -134,10 +119,17 @@ public class ManagerDashboard extends JFrame {
 						PreparedStatement promoteUsertmt = connection.prepareStatement("UPDATE Accounts SET type = 'STAFF' WHERE email ='" + promoteCustomerInputBox.getText() + "' AND type='CUSTOMER'");
 			            int rowsUpdated = promoteUsertmt.executeUpdate();
 			            if (rowsUpdated > 0) {
-			                System.out.println("An existing user was updated successfully!");
-			            }
-			            else {
-			            	System.out.println("Failed");
+			            	staffVector.clear();
+			                System.out.println("User was promoted successfully");
+			                getAllStaffstmt = connection.createStatement();
+			                //Get All Accounts of Type STAFF
+			                staffListResultSet = getAllStaffstmt.executeQuery("SELECT * FROM Accounts WHERE type='STAFF'");
+			                while (staffListResultSet.next()) {
+			                    String row = staffListResultSet.getString("email") + ", " + staffListResultSet.getString("forename") + ", " + staffListResultSet.getString("surname");
+			                    staffVector.add(row);
+			                }
+			                repaint();
+			                JOptionPane.showMessageDialog(null, "Successfully promoted user");
 			            }
 					} catch (SQLException e2) {
 						e2.printStackTrace();
@@ -147,10 +139,24 @@ public class ManagerDashboard extends JFrame {
             
             
             
+            JList<String> staffList = new JList<String>(staffVector);
+            staffList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
             
+            staffList.addListSelectionListener(new ListSelectionListener() {
+                public void valueChanged(ListSelectionEvent e) {
+                    if (!e.getValueIsAdjusting()) {
+                        selectedValue = staffList.getSelectedValue();
+                        selectedValueEmail = selectedValue.substring(0, selectedValue.indexOf(","));
+                    }
+                }
+            });
             
-            
-            
+            //Add List to Scrollable Pane
+            JScrollPane staffScrollableList = new JScrollPane(staffList);
+            //Add Items to Demote User Panel 
+            demoteUserPanel.add(customerListLabel, BorderLayout.NORTH);
+            demoteUserPanel.add(staffScrollableList, BorderLayout.WEST);
+            demotePanel.add(demoteSelectedUserButton, BorderLayout.CENTER);
             //Add Items to Promote User Panel
             promoteUserPanel.add(promoteCustomerInputBox, BorderLayout.WEST);
             promoteUserPanel.add(promoteCustomerListLabel, BorderLayout.NORTH);
