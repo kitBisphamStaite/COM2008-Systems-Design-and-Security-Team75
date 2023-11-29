@@ -159,11 +159,8 @@ public class ProductRecords extends JFrame {
         int productPrice = Integer.parseInt(priceField.getText());
 
         ProductType selectedProductType = (ProductType) productTypeComboBox.getSelectedItem();
-        System.out.println(selectedProductType);
         Gauge selectedGauge = (Gauge) gaugeComboBox.getSelectedItem();
-        System.out.println(selectedGauge);
         Scale selectedScale = (Scale) scaleComboBox.getSelectedItem();
-        System.out.println(selectedScale);
 
         listModel.clear();
 

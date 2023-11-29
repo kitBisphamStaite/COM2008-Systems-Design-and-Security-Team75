@@ -1,6 +1,5 @@
 public class RollingStock extends Product{
     private String eraCode;
-
     
     public RollingStock(String productCode, String productName, String manufacturerName,int retailPrice, int stock, 
                         Gauge gauge, Scale scale, String eraCode){
