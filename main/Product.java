@@ -90,7 +90,11 @@ public class Product {
 
     @Override
     public String toString() {
-        return productCode + ", " + productName + ", " + manufacturerName + ", £" + retailPrice + ", " + productType.toString();
+        return (productName + ", £" + retailPrice + ", " + stock + ", " + gauge + ", " + scale);
+    }
+
+    public String getProductDetails(){
+        return null;
     }
 
 }

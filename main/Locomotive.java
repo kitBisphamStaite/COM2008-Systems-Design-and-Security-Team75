@@ -21,4 +21,10 @@ public class Locomotive extends Product {
     public void setControlType(ControlType controlType) {
         this.controlType = controlType;
     }
+
+    @Override
+    public String getProductDetails(){
+        System.out.println("Not implemented yet: Locomotive");
+        return null;
+    }
 }

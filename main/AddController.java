@@ -114,7 +114,7 @@ public class AddController extends JFrame{
             parentScreen.getParentScreen().searchProducts();
             this.dispose();
         } else if (isEditing && validProductName && validManufacturerName && validRetailPrice && validStock && validGauge && validScale && validChipType) {
-            Inventory.getInstance().updateProduct(new Controller(productCodeText, productNameText, manufacturerNameText, 
+            InventoryUpdate.getInstance().updateProduct(new Controller(productCodeText, productNameText, manufacturerNameText, 
                                                 Integer.parseInt(retailPriceText), Integer.parseInt(stockText), 
                                                 (Gauge) gaugeComboBox.getSelectedItem(), (Scale) scaleComboBox.getSelectedItem(), 
                                                 (ChipType) chipTypeComboBox.getSelectedItem()));

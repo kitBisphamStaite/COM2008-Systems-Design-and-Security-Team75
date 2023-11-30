@@ -87,4 +87,9 @@ public class TrainSet extends Product {
         }
     }
     
+    @Override
+    public String getProductDetails(){
+        return (getProductCode() + ", " + controller.getProductCode() + ", " + eraCode);
+    }
+
 }

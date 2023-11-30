@@ -48,8 +48,6 @@ public class AddTrack extends JFrame {
                 addProduct();
             }        
         });
-
-
         
         tempPanel1.add(new JLabel("productCodeTextArea (Product Code Should Start with R):"));
         tempPanel1.add(productCodeTextArea);
@@ -120,7 +118,7 @@ public class AddTrack extends JFrame {
             parentScreen.getParentScreen().searchProducts();
             this.dispose();
         } else if(isEditing && validProductName && validManufacturerName && validRetailPrice && validStock && validGauge && validScale && validCurveRadius && validTrackType){
-            Inventory.getInstance().updateProduct(new Track(productCodeText, productNameText, manufacturerNameText, 
+            InventoryUpdate.getInstance().updateProduct(new Track(productCodeText, productNameText, manufacturerNameText, 
                                                 Integer.parseInt(retailPriceText), Integer.parseInt(stockText), 
                                                 (Gauge) gaugeComboBox.getSelectedItem(), (Scale) scaleComboBox.getSelectedItem(), 
                                                 (CurveRadius) curveRadiusComboBox.getSelectedItem(), (TrackType) trackTypeComboBox.getSelectedItem()));

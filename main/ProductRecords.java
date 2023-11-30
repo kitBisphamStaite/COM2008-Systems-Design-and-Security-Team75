@@ -2,6 +2,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,8 +16,12 @@ public class ProductRecords extends JFrame {
     private JComboBox<ProductType> productTypeComboBox;
     private JComboBox<Gauge> gaugeComboBox;
     private JComboBox<Scale> scaleComboBox;
+    private boolean userIsStaff;
 
-    public ProductRecords() {
+    public ProductRecords(boolean userIsStaff) {
+        //Determines the user
+        this.userIsStaff = userIsStaff; 
+
         // Sample product data
         productList = new ArrayList<>();
         productList = Inventory.getInstance().getProducts();
@@ -34,6 +40,8 @@ public class ProductRecords extends JFrame {
         scaleComboBox = new JComboBox<Scale>(Scale.values());
         priceField = new JTextField("0", 6); 
         
+        JPanel bottomPanel = new JPanel();
+
         JButton searchButton = new JButton("Search");
         searchButton.addActionListener(new ActionListener() {
             @Override
@@ -42,23 +50,57 @@ public class ProductRecords extends JFrame {
             }
         });
         
-        JButton editProductButton = new JButton("Edit Product");
-        editProductButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (productListUI.getSelectedValue() != null) {
-                    editProductDetails(productListUI.getSelectedValue());
+        if (userIsStaff){
+            JButton editProductButton = new JButton("Edit Product");
+            editProductButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    if (productListUI.getSelectedValue() != null) {
+                        editProductDetails(productListUI.getSelectedValue());
+                    }
                 }
-            }
-        });
+            });
+    
+            JButton addProductButton = new JButton("Add Product");
+            addProductButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    addProductDetails();
+                }
+            });
+    
+            JButton deleteProductButton = new JButton("Delete Product");
+            deleteProductButton.addActionListener(new ActionListener(){
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    deleteProduct(productListUI.getSelectedValue());
+                }
+            });
+            bottomPanel.add(addProductButton);
+            bottomPanel.add(editProductButton);
+            bottomPanel.add(deleteProductButton);
+        } else{
+            JButton productButton = new JButton("View Product");
+            productButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    if (productListUI.getSelectedValue() != null) {
+                        openProductDetails(productListUI.getSelectedValue());
+                    }
+                }
+            });
+    
+            JButton orderPageButton = new JButton("View Orders");
+            orderPageButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    openOrderPage();
+                }
+            });
+            bottomPanel.add(productButton);
+            bottomPanel.add(orderPageButton);
+        }
 
-        JButton addProductButton = new JButton("Add Product");
-        addProductButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                addProductDetails();
-            }
-        });
 
         JButton returnHomeButton = new JButton("Return to Home");
         returnHomeButton.addActionListener(new ActionListener() {
@@ -82,17 +124,42 @@ public class ProductRecords extends JFrame {
         topPanel.add(new JLabel("Max Price (£):"));
         topPanel.add(priceField);
         topPanel.add(searchButton);
-        JPanel bottomPanel = new JPanel();
-        bottomPanel.add(addProductButton);
-        bottomPanel.add(editProductButton);
+
+        JPanel detailsPanel = new JPanel();
+        JLabel productCode = new JLabel("Null");
+        detailsPanel.add(productCode);
+
         bottomPanel.add(returnHomeButton);
 
+
+        JScrollPane productScrollPane = new JScrollPane(productListUI);
+        productListUI.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+        productListUI.addListSelectionListener(new ListSelectionListener(){
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+              if (productListUI.getSelectedValue() != null) {
+                productCode.setText(productListUI.getSelectedValue().toString());
+              }
+            }
+        });
+
+        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, productScrollPane, detailsPanel);
+        if (productListUI != null){
+            productListUI.setSelectedIndex(0);
+            productCode.setText(productListUI.getSelectedValue().toString());
+        }
+
         add(topPanel, BorderLayout.NORTH);
-        add(new JScrollPane(productListUI), BorderLayout.CENTER);
+        add(splitPane, BorderLayout.CENTER);
         add(bottomPanel, BorderLayout.SOUTH);
 
+        if (userIsStaff){
+            setTitle("Product Records");
+        } else {
+            setTitle("Selected Category Screen");
+        }
         // Set up the frame
-        setTitle("Product Records");
         setSize(1600, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
@@ -145,6 +212,7 @@ public class ProductRecords extends JFrame {
     }
     
     private void returnHome(){
+        this.dispose();
         System.out.println("Return Home");
     }
 
@@ -152,6 +220,22 @@ public class ProductRecords extends JFrame {
         AddProduct detailsScreen = new AddProduct(this);
         detailsScreen.setVisible(true);
         this.setVisible(false);
+    }
+
+    private void deleteProduct(Product product){
+        InventoryDelete.getInstance().deleteProduct(product);
+        searchProducts();
+    }
+
+    private void openProductDetails(Product product) {
+        ProductPopup detailsScreen = new ProductPopup(product, this);
+        detailsScreen.setVisible(true);
+        this.setVisible(false);
+    }
+
+    private void openOrderPage(){
+        System.out.println("Open order page");
+        //Sends you to the basket page, which someone else is making
     }
 
     public void searchProducts() {
@@ -182,6 +266,6 @@ public class ProductRecords extends JFrame {
     }
 
     public static void main(String[] args) {
-        new ProductRecords();
+        new ProductRecords(false);
     }
 }

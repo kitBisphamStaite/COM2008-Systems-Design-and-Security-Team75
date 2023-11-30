@@ -123,7 +123,7 @@ public class AddLocomotive extends JFrame{
             parentScreen.getParentScreen().searchProducts();
             this.dispose();
         } else if (isEditing && validProductName && validManufacturerName && validRetailPrice && validStock && validGauge && validScale && validEraCode && validControlType) {
-            Inventory.getInstance().updateProduct(new Locomotive(productCodeText, productNameText, manufacturerNameText, 
+            InventoryUpdate.getInstance().updateProduct(new Locomotive(productCodeText, productNameText, manufacturerNameText, 
                                                 Integer.parseInt(retailPriceText), Integer.parseInt(stockText), 
                                                 (Gauge) gaugeComboBox.getSelectedItem(), (Scale) scaleComboBox.getSelectedItem(), 
                                                 eraCodeText, (ControlType) controlTypeComboBox.getSelectedItem()));

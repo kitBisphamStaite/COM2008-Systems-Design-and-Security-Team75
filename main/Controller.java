@@ -14,5 +14,10 @@ public class Controller extends Product{
     public ChipType GetChipType(){
         return this.chipType;
     }
-
+    
+    @Override
+    public String getProductDetails(){
+        System.out.println("Not implemented yet: Controller");
+        return null;
+    }
 }

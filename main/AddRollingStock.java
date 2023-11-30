@@ -118,7 +118,7 @@ public class AddRollingStock extends JFrame {
             parentScreen.getParentScreen().searchProducts();
             this.dispose();
         } else if (isEditing && validProductName && validManufacturerName && validRetailPrice && validStock && validGauge && validScale && validEraCode) {
-            Inventory.getInstance().updateProduct(new RollingStock(productCodeText, productNameText, manufacturerNameText, 
+            InventoryUpdate.getInstance().updateProduct(new RollingStock(productCodeText, productNameText, manufacturerNameText, 
                                                 Integer.parseInt(retailPriceText), Integer.parseInt(stockText), 
                                                 (Gauge) gaugeComboBox.getSelectedItem(), (Scale) scaleComboBox.getSelectedItem(), 
                                                 eraCodeText));

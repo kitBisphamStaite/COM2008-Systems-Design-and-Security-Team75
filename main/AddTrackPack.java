@@ -168,7 +168,7 @@ public class AddTrackPack extends JFrame {
             parentScreen.getParentScreen().searchProducts();
             this.dispose();
         } else if (isEditing && validProductCode && validProductName && validManufacturerName && validRetailPrice && validStock && validGauge && validScale && validTrackList) {
-            Inventory.getInstance().updateProduct(new TrackPack(productCodeText, productNameText, manufacturerNameText, 
+            InventoryUpdate.getInstance().updateProduct(new TrackPack(productCodeText, productNameText, manufacturerNameText, 
                                                 Integer.parseInt(retailPriceText), Integer.parseInt(stockText), 
                                                 (Gauge) gaugeComboBox.getSelectedItem(), (Scale) scaleComboBox.getSelectedItem(), 
                                                 trackList));
