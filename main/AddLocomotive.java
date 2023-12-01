@@ -4,7 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class AddLocomotive extends JFrame{
-    private AddProduct parentScreen;
+    private ProductRecords parentScreen;
     private JTextArea productCodeTextArea = new JTextArea();
     private JTextArea productNameTextArea = new JTextArea();
     private JTextArea manufacturerNameTextArea = new JTextArea();
@@ -16,7 +16,7 @@ public class AddLocomotive extends JFrame{
     private JComboBox<ControlType> controlTypeComboBox = new JComboBox<ControlType>(ControlType.values());
     private boolean isEditing = false;
 
-    public AddLocomotive(AddProduct parentScreen) {
+    public AddLocomotive(ProductRecords parentScreen) {
         this.parentScreen = parentScreen;
         setTitle("Locomotive");
         setSize(600, 600);
@@ -120,7 +120,7 @@ public class AddLocomotive extends JFrame{
                                                 (Gauge) gaugeComboBox.getSelectedItem(), (Scale) scaleComboBox.getSelectedItem(), 
                                                 eraCodeText, (ControlType) controlTypeComboBox.getSelectedItem()));
             parentScreen.setVisible(true);
-            parentScreen.getParentScreen().searchProducts();
+            parentScreen.searchProducts();
             this.dispose();
         } else if (isEditing && validProductName && validManufacturerName && validRetailPrice && validStock && validGauge && validScale && validEraCode && validControlType) {
             InventoryUpdate.getInstance().updateProduct(new Locomotive(productCodeText, productNameText, manufacturerNameText, 
@@ -128,9 +128,64 @@ public class AddLocomotive extends JFrame{
                                                 (Gauge) gaugeComboBox.getSelectedItem(), (Scale) scaleComboBox.getSelectedItem(), 
                                                 eraCodeText, (ControlType) controlTypeComboBox.getSelectedItem()));
             parentScreen.setVisible(true);
-            parentScreen.getParentScreen().searchProducts();
+            parentScreen.searchProducts();
             this.dispose();
+        }  
+        if (!isEditing && !validProductCode){
+            JOptionPane.showMessageDialog(null,
+            "Invalid Produce code.",
+            "Incorrect Inputs",
+            JOptionPane.WARNING_MESSAGE);
         } 
+        if (!validProductName){
+            JOptionPane.showMessageDialog(null,
+            "Invalid Product Name.",
+            "Incorrect Inputs",
+            JOptionPane.WARNING_MESSAGE);
+        } 
+        if (!validManufacturerName){
+            JOptionPane.showMessageDialog(null,
+            "Invalid Manufacturer Name.",
+            "Incorrect Inputs",
+            JOptionPane.WARNING_MESSAGE);
+        } 
+        if (!validRetailPrice){
+            JOptionPane.showMessageDialog(null,
+            "Invalid Retail Price.",
+            "Incorrect Inputs",
+            JOptionPane.WARNING_MESSAGE);
+        } 
+        if (!validStock){
+            JOptionPane.showMessageDialog(null,
+            "Invalid Stock.",
+            "Incorrect Inpits",
+            JOptionPane.WARNING_MESSAGE);
+        } 
+        if (!validGauge){
+            JOptionPane.showMessageDialog(null,
+            "Invalid Gauge.",
+            "Incorrect Inputs",
+            JOptionPane.WARNING_MESSAGE);
+        } 
+        if (!validScale){
+            JOptionPane.showMessageDialog(null,
+            "Invalid Scale.",
+            "Incorrect Inputs",
+            JOptionPane.WARNING_MESSAGE);
+        }
+        if (!validEraCode){
+            JOptionPane.showMessageDialog(null,
+            "Invalid Era Code.",
+            "Incorrect Inputs",
+            JOptionPane.WARNING_MESSAGE);
+        }
+        if (!validControlType){
+            JOptionPane.showMessageDialog(null,
+            "Invalid Control Type.",
+            "Incorrect Inputs",
+            JOptionPane.WARNING_MESSAGE);
+        }
+
 
     }
 

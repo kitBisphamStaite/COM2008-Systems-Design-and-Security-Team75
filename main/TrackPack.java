@@ -28,11 +28,4 @@ public class TrackPack extends Product {
             tracks.add(new ProductPair(track, quantity));
         }
     }
-
-    @Override
-    public String getProductDetails(){
-        System.out.println("Not implemented yet: Track Pack");
-        return null;
-    }
-
 }

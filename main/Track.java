@@ -21,10 +21,4 @@ public class Track extends Product{
     public void setTrackType(TrackType trackType) {
         this.trackType = trackType;
     }
-
-    @Override
-    public String getProductDetails(){
-        System.out.println("Not implemented yet: Track");
-        return null;
-    }
 }

@@ -86,10 +86,4 @@ public class TrainSet extends Product {
             trackPacks.add(new ProductPair(trackPack, quantity));
         }
     }
-    
-    @Override
-    public String getProductDetails(){
-        return (getProductCode() + ", " + controller.getProductCode() + ", " + eraCode);
-    }
-
 }

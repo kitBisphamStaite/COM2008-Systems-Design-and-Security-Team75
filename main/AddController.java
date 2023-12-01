@@ -4,7 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class AddController extends JFrame{
-    private AddProduct parentScreen;
+    private ProductRecords parentScreen;
     private JTextArea productCodeTextArea = new JTextArea(); //Check it starts with "C"
     private JTextArea productNameTextArea = new JTextArea();
     private JTextArea manufacturerNameTextArea = new JTextArea();
@@ -15,7 +15,7 @@ public class AddController extends JFrame{
     private JComboBox<ChipType> chipTypeComboBox = new JComboBox<ChipType>(ChipType.values());
     private boolean isEditing = false;
 
-    public AddController(AddProduct parentScreen) {
+    public AddController(ProductRecords parentScreen) {
         this.parentScreen = parentScreen;
         setTitle("Controller");
         setSize(600, 600);
@@ -111,7 +111,7 @@ public class AddController extends JFrame{
                                                 (Gauge) gaugeComboBox.getSelectedItem(), (Scale) scaleComboBox.getSelectedItem(), 
                                                 (ChipType) chipTypeComboBox.getSelectedItem()));
             parentScreen.setVisible(true);
-            parentScreen.getParentScreen().searchProducts();
+            parentScreen.searchProducts();
             this.dispose();
         } else if (isEditing && validProductName && validManufacturerName && validRetailPrice && validStock && validGauge && validScale && validChipType) {
             InventoryUpdate.getInstance().updateProduct(new Controller(productCodeText, productNameText, manufacturerNameText, 
@@ -119,8 +119,56 @@ public class AddController extends JFrame{
                                                 (Gauge) gaugeComboBox.getSelectedItem(), (Scale) scaleComboBox.getSelectedItem(), 
                                                 (ChipType) chipTypeComboBox.getSelectedItem()));
             parentScreen.setVisible(true);
-            parentScreen.getParentScreen().searchProducts();
+            parentScreen.searchProducts();
             this.dispose();
+        } 
+        if (!isEditing && !validProductCode){
+            JOptionPane.showMessageDialog(null,
+            "Invalid Produce code.",
+            "Incorrect Inputs",
+            JOptionPane.WARNING_MESSAGE);
+        } 
+        if (!validProductName){
+            JOptionPane.showMessageDialog(null,
+            "Invalid Product Name.",
+            "Incorrect Inputs",
+            JOptionPane.WARNING_MESSAGE);
+        } 
+        if (!validManufacturerName){
+            JOptionPane.showMessageDialog(null,
+            "Invalid Manufacturer Name.",
+            "Incorrect Inputs",
+            JOptionPane.WARNING_MESSAGE);
+        } 
+        if (!validRetailPrice){
+            JOptionPane.showMessageDialog(null,
+            "Invalid Retail Price.",
+            "Incorrect Inputs",
+            JOptionPane.WARNING_MESSAGE);
+        } 
+        if (!validStock){
+            JOptionPane.showMessageDialog(null,
+            "Invalid Stock.",
+            "Incorrect Inpits",
+            JOptionPane.WARNING_MESSAGE);
+        } 
+        if (!validGauge){
+            JOptionPane.showMessageDialog(null,
+            "Invalid Gauge.",
+            "Incorrect Inputs",
+            JOptionPane.WARNING_MESSAGE);
+        } 
+        if (!validScale){
+            JOptionPane.showMessageDialog(null,
+            "Invalid Scale.",
+            "Incorrect Inputs",
+            JOptionPane.WARNING_MESSAGE);
+        } 
+        if (!validChipType){
+            JOptionPane.showMessageDialog(null,
+            "Invalid Chip Type.",
+            "Incorrect Inputs",
+            JOptionPane.WARNING_MESSAGE);
         }
     }
 

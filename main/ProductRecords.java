@@ -17,6 +17,7 @@ public class ProductRecords extends JFrame {
     private JComboBox<Gauge> gaugeComboBox;
     private JComboBox<Scale> scaleComboBox;
     private boolean userIsStaff;
+    JPanel detailsPanel = new JPanel();
 
     public ProductRecords(boolean userIsStaff) {
         //Determines the user
@@ -65,7 +66,7 @@ public class ProductRecords extends JFrame {
             addProductButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    addProductDetails();
+                    addProduct();
                 }
             });
     
@@ -125,10 +126,6 @@ public class ProductRecords extends JFrame {
         topPanel.add(priceField);
         topPanel.add(searchButton);
 
-        JPanel detailsPanel = new JPanel();
-        JLabel productCode = new JLabel("Null");
-        detailsPanel.add(productCode);
-
         bottomPanel.add(returnHomeButton);
 
 
@@ -138,16 +135,16 @@ public class ProductRecords extends JFrame {
         productListUI.addListSelectionListener(new ListSelectionListener(){
             @Override
             public void valueChanged(ListSelectionEvent e) {
-              if (productListUI.getSelectedValue() != null) {
-                productCode.setText(productListUI.getSelectedValue().toString());
+              if (productListUI.getSelectedValue() != null && e.getValueIsAdjusting()) {
+                changeProductDetails(productListUI.getSelectedValue());
               }
-            }
+            }   
         });
 
         JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, productScrollPane, detailsPanel);
         if (productListUI != null){
             productListUI.setSelectedIndex(0);
-            productCode.setText(productListUI.getSelectedValue().toString());
+            changeProductDetails(productListUI.getSelectedValue());
         }
 
         add(topPanel, BorderLayout.NORTH);
@@ -165,65 +162,270 @@ public class ProductRecords extends JFrame {
         setVisible(true);
     }
 
+    public void changeProductDetails(Product product){
+        resetDetailPanel();
+        JLabel productCode = new JLabel("Product Code: " + product.getProductCode());
+        JLabel productName = new JLabel("Product Name: " + product.getProductName());
+        JLabel manufacturerName = new JLabel("Manufacturer Name: " + product.getManufacturerName());
+        JLabel retailPrice = new JLabel("Retail Price: " + Integer.toString(product.getRetailPrice()));
+        JLabel stock = new JLabel("Stock: " + Integer.toString(product.getStock()));
+        JLabel gauge = new JLabel("Guage: " + product.getGauge().toString());
+        JLabel scale = new JLabel("Scale: " + product.getScale().toString());
+        
+        productCode.setFont(new Font("Dialog", Font.BOLD, 14));
+        productName.setFont(new Font("Dialog", Font.BOLD, 14));
+        manufacturerName.setFont(new Font("Dialog", Font.BOLD, 14));
+        retailPrice.setFont(new Font("Dialog", Font.BOLD, 14));
+        stock.setFont(new Font("Dialog", Font.BOLD, 14));
+        gauge.setFont(new Font("Dialog", Font.BOLD, 14));
+        scale.setFont(new Font("Dialog", Font.BOLD, 14));
+
+        detailsPanel.add(productCode);
+        detailsPanel.add(productName);
+        detailsPanel.add(manufacturerName);
+        detailsPanel.add(retailPrice);
+        detailsPanel.add(stock);
+        detailsPanel.add(gauge);
+        detailsPanel.add(scale);
+
+        if (productListUI.getSelectedValue().getProductType() == ProductType.CONTROLLER){
+            displayControllerDetails((Controller) product);
+        }
+        if (productListUI.getSelectedValue().getProductType() == ProductType.LOCOMOTIVE){
+            displayLocomotiveDetails((Locomotive) product);
+        }
+        if (productListUI.getSelectedValue().getProductType() == ProductType.ROLLINGSTOCK){
+            displayRollingStockDetails((RollingStock) product);
+        }
+        if (productListUI.getSelectedValue().getProductType() == ProductType.TRACK){
+            displayTrackDetails((Track) product);
+        }
+        if (productListUI.getSelectedValue().getProductType() == ProductType.TRACKPACK){
+            displayTrackPackDetails((TrackPack) product);
+        }
+        if (productListUI.getSelectedValue().getProductType() == ProductType.TRAINSET){
+            displayTrainSetDetails((TrainSet) product);
+        }   
+    }
+
+    public void displayControllerDetails(Controller product){
+        JLabel chipType = new JLabel("Chip Type: " + product.GetChipType().toString());
+        chipType.setFont(new Font("Dialog", Font.BOLD, 14));
+        detailsPanel.add(chipType);
+    }
+    
+    public void displayLocomotiveDetails(Locomotive product){
+        JLabel controlType = new JLabel("Control Type: " + product.getControlType().toString());
+        JLabel eraCode = new JLabel("Era Code: " + product.getEraCode());
+        controlType.setFont(new Font("Dialog", Font.BOLD, 14));
+        eraCode.setFont(new Font("Dialog", Font.BOLD, 14));
+        detailsPanel.add(controlType);
+        detailsPanel.add(eraCode);
+    }
+    
+    public void displayRollingStockDetails(RollingStock product){
+        JLabel eraCode = new JLabel("Era Code: " + product.getEraCode());
+        eraCode.setFont(new Font("Dialog", Font.BOLD, 14));
+        detailsPanel.add(eraCode);
+    }
+    
+    public void  displayTrackDetails(Track product){
+        JLabel curveRadius = new JLabel("Curve Radius: " + product.getCurveRadius().toString());
+        JLabel trackType = new JLabel("Track Type: " + product.getTrackType().toString());
+        curveRadius.setFont(new Font("Dialog", Font.BOLD, 14));
+        trackType.setFont(new Font("Dialog", Font.BOLD, 14));
+        detailsPanel.add(curveRadius);
+        detailsPanel.add(trackType);
+    }
+    
+    public void displayTrackPackDetails(TrackPack product){
+        JLabel tracks = new JLabel("Tracks: " + product.getTracks().toString());
+        tracks.setFont(new Font("Dialog", Font.BOLD, 14));
+        detailsPanel.add(tracks);
+    }
+    
+    public void displayTrainSetDetails(TrainSet product){
+        JLabel eraCode = new JLabel("Era Code: " + product.getEraCode());
+        JLabel controllerProductCode = new JLabel("Controller Product Code: " + product.getController().getProductCode());
+        JLabel locomotives = new JLabel("Locomotives: " + product.getLocomotives().toString());
+        JLabel rollingStocks = new JLabel("Rolling Stocks: " + product.getRollingStocks().toString());
+        JLabel trackPacks = new JLabel("Track Packs: " + product.getTrackPacks().toString());
+        eraCode.setFont(new Font("Dialog", Font.BOLD, 14));
+        controllerProductCode.setFont(new Font("Dialog", Font.BOLD, 14));
+        locomotives.setFont(new Font("Dialog", Font.BOLD, 14));
+        rollingStocks.setFont(new Font("Dialog", Font.BOLD, 14));
+        trackPacks.setFont(new Font("Dialog", Font.BOLD, 14));
+        detailsPanel.add(eraCode);
+        detailsPanel.add(controllerProductCode);
+        detailsPanel.add(locomotives);
+        detailsPanel.add(rollingStocks);
+        detailsPanel.add(trackPacks);
+
+    }
+
     private void editProductDetails(Product product) {
         System.out.println("Edit Product");
         if (product.getProductType() == ProductType.CONTROLLER) {
-            AddProduct detailsScreen = new AddProduct(this);
-            AddController addController = new AddController(detailsScreen);
+            AddController addController = new AddController(this);
             addController.editProduct((Controller) product);
             addController.setVisible(true);
             this.setVisible(false);
         }
         if (product.getProductType() == ProductType.LOCOMOTIVE) {
-            AddProduct detailsScreen = new AddProduct(this);
-            AddLocomotive addController = new AddLocomotive(detailsScreen);
+            AddLocomotive addController = new AddLocomotive(this);
             addController.editProduct((Locomotive) product);
             addController.setVisible(true);
             this.setVisible(false);
         }
         if (product.getProductType() == ProductType.ROLLINGSTOCK) {
-            AddProduct detailsScreen = new AddProduct(this);
-            AddRollingStock addController = new AddRollingStock(detailsScreen);
+            AddRollingStock addController = new AddRollingStock(this);
             addController.editProduct((RollingStock) product);
             addController.setVisible(true);
             this.setVisible(false);
         }
         if (product.getProductType() == ProductType.TRACK) {
-            AddProduct detailsScreen = new AddProduct(this);
-            AddTrack addController = new AddTrack(detailsScreen);
+            AddTrack addController = new AddTrack(this);
             addController.editProduct((Track) product);
             addController.setVisible(true);
             this.setVisible(false);
         }
         if (product.getProductType() == ProductType.TRACKPACK) {
-            AddProduct detailsScreen = new AddProduct(this);
-            AddTrackPack addController = new AddTrackPack(detailsScreen);
+            AddTrackPack addController = new AddTrackPack(this);
             addController.editProduct((TrackPack) product);
             addController.setVisible(true);
             this.setVisible(false);
         }
         if (product.getProductType() == ProductType.TRAINSET) {
-            AddProduct detailsScreen = new AddProduct(this);
-            AddTrainSet addController = new AddTrainSet(detailsScreen);
+            AddTrainSet addController = new AddTrainSet(this);
             addController.editProduct((TrainSet) product);
             addController.setVisible(true);
             this.setVisible(false);
         }
     }
-    
+
     private void returnHome(){
         this.dispose();
+        if (userIsStaff){
+            new StaffDashboard();
+        }
         System.out.println("Return Home");
     }
 
-    private void addProductDetails(){
-        AddProduct detailsScreen = new AddProduct(this);
-        detailsScreen.setVisible(true);
+    private void addProduct(){
+        JButton goBackButton = new JButton("Go Back");
+        goBackButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                changeProductDetails(productListUI.getSelectedValue());
+            }
+        });
+
+        JButton addControllerButton = new JButton("Add Controller");
+        addControllerButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                addController();
+            }
+        });
+
+        JButton AddLocomotiveButton = new JButton("Add Locomotive");
+        AddLocomotiveButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                addLocomotive();
+            }
+        });
+
+        JButton addRollingStockButton = new JButton("Add Rolling Stock");
+        addRollingStockButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                addRollingStock();         
+            }
+        });
+
+        JButton AddTrackButton = new JButton("Add Track");
+        AddTrackButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                addTrack();
+            }
+        });
+
+        JButton AddTrackPackButton = new JButton("Add Track Pack");
+        AddTrackPackButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                addTrackPack();
+            }
+        });
+
+        JButton AddTrainSetButton = new JButton("Add Train Set");
+        AddTrainSetButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                addTrainSet();
+            }
+        });
+        resetDetailPanel();
+        GridLayout addProductLayout = new GridLayout(4,2);
+        detailsPanel.setLayout(addProductLayout);
+        detailsPanel.add(addControllerButton);
+        detailsPanel.add(AddLocomotiveButton);
+        detailsPanel.add(addRollingStockButton);
+        detailsPanel.add(AddTrackButton);
+        detailsPanel.add(AddTrackPackButton);
+        detailsPanel.add(AddTrainSetButton);
+        detailsPanel.add(goBackButton);
+    }
+    
+    public void addController(){
+        AddController addController = new AddController(this);
+        addController.setVisible(true);
         this.setVisible(false);
     }
 
+    public void addLocomotive(){
+        AddLocomotive addLocomotive = new AddLocomotive(this);
+        addLocomotive.setVisible(true);
+        this.setVisible(false);
+    }
+    
+    public void addRollingStock(){
+        AddRollingStock addRollingStock = new AddRollingStock(this);
+        addRollingStock.setVisible(true);
+        this.setVisible(false);       
+    }
+    
+    public void addTrack(){
+        AddTrack addTrack = new AddTrack(this);
+        addTrack.setVisible(true);
+        this.setVisible(false);
+    }
+    
+    public void addTrackPack(){
+        AddTrackPack addTrackPack = new AddTrackPack(this);
+        addTrackPack.setVisible(true);
+        this.setVisible(false);
+    }
+
+    public void addTrainSet(){
+        AddTrainSet addTrainSet = new AddTrainSet(this);
+        addTrainSet.setVisible(true);
+        this.setVisible(false);
+    }
+
+    public void resetDetailPanel(){
+        detailsPanel.removeAll();
+        detailsPanel.repaint();
+        detailsPanel.revalidate();
+    }
+
     private void deleteProduct(Product product){
-        InventoryDelete.getInstance().deleteProduct(product);
+        String deleteConfirmationName = (String) JOptionPane.showInputDialog(null, "Enter Name");
+        if (deleteConfirmationName != null &&  deleteConfirmationName.equals(product.getProductName())){
+            InventoryDelete.getInstance().deleteProduct(product);
+        }
         searchProducts();
     }
 
@@ -266,6 +468,6 @@ public class ProductRecords extends JFrame {
     }
 
     public static void main(String[] args) {
-        new ProductRecords(false);
+        new ProductRecords(true);
     }
 }

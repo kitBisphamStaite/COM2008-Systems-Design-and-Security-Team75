@@ -12,10 +12,4 @@ public class RollingStock extends Product{
     public void setEraCode(String eraCode) {
         this.eraCode = eraCode;
     }
-
-    @Override
-    public String getProductDetails(){
-        System.out.println("Not implemented yet: Rolling Stock");
-        return null;
-    }
 }

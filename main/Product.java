@@ -92,11 +92,6 @@ public class Product {
     public String toString() {
         return (productName + ", £" + retailPrice + ", " + stock + ", " + gauge + ", " + scale);
     }
-
-    public String getProductDetails(){
-        return null;
-    }
-
 }
 
 
