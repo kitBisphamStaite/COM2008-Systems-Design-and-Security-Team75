@@ -1,6 +1,5 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
@@ -8,7 +7,6 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
@@ -23,7 +21,7 @@ public class EditRollingStock extends JFrame {
     String passwordDB = "mood6Phah";
     Connection connection;
     //SQL
-    Statement getAllRollingStockstmt;
+    PreparedStatement getAllRollingStockstmt;
     ResultSet rollingStockListResultSet;
     Vector<String> rollingStockVector = new Vector<String>();
     //SelectedValue from List
@@ -43,12 +41,12 @@ public class EditRollingStock extends JFrame {
         //GET LIST OF LOCOMOTIVES
         try {
             connection = DriverManager.getConnection(urlDB, usernameDB, passwordDB);
-            getAllRollingStockstmt = connection.createStatement();
+            getAllRollingStockstmt = connection.prepareStatement("SELECT * FROM Products INNER JOIN Rolling_Stock ON Products.product_code = Rolling_Stock.product_code");
             //Get All Locomotive Products
-            rollingStockListResultSet = getAllRollingStockstmt.executeQuery("SELECT * FROM Products INNER JOIN Rolling_Stock ON Products.product_code = Rolling_Stock.product_code");
+            rollingStockListResultSet = getAllRollingStockstmt.executeQuery();
             
             while (rollingStockListResultSet.next()) {
-                String row = rollingStockListResultSet.getString("product_code") + "," + rollingStockListResultSet.getString("product_name") + ", £" + rollingStockListResultSet.getString("retail_price") + ", " + rollingStockListResultSet.getString("stock") + ", " + rollingStockListResultSet.getString("gauge") + ", " + rollingStockListResultSet.getString("scale") + "," + rollingStockListResultSet.getString("era_code");
+                String row = rollingStockListResultSet.getString("product_code") + ", " + rollingStockListResultSet.getString("product_name") + ", £" + rollingStockListResultSet.getString("retail_price") + ", " + rollingStockListResultSet.getString("stock") + ", " + rollingStockListResultSet.getString("gauge") + ", " + rollingStockListResultSet.getString("scale") + "," + rollingStockListResultSet.getString("era_code");
                 rollingStockVector.add(row);
             }
   
@@ -399,9 +397,9 @@ public class EditRollingStock extends JFrame {
         							    			                System.out.println("Product successfully added.");
         							    			                rollingStockVector.clear();
         							    			                rollingStockList.clearSelection();
-        							    			                getAllRollingStockstmt = connection.createStatement();
+        							    			                getAllRollingStockstmt = connection.prepareStatement("SELECT * FROM Products INNER JOIN Rolling_Stock ON Products.product_code = Rolling_Stock.product_code");
         							    			                //Get All Locomotive Products
-        							    			                rollingStockListResultSet = getAllRollingStockstmt.executeQuery("SELECT * FROM Products INNER JOIN Rolling_Stock ON Products.product_code = Rolling_Stock.product_code");
+        							    			                rollingStockListResultSet = getAllRollingStockstmt.executeQuery();
         							    			                
         							    			                while (rollingStockListResultSet.next()) {
         							    			                    String row = rollingStockListResultSet.getString("product_code") + "," + rollingStockListResultSet.getString("product_name") + ", £" + rollingStockListResultSet.getString("retail_price") + ", " + rollingStockListResultSet.getString("stock") + ", " + rollingStockListResultSet.getString("gauge") + ", " + rollingStockListResultSet.getString("scale") + "," + rollingStockListResultSet.getString("era_code");
@@ -497,9 +495,9 @@ public class EditRollingStock extends JFrame {
     			                System.out.println("Product successfully deleted.");
     			                rollingStockVector.clear();
     			                rollingStockList.clearSelection();
-    			                getAllRollingStockstmt = connection.createStatement();
+    			                getAllRollingStockstmt = connection.prepareStatement("SELECT * FROM Products INNER JOIN Rolling_Stock ON Products.product_code = Rolling_Stock.product_code");
     			                //Get All Locomotive Products
-    			                rollingStockListResultSet = getAllRollingStockstmt.executeQuery("SELECT * FROM Products INNER JOIN Rolling_Stock ON Products.product_code = Rolling_Stock.product_code");
+    			                rollingStockListResultSet = getAllRollingStockstmt.executeQuery();
     			                
     			                while (rollingStockListResultSet.next()) {
     			                    String row = rollingStockListResultSet.getString("product_code") + "," + rollingStockListResultSet.getString("product_name") + ", £" + rollingStockListResultSet.getString("retail_price") + ", " + rollingStockListResultSet.getString("stock") + ", " + rollingStockListResultSet.getString("gauge") + ", " + rollingStockListResultSet.getString("scale") + "," + rollingStockListResultSet.getString("era_code");

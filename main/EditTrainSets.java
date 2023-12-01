@@ -1,6 +1,5 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
@@ -8,7 +7,6 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
@@ -22,7 +20,7 @@ public class EditTrainSets extends JFrame {
     String passwordDB = "mood6Phah";
     Connection connection;
     //SQL
-    Statement getAllTrainSetstmt;
+    PreparedStatement getAllTrainSetstmt;
     ResultSet TrainSetListResultSet;
     Vector<String> TrainSetVector = new Vector<String>();
     Vector<String> productInformationVector = new Vector<String>();
@@ -47,9 +45,9 @@ public class EditTrainSets extends JFrame {
         //GET LIST OF TRACKS
         try {
             connection = DriverManager.getConnection(urlDB, usernameDB, passwordDB);
-            getAllTrainSetstmt = connection.createStatement();
+            getAllTrainSetstmt = connection.prepareStatement("SELECT * FROM Products INNER JOIN Train_Set ON Products.product_code = Train_Set.product_code");
             //Get All Track Products
-            TrainSetListResultSet = getAllTrainSetstmt.executeQuery("SELECT * FROM Products INNER JOIN Train_Set ON Products.product_code = Train_Set.product_code");
+            TrainSetListResultSet = getAllTrainSetstmt.executeQuery();
             
             while (TrainSetListResultSet.next()) {
                 String row = TrainSetListResultSet.getString("product_code") + ", " + TrainSetListResultSet.getString("controller_product_code") + ", " + TrainSetListResultSet.getString("era_code");
@@ -411,9 +409,9 @@ public class EditTrainSets extends JFrame {
             							    			                productInformationVector.clear();
             							    			                trainSetList.clearSelection();
             							    			                productInformationList.clearSelection();
-            							    			                getAllTrainSetstmt = connection.createStatement();
+            							    			                getAllTrainSetstmt = connection.prepareStatement("SELECT * FROM Products INNER JOIN Train_Set ON Products.product_code = Train_Set.product_code");
             							    			                //Get All Track Products
-            							    			                TrainSetListResultSet = getAllTrainSetstmt.executeQuery("SELECT * FROM Products INNER JOIN Train_Set ON Products.product_code = Train_Set.product_code");
+            							    			                TrainSetListResultSet = getAllTrainSetstmt.executeQuery();
             							    			                while (TrainSetListResultSet.next()) {
             							    			                    String row = TrainSetListResultSet.getString("product_code") + ", " + TrainSetListResultSet.getString("controller_product_code") + ", " + TrainSetListResultSet.getString("era_code");
             							    			                    String productRow = TrainSetListResultSet.getString("product_name") + ", £" + TrainSetListResultSet.getString("retail_price") + ", " + TrainSetListResultSet.getString("stock") + ", " + TrainSetListResultSet.getString("gauge") + ", " + TrainSetListResultSet.getString("scale");
@@ -521,9 +519,9 @@ public class EditTrainSets extends JFrame {
     			                productInformationVector.clear();
     			                trainSetList.clearSelection();
     			                productInformationList.clearSelection();
-    			                getAllTrainSetstmt = connection.createStatement();
+    			                getAllTrainSetstmt = connection.prepareStatement("SELECT * FROM Products INNER JOIN Train_Set ON Products.product_code = Train_Set.product_code");
     			                //Get All Track Products
-    			                TrainSetListResultSet = getAllTrainSetstmt.executeQuery("SELECT * FROM Products INNER JOIN Train_Set ON Products.product_code = Train_Set.product_code");
+    			                TrainSetListResultSet = getAllTrainSetstmt.executeQuery();
     			                
     			                while (TrainSetListResultSet.next()) {
     			                    String row = TrainSetListResultSet.getString("product_code") + ", " + TrainSetListResultSet.getString("controller_product_code" + ", " + TrainSetListResultSet.getString("era_code"));

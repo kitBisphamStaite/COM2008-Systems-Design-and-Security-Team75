@@ -1,6 +1,5 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
@@ -8,7 +7,6 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
@@ -23,7 +21,7 @@ public class EditTrackPacks extends JFrame {
     Connection connection;
     
     //SQL
-    Statement getAllTrackPackstmt;
+    PreparedStatement getAllTrackPackstmt;
     ResultSet TrainSetListResultSet;
     Vector<String> productInformationVector = new Vector<String>();
     //SelectedValue from List
@@ -43,9 +41,9 @@ public class EditTrackPacks extends JFrame {
         //GET LIST OF TRACKS
         try {
             connection = DriverManager.getConnection(urlDB, usernameDB, passwordDB);
-            getAllTrackPackstmt = connection.createStatement();
+            getAllTrackPackstmt = connection.prepareStatement("SELECT * FROM Products WHERE product_code LIKE 'P%'");
             //Get All Track Products
-            TrainSetListResultSet = getAllTrackPackstmt.executeQuery("SELECT * FROM Products WHERE product_code LIKE 'P%'");
+            TrainSetListResultSet = getAllTrackPackstmt.executeQuery();
             
             while (TrainSetListResultSet.next()) {
                 String productRow = TrainSetListResultSet.getString("product_code") + ", " + TrainSetListResultSet.getString("product_name") + ", £" + TrainSetListResultSet.getString("retail_price") + ", " + TrainSetListResultSet.getString("stock") + ", " + TrainSetListResultSet.getString("gauge") + ", " + TrainSetListResultSet.getString("scale");
@@ -97,9 +95,10 @@ public class EditTrackPacks extends JFrame {
             //Create Track List Panel Items
             JLabel trackPackListLabel = new JLabel("Track Pack Product List:");
             JList<String> productInformationList = new JList<String>(productInformationVector);
-            System.out.println(productInformationVector);
             productInformationList.setPreferredSize(new Dimension(200, 200));
             productInformationList.setSelectedIndex(0);
+            selectedValue = productInformationList.getSelectedValue();
+            System.out.println(selectedValue);
             selectedValueInformation = productInformationList.getSelectedValue();
             selectedIndex = 0;
             JLabel productInfo = new JLabel("Selected Track Pack Product Info:");
@@ -373,9 +372,9 @@ public class EditTrackPacks extends JFrame {
         							    			                System.out.println("Product successfully added.");
         							    			                productInformationVector.clear();
         							    			                productInformationList.clearSelection();
-        							    			                getAllTrackPackstmt = connection.createStatement();
+        							    			                getAllTrackPackstmt = connection.prepareStatement("SELECT * FROM Products WHERE product_code LIKE 'P%'");
         							    			                //Get All Locomotive Products
-        							    			                TrainSetListResultSet = getAllTrackPackstmt.executeQuery("SELECT * FROM Products WHERE product_code LIKE 'P%'");
+        							    			                TrainSetListResultSet = getAllTrackPackstmt.executeQuery();
         							    			                while (TrainSetListResultSet.next()) {
         							    			                    String productRow = TrainSetListResultSet.getString("product_code") + ", " + TrainSetListResultSet.getString("product_name") + ", £" + TrainSetListResultSet.getString("retail_price") + ", " + TrainSetListResultSet.getString("stock") + ", " + TrainSetListResultSet.getString("gauge") + ", " + TrainSetListResultSet.getString("scale");
         							    			                    productInformationVector.add(productRow);
@@ -473,9 +472,9 @@ public class EditTrackPacks extends JFrame {
     			                System.out.println("Product successfully deleted.");
     			                productInformationVector.clear();
     			                trackPackList.clearSelection();
-    			                getAllTrackPackstmt = connection.createStatement();
+    			                getAllTrackPackstmt = connection.prepareStatement("SELECT * FROM Products WHERE product_code LIKE 'P%'");
     			                //Get All Track Products
-    			                TrainSetListResultSet = getAllTrackPackstmt.executeQuery("SELECT * FROM Products WHERE product_code LIKE 'P%");
+    			                TrainSetListResultSet = getAllTrackPackstmt.executeQuery();
     			                
     			                while (TrainSetListResultSet.next()) {
     			                    String productRow = TrainSetListResultSet.getString("product_code") + ", " + TrainSetListResultSet.getString("product_name") + ", £" + TrainSetListResultSet.getString("retail_price") + ", " + TrainSetListResultSet.getString("stock") + ", " + TrainSetListResultSet.getString("gauge") + ", " + TrainSetListResultSet.getString("scale");
@@ -552,10 +551,10 @@ public class EditTrackPacks extends JFrame {
                 int thirdCommaIndex = selectedValue.indexOf(",", secondCommaIndex + 1);
                 selectedValueCost = selectedValue.substring(secondCommaIndex + 3, thirdCommaIndex);
                 int fourthCommaIndex = selectedValue.indexOf(",", thirdCommaIndex + 1);
-                selectedValueStock = selectedValue.substring(thirdCommaIndex + 1, fourthCommaIndex);
+                selectedValueStock = selectedValue.substring(thirdCommaIndex + 2, fourthCommaIndex);
                 int fifthCommaIndex = selectedValue.indexOf(",", fourthCommaIndex + 1);
-                selectedValueGauge = selectedValue.substring(fourthCommaIndex +1, fifthCommaIndex);
-                selectedValueStock = selectedValue.substring(fifthCommaIndex + 1, selectedValue.length());
+                selectedValueGauge = selectedValue.substring(fourthCommaIndex + 2, fifthCommaIndex);
+                selectedValueScale = selectedValue.substring(fifthCommaIndex + 2, selectedValue.length());
                 //DISPLAYING SELECTED LOCOMOTIVE DETAILS
                 productName.setText("Product Name: " + selectedValueName);
                 productCode.setText("Product Code: " + selectedValueProductCode);
@@ -569,6 +568,7 @@ public class EditTrackPacks extends JFrame {
             	productName.setText("Product Name: ");
                 productCode.setText("Product Code: ");
                 productCost.setText("Product Cost: ");
+                productStock.setText("Product Stock: ");
                 productGauge.setText("Product Gauge: ");
                 productScale.setText("Product Scale: ");
             }
