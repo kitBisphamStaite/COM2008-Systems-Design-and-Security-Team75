@@ -26,6 +26,6 @@ public class ProductPair {
 
     @Override
     public String toString() {
-        return product.getProductCode() + ": " + quantity;
+        return product.getProductName() + ": " + quantity;
     }
 }

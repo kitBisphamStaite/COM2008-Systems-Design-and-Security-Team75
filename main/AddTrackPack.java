@@ -72,13 +72,16 @@ public class AddTrackPack extends JFrame {
                 trackPopup();
             }   
         });
-        
+
         JButton removeTrackButton = new JButton("Remove Track");
         removeTrackButton.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
                 int currentlySelected = trackListUI.getSelectedIndex();
-                trackListUI.remove(currentlySelected);
+                trackList.remove(currentlySelected);
+                trackListModel.remove(currentlySelected);
+                tempPanel8.repaint();
+                tempPanel8.revalidate();
             }   
         });
         
@@ -130,8 +133,16 @@ public class AddTrackPack extends JFrame {
 
     public void addTrackFromButton(ProductPair productPair){
         if (productPair.getProduct().getProductType() == ProductType.TRACK) {
-            trackListModel.addElement(productPair);
-            trackList.add(productPair);
+            if (ProductValidator.getInstance().validProductListAdd(trackList, ProductType.TRACK, productPair)){
+                System.out.println("Product Not Already in list");
+                trackListModel.addElement(productPair);
+                trackList.add(productPair);
+            } else {
+                JOptionPane.showMessageDialog(null,
+                "Duplicated Product Inputed.",
+                "Duplicate Inputs",
+                JOptionPane.WARNING_MESSAGE);
+            }
         }
         else{
             System.out.println("Wrong Product Type");
@@ -160,18 +171,12 @@ public class AddTrackPack extends JFrame {
         Boolean validTrackList = ProductValidator.getInstance().validProductList(trackList, ProductType.TRACK, 1);
 
         if (!isEditing && validProductName && validManufacturerName && validRetailPrice && validStock && validGauge && validScale && validTrackList) {
-            Inventory.getInstance().addProduct(new TrackPack(productCodeText, productNameText, manufacturerNameText, 
-                                                Integer.parseInt(retailPriceText), Integer.parseInt(stockText), 
-                                                (Gauge) gaugeComboBox.getSelectedItem(), (Scale) scaleComboBox.getSelectedItem(), 
-                                                trackList));
+            Inventory.getInstance().addProduct(new TrackPack(productCodeText, productNameText, manufacturerNameText, Integer.parseInt(retailPriceText), Integer.parseInt(stockText), (Gauge) gaugeComboBox.getSelectedItem(), (Scale) scaleComboBox.getSelectedItem(), trackList));
             parentScreen.setVisible(true);
             parentScreen.searchProducts();
             this.dispose();
         } else if (isEditing && validProductCode && validProductName && validManufacturerName && validRetailPrice && validStock && validGauge && validScale && validTrackList) {
-            InventoryUpdate.getInstance().updateProduct(new TrackPack(productCodeText, productNameText, manufacturerNameText, 
-                                                Integer.parseInt(retailPriceText), Integer.parseInt(stockText), 
-                                                (Gauge) gaugeComboBox.getSelectedItem(), (Scale) scaleComboBox.getSelectedItem(), 
-                                                trackList));
+            InventoryUpdate.getInstance().updateProduct(new TrackPack(productCodeText, productNameText, manufacturerNameText, Integer.parseInt(retailPriceText), Integer.parseInt(stockText), (Gauge) gaugeComboBox.getSelectedItem(), (Scale) scaleComboBox.getSelectedItem(), trackList));
             parentScreen.setVisible(true);
             parentScreen.searchProducts();
             this.dispose();
@@ -224,8 +229,6 @@ public class AddTrackPack extends JFrame {
             "Incorrect Inputs",
             JOptionPane.WARNING_MESSAGE);
         }
-
-
     }
 
     public void editProduct(TrackPack product){
@@ -237,7 +240,9 @@ public class AddTrackPack extends JFrame {
         stockTextArea.setText(Integer.toString(product.getStock()));
         gaugeComboBox.setSelectedItem(product.getGauge());
         scaleComboBox.setSelectedItem(product.getScale());
-        trackList = product.getTracks();
+        for(ProductPair productPair : product.getTracks()){
+            addTrackFromButton(productPair);
+        }
         isEditing = true;
     }
 }

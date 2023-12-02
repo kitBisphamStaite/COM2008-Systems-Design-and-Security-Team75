@@ -11,6 +11,7 @@ public class TrainSet extends Product {
                     Gauge gauge, Scale scale, String eraCode, Controller controller, ArrayList<ProductPair> locomotives, 
                     ArrayList<ProductPair> rollingStocks, ArrayList<ProductPair> trackPacks){
         super(productCode, productName, manufacturerName, retailPrice, stock, gauge, scale, ProductType.TRAINSET);
+        this.eraCode = eraCode;
         this.controller = controller;
         this.locomotives = locomotives;
         this.rollingStocks = rollingStocks;

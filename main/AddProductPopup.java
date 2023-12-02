@@ -74,6 +74,7 @@ public class AddProductPopup extends JFrame {
             Product productFinal = Inventory.getInstance().getProduct(productCode);
             System.out.println("Valid Product and Code");
             parentScreen.addProductFromButton(new ProductPair(productFinal, quantityFinal));
+            //InventoryUpdate.getInstance().updateProduct();
             goBack();
         }
         else{

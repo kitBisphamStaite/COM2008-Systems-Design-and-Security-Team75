@@ -81,8 +81,8 @@ public class AddTrainSet extends JFrame {
             }
         });
 
-        JButton addProducButton = new JButton("Add Product");
-        addProducButton.addActionListener(new ActionListener() {
+        JButton addProductButton = new JButton("Add Product");
+        addProductButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 addProduct();
@@ -93,32 +93,49 @@ public class AddTrainSet extends JFrame {
         addLocomotiveButton.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
-                ProductPopup(ProductType.LOCOMOTIVE);
+                productPopup(ProductType.LOCOMOTIVE);
             }   
         });
-        
+
         JButton removeLocomotiveButton = new JButton("Remove Locomotive");
         removeLocomotiveButton.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
-                int currentlySelected = locomotiveListUI.getSelectedIndex();
-                locomotiveListUI.remove(currentlySelected);            }   
+                if (locomotiveListUI.getSelectedValue() != null){
+                    int currentlySelected = locomotiveListUI.getSelectedIndex();
+                    if (currentlySelected < locomotiveList.size()){
+                        locomotiveList.remove(currentlySelected);
+                        locomotiveListModel.remove(currentlySelected);
+                        tempPanel11.repaint();
+                        tempPanel11.revalidate();
+                    }
+                }
+            } 
         });
 
         JButton addRollingStockButton = new JButton("Add Rolling Stock");
         addRollingStockButton.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
-                ProductPopup(ProductType.ROLLINGSTOCK);
+                productPopup(ProductType.ROLLINGSTOCK);
             }   
         });
-        
+
         JButton removeRollingStockButton = new JButton("Remove Rolling Stock");
         removeRollingStockButton.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
-                int currentlySelected = rollingStockListUI.getSelectedIndex();
-                rollingStockListUI.remove(currentlySelected);            }   
+                if (rollingStockListUI.getSelectedValue() != null){
+
+                    int currentlySelected = rollingStockListUI.getSelectedIndex();
+                    if (currentlySelected < rollingStockList.size()){
+                        rollingStockList.remove(currentlySelected);
+                        rollingStockListModel.remove(currentlySelected);
+                        tempPanel13.repaint();
+                        tempPanel13.revalidate();
+                    }
+                }
+            }   
         });
 
 
@@ -126,7 +143,7 @@ public class AddTrainSet extends JFrame {
         addTrackPackButton.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
-                ProductPopup(ProductType.TRACKPACK);
+                productPopup(ProductType.TRACKPACK);
             }   
         });
 
@@ -134,8 +151,16 @@ public class AddTrainSet extends JFrame {
         removeTrackPackButton.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
-                int currentlySelected = trackPackListUI.getSelectedIndex();
-                trackPackListUI.remove(currentlySelected);            }   
+                if (trackPackListUI.getSelectedValue() != null){
+                    int currentlySelected = trackPackListUI.getSelectedIndex();
+                    if (currentlySelected < trackPackList.size()){
+                        trackPackList.remove(currentlySelected);
+                        trackPackListModel.remove(currentlySelected);
+                        tempPanel15.repaint();
+                        tempPanel15.revalidate();
+                    }
+                }
+            }   
         });
 
 
@@ -169,7 +194,7 @@ public class AddTrainSet extends JFrame {
         tempPanel14.add(trackPackListUI);
         tempPanel15.add(addTrackPackButton);
         tempPanel15.add(removeTrackPackButton);
-        tempPanel16.add(addProducButton);
+        tempPanel16.add(addProductButton);
         tempPanel16.add(goBackButton);
         detailsPanel.add(tempPanel1);
         detailsPanel.add(tempPanel2);
@@ -196,7 +221,7 @@ public class AddTrainSet extends JFrame {
         this.dispose();
     }
     
-    private void ProductPopup(ProductType productType){
+    private void productPopup(ProductType productType){
         AddProductPopup detailsScreen = new AddProductPopup(this, productType);
         detailsScreen.setVisible(true);
         this.setVisible(false);
@@ -204,16 +229,38 @@ public class AddTrainSet extends JFrame {
 
     public void addProductFromButton(ProductPair productPair){
         if (productPair.getProduct().getProductType() == ProductType.TRACKPACK) {
-            trackPackListModel.addElement(productPair);
-            trackPackList.add(productPair);
+            if (ProductValidator.getInstance().validProductListAdd(trackPackList, ProductType.TRACKPACK, productPair)){
+                trackPackListModel.addElement(productPair);
+                trackPackList.add(productPair);
+            } else {
+                JOptionPane.showMessageDialog(null,
+                "Duplicated Product Inputed.",
+                "Duplicate Inputs",
+                JOptionPane.WARNING_MESSAGE);
+            }
         }
         if (productPair.getProduct().getProductType() == ProductType.ROLLINGSTOCK) {
-            rollingStockListModel.addElement(productPair);
-            rollingStockList.add(productPair);
+            if (ProductValidator.getInstance().validProductListAdd(rollingStockList, ProductType.ROLLINGSTOCK, productPair)){
+                rollingStockListModel.addElement(productPair);
+                rollingStockList.add(productPair);
+            } else {
+                JOptionPane.showMessageDialog(null,
+                "Duplicated Product Inputed.",
+                "Duplicate Inputs",
+                JOptionPane.WARNING_MESSAGE);
+            }
+
         }
         if (productPair.getProduct().getProductType() == ProductType.LOCOMOTIVE) {
-            locomotiveListModel.addElement(productPair);
-            locomotiveList.add(productPair);
+            if (ProductValidator.getInstance().validProductListAdd(locomotiveList, ProductType.LOCOMOTIVE, productPair)){
+                locomotiveListModel.addElement(productPair);
+                locomotiveList.add(productPair);
+            } else {
+                JOptionPane.showMessageDialog(null,
+                "Duplicated Product Inputed.",
+                "Duplicate Inputs",
+                JOptionPane.WARNING_MESSAGE);
+            }
         }
     }
 
@@ -328,7 +375,6 @@ public class AddTrainSet extends JFrame {
             "Incorrect Inputs",
             JOptionPane.WARNING_MESSAGE);
         }
-
     }
 
     public void editProduct(TrainSet product){
@@ -342,9 +388,17 @@ public class AddTrainSet extends JFrame {
         scaleComboBox.setSelectedItem(product.getScale());
         eraCodeTextArea.setText(product.getEraCode());
         controllerProductCodeTextArea.setText(product.getController().getProductCode());
-        locomotiveList = product.getLocomotives();
-        rollingStockList = product.getRollingStocks();
-        trackPackList = product.getTrackPacks();
+
+        for(ProductPair productPair : product.getLocomotives()){
+            addProductFromButton(productPair);
+        }
+        for(ProductPair productPair : product.getRollingStocks()){
+            addProductFromButton(productPair);
+        }
+        for(ProductPair productPair : product.getTrackPacks()){
+            addProductFromButton(productPair);
+        }
+        
         isEditing = true;
     }
 }
