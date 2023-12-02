@@ -265,33 +265,38 @@ public class ProductRecords extends JFrame {
 
     private void editProductDetails(Product product) {
         System.out.println("Edit Product");
-        AddProduct addProduct = new AddProduct(this, product.getProductType());
         if (product.getProductType() == ProductType.CONTROLLER) {
+            AddController addProduct = new AddController(this);
             addProduct.editProduct((Controller) product);
             addProduct.setVisible(true);
             this.setVisible(false);
         }
         if (product.getProductType() == ProductType.LOCOMOTIVE) {
+            AddLocomotive addProduct = new AddLocomotive(this);
             addProduct.editProduct((Locomotive) product);
             addProduct.setVisible(true);
             this.setVisible(false);
         }
         if (product.getProductType() == ProductType.ROLLINGSTOCK) {
+            AddRollingStock addProduct = new AddRollingStock(this);
             addProduct.editProduct((RollingStock) product);
             addProduct.setVisible(true);
             this.setVisible(false);
         }
         if (product.getProductType() == ProductType.TRACK) {
+            AddTrack addProduct = new AddTrack(this);
             addProduct.editProduct((Track) product);
             addProduct.setVisible(true);
             this.setVisible(false);
         }
         if (product.getProductType() == ProductType.TRACKPACK) {
+            AddTrackPack addProduct = new AddTrackPack(this);
             addProduct.editProduct((TrackPack) product);
             addProduct.setVisible(true);
             this.setVisible(false);
         }
         if (product.getProductType() == ProductType.TRAINSET) {
+            AddTrainSet addProduct = new AddTrainSet(this);
             addProduct.editProduct((TrainSet) product);
             addProduct.setVisible(true);
             this.setVisible(false);
@@ -319,7 +324,7 @@ public class ProductRecords extends JFrame {
         addControllerButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                addNewProduct(ProductType.CONTROLLER);
+                addController();
             }
         });
 
@@ -327,7 +332,7 @@ public class ProductRecords extends JFrame {
         AddLocomotiveButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                addNewProduct(ProductType.LOCOMOTIVE);
+                addLocomotive();
             }
         });
 
@@ -335,7 +340,7 @@ public class ProductRecords extends JFrame {
         addRollingStockButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                addNewProduct(ProductType.ROLLINGSTOCK);
+                addRollingStock();
             }
         });
 
@@ -343,7 +348,7 @@ public class ProductRecords extends JFrame {
         AddTrackButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                addNewProduct(ProductType.TRACK);
+                addTrack();
             }
         });
 
@@ -351,8 +356,7 @@ public class ProductRecords extends JFrame {
         AddTrackPackButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                addNewProduct(ProductType.TRAINSET);
-
+                addTrackPack();
             }
         });
 
@@ -360,7 +364,7 @@ public class ProductRecords extends JFrame {
         AddTrainSetButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                addNewProduct(ProductType.TRAINSET);
+                addTrainSet();
             }
         });
         resetDetailPanel();
@@ -374,45 +378,39 @@ public class ProductRecords extends JFrame {
         detailsPanel.add(AddTrainSetButton);
         detailsPanel.add(goBackButton);
     }
-    
-    public void addNewProduct(ProductType productType){
-        AddProduct addProduct = new AddProduct(this, productType);
-        addProduct.setVisible(true);
-        this.setVisible(false);
-    }
 
     public void addController(){
-        AddProduct addController = new AddProduct(this, ProductType.CONTROLLER);
+        AddController addController = new AddController(this);
         addController.setVisible(true);
         this.setVisible(false);
     }
 
     public void addLocomotive(){
-        AddProduct addLocomotive = new AddProduct(this, ProductType.LOCOMOTIVE);
+        AddLocomotive addLocomotive = new AddLocomotive(this);
         addLocomotive.setVisible(true);
         this.setVisible(false);
     }
     
     public void addRollingStock(){
-        AddProduct addRollingStock = new AddProduct(this, ProductType.ROLLINGSTOCK);
+        AddRollingStock addRollingStock = new AddRollingStock(this);
         addRollingStock.setVisible(true);
         this.setVisible(false);       
     }
     
     public void addTrack(){
-        AddProduct addTrack = new AddProduct(this, ProductType.TRACK);
+        AddTrack addTrack = new AddTrack(this);
         addTrack.setVisible(true);
         this.setVisible(false);
     }
     
     public void addTrackPack(){
-        AddProduct addTrackPack = new AddProduct(this, ProductType.TRACKPACK);
+        AddTrackPack addTrackPack = new AddTrackPack(this);
         addTrackPack.setVisible(true);
         this.setVisible(false);
     }
 
     public void addTrainSet(){
-        AddProduct addTrainSet = new AddProduct(this, ProductType.TRAINSET);
+        AddTrainSet addTrainSet = new AddTrainSet(this);
         addTrainSet.setVisible(true);
         this.setVisible(false);
     }
