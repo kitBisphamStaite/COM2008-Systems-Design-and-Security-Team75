@@ -3,15 +3,13 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class AddProductPopup extends JFrame {
-    private AddTrainSet parentScreen;
+public class AddTrackPopup extends JFrame {
+    private AddTrackPack parentScreen;
     private JTextArea productCodeTextArea = new JTextArea();
     private JTextArea quantityTextArea = new JTextArea();
-    private ProductType productType;
 
-    public AddProductPopup(AddTrainSet parentScreenInit, ProductType productTypeInit) {
-        this.parentScreen = parentScreenInit;
-        this.productType = productTypeInit;
+    public AddTrackPopup(AddTrackPack parentScreen) {
+        this.parentScreen = parentScreen;
         setTitle("Train Set");
         setSize(600, 600);
         setLocationRelativeTo(null);
@@ -34,22 +32,7 @@ public class AddProductPopup extends JFrame {
             }        
         });
 
-        if (productType == ProductType.LOCOMOTIVE){
-            detailsPanel.add(new JLabel("productCodeTextArea (Product Code should start with 'L'):"));
-        }
-
-        if (productType == ProductType.ROLLINGSTOCK){
-            detailsPanel.add(new JLabel("productCodeTextArea (Product Code should start with 'S'):"));
-        }
-
-        if (productType == ProductType.TRACKPACK){
-            detailsPanel.add(new JLabel("productCodeTextArea (Product Code should start with 'P'):"));
-        }
-
-        if (productType == ProductType.TRACK){
-            detailsPanel.add(new JLabel("productCodeTextArea (Product Code should start with 'P'):"));
-        }
-
+        detailsPanel.add(new JLabel("productCodeTextArea (Product Code should start with 'L'):"));
         detailsPanel.add(productCodeTextArea);
         detailsPanel.add(new JLabel("quantityTextArea:"));
         detailsPanel.add(quantityTextArea);
@@ -71,18 +54,17 @@ public class AddProductPopup extends JFrame {
         Boolean validQuantity = ProductValidator.getInstance().validQuantity(quantity);
 
         String productCode = productCodeTextArea.getText().strip();
-        Boolean validProduct = ProductValidator.getInstance().validProduct(productCode, productType);
+        Boolean validProduct = ProductValidator.getInstance().validProduct(productCode, ProductType.TRACK);
 
         if (validQuantity && validProduct){
             int quantityFinal = Integer.parseInt(quantity);
             Product productFinal = Inventory.getInstance().getProduct(productCode);
             System.out.println("Valid Product and Code");
-            parentScreen.addProductFromButton(new ProductPair(productFinal, quantityFinal));
-            //InventoryUpdate.getInstance().updateProduct();
+            parentScreen.addTrackFromButton(new ProductPair(productFinal, quantityFinal));
             goBack();
         }
         else{
-            System.out.println("Invalid Product Code and Quantity - AddProductPopup");
+            System.out.println("Invalid Product Code and Quantity - AddTrackPopup");
         }
     }
 }
