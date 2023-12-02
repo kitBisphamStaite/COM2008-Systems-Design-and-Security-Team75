@@ -40,7 +40,7 @@ public class InventoryUpdate {
         oldProduct.setScale(updatedProduct.getScale());
 
         try {
-            String updateSQL = "UPDATE Products SET product_name=?, manufacturer_name=?, retail_price=?, stock=?, gauge=?, scale-? WHERE product_code=?";
+            String updateSQL = "UPDATE Products SET product_name=?, manufacturer_name=?, retail_price=?, stock=?, gauge=?, scale=? WHERE product_code=?";
             PreparedStatement preparedStatement = connection.prepareStatement(updateSQL);
 
             preparedStatement.setString(1, updatedProduct.getProductName());
@@ -50,6 +50,14 @@ public class InventoryUpdate {
             preparedStatement.setInt(5, updatedProduct.getGauge().ordinal());
             preparedStatement.setInt(6, updatedProduct.getScale().ordinal());
             preparedStatement.setString(7, updatedProduct.getProductCode());
+
+            int rowsUpdated = preparedStatement.executeUpdate();
+            if (rowsUpdated > 0){
+                System.out.println(rowsUpdated + " row(s) updated Successfully");
+            } else {
+                System.out.println("No rows were updated for Product Code: " + updatedProduct.getProductCode());
+            }
+
         } catch (SQLException e){
             e.printStackTrace();
         }
@@ -81,11 +89,19 @@ public class InventoryUpdate {
         oldProduct.SetChipType(updatedProduct.GetChipType());
 
         try {
-            String updateSQL = "UPDATE Controller chip_type=? WHERE product_code=?";
+            String updateSQL = "UPDATE Controller SET chip_type=? WHERE product_code=?";
             PreparedStatement preparedStatement = connection.prepareStatement(updateSQL);
 
             preparedStatement.setInt(1, updatedProduct.GetChipType().ordinal());
             preparedStatement.setString(2, updatedProduct.getProductCode());
+
+            int rowsUpdated = preparedStatement.executeUpdate();
+            if (rowsUpdated > 0){
+                System.out.println(rowsUpdated + " row(s) updated Successfully");
+            } else {
+                System.out.println("No rows were updated for Product Code: " + updatedProduct.getProductCode());
+            }
+
         } catch (SQLException e){
             e.printStackTrace();
         }
@@ -104,6 +120,13 @@ public class InventoryUpdate {
             preparedStatement.setInt(1, updatedProduct.getControlType().ordinal());
             preparedStatement.setString(2, updatedProduct.getEraCode());
             preparedStatement.setString(3, updatedProduct.getProductCode());
+            
+            int rowsUpdated = preparedStatement.executeUpdate();
+            if (rowsUpdated > 0){
+                System.out.println(rowsUpdated + " row(s) updated Successfully");
+            } else {
+                System.out.println("No rows were updated for Product Code: " + updatedProduct.getProductCode());
+            }
         } catch (SQLException e){
             e.printStackTrace();
         }
@@ -120,6 +143,14 @@ public class InventoryUpdate {
 
             preparedStatement.setString(1, updatedProduct.getEraCode());
             preparedStatement.setString(2, updatedProduct.getProductCode());
+
+            int rowsUpdated = preparedStatement.executeUpdate();
+            if (rowsUpdated > 0){
+                System.out.println(rowsUpdated + " row(s) updated Successfully");
+            } else {
+                System.out.println("No rows were updated for Product Code: " + updatedProduct.getProductCode());
+            }
+
         } catch (SQLException e){
             e.printStackTrace();
         }
@@ -132,12 +163,19 @@ public class InventoryUpdate {
         oldProduct.setTrackType(updatedProduct.getTrackType());
         
         try {
-            String updateSQL = "UPDATE Track SET track_type=?, curve_radius-? WHERE product_code=?";
+            String updateSQL = "UPDATE Track SET track_type=?, curve_radius=? WHERE product_code=?";
             PreparedStatement preparedStatement = connection.prepareStatement(updateSQL);
 
             preparedStatement.setInt(1, updatedProduct.getTrackType().ordinal());
             preparedStatement.setInt(2, updatedProduct.getCurveRadius().ordinal());
             preparedStatement.setString(3, updatedProduct.getProductCode());
+
+            int rowsUpdated = preparedStatement.executeUpdate();
+            if (rowsUpdated > 0){
+                System.out.println(rowsUpdated + " row(s) updated Successfully");
+            } else {
+                System.out.println("No rows were updated for Product Code: " + updatedProduct.getProductCode());
+            }
         } catch (SQLException e){
             e.printStackTrace();
         }
@@ -166,6 +204,13 @@ public class InventoryUpdate {
             preparedStatement.setString(1, updatedProduct.getController().getProductCode());
             preparedStatement.setString(2, updatedProduct.getEraCode());
             preparedStatement.setString(3, updatedProduct.getProductCode());
+            int rowsUpdated = preparedStatement.executeUpdate();
+            if (rowsUpdated > 0){
+                System.out.println(rowsUpdated + " row(s) updated Successfully");
+            } else {
+                System.out.println("No rows were updated for Product Code: " + updatedProduct.getProductCode());
+            }
+
         } catch (SQLException e){
             e.printStackTrace();
         }

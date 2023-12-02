@@ -29,11 +29,18 @@ public class ProductValidator {
                         return true;
                     } else if (productType == ProductType.TRAINSET && productCode.startsWith("M")) {
                         return true;
+                    } else {
+                        System.out.println("Incorrect Product Type");
                     }
+                } else {
+                    System.out.println("Incorrect Length");
                 }
+            } else {
+                System.out.println("Already a product");
             }
+        } else {
+            System.out.println("Not a valid String input");
         }
-        System.out.println("Invalid Product Code");
         return false;
     }
 
@@ -41,7 +48,6 @@ public class ProductValidator {
         if (productname != null && productname !="") {
             return true;
         }
-        System.out.println("Invalid Product Name");
         return false;
     }
 
@@ -49,7 +55,6 @@ public class ProductValidator {
         if (manufacturerName != null && manufacturerName !="") {
             return true;
         }
-        System.out.println("Invalid Manufacturer Name");
         return false;    
     }
 
@@ -60,7 +65,6 @@ public class ProductValidator {
                 return true;
             }
         }
-        System.out.println("Invalid Price");
         return false;
     }
 
@@ -71,7 +75,6 @@ public class ProductValidator {
                 return true;
             }
         }
-        System.out.println("Invalid Stock");
         return false;
     }
 
@@ -81,7 +84,6 @@ public class ProductValidator {
                 return true;
             }
         }
-        System.out.println("Invalid Stock");
         return false;
     }
 
@@ -101,7 +103,6 @@ public class ProductValidator {
         if (eraCode != null && eraCode !="") {
             return true;
         }
-        System.out.println("Invalid Era code");
         return false;    
     }
 
@@ -135,6 +136,18 @@ public class ProductValidator {
         }
         if (productList.size() < minimumListLength) {
             return false;
+        }
+        return true;
+    }
+
+    public boolean validProductListAdd(ArrayList<ProductPair> productList, ProductType productType, ProductPair product){
+        for (ProductPair productPair : productList) {
+            if (productPair.getProduct().getProductType() != productType) {
+                return false;
+            }
+            if (productPair.getProduct().getProductCode().equals(product.getProduct().getProductCode())){
+                return false;
+            }
         }
         return true;
     }

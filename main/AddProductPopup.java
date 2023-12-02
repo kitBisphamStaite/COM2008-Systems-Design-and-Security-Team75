@@ -4,12 +4,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class AddProductPopup extends JFrame {
-    private AddTrainSet parentScreen;
+    private AddProduct parentScreen;
     private JTextArea productCodeTextArea = new JTextArea();
     private JTextArea quantityTextArea = new JTextArea();
     private ProductType productType;
 
-    public AddProductPopup(AddTrainSet parentScreenInit, ProductType productTypeInit) {
+    public AddProductPopup(AddProduct parentScreenInit, ProductType productTypeInit) {
         this.parentScreen = parentScreenInit;
         this.productType = productTypeInit;
         setTitle("Train Set");
@@ -46,6 +46,10 @@ public class AddProductPopup extends JFrame {
             detailsPanel.add(new JLabel("productCodeTextArea (Product Code should start with 'P'):"));
         }
 
+        if (productType == ProductType.TRACK){
+            detailsPanel.add(new JLabel("productCodeTextArea (Product Code should start with 'P'):"));
+        }
+
         detailsPanel.add(productCodeTextArea);
         detailsPanel.add(new JLabel("quantityTextArea:"));
         detailsPanel.add(quantityTextArea);
@@ -74,6 +78,7 @@ public class AddProductPopup extends JFrame {
             Product productFinal = Inventory.getInstance().getProduct(productCode);
             System.out.println("Valid Product and Code");
             parentScreen.addProductFromButton(new ProductPair(productFinal, quantityFinal));
+            //InventoryUpdate.getInstance().updateProduct();
             goBack();
         }
         else{

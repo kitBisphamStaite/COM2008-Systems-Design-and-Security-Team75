@@ -33,7 +33,46 @@ public class Inventory {
 
     // Track codes start with R, controller codes with C, locomotives with L, rolling stock with S, train sets with M, and track packs with P
     public void initProducts(){
-        try {
+        initController();
+        initLocomotive();
+        initRollingStock();
+        initTrack();
+        initTrackPack();
+        initTrainSet();
+    }
+
+    public void initLocomotive(){
+        try{
+            String selectSQL = "SELECT * FROM Products";
+            PreparedStatement preparedStatement = connection.prepareStatement(selectSQL);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while(resultSet.next()){
+                String productCode = resultSet.getString("product_code");
+                String productName = resultSet.getString("product_name");
+                String manufacturerName = resultSet.getString("manufacturer_name");
+                int retailPrice = resultSet.getInt("retail_price");
+                int stock = resultSet.getInt("stock");
+                Gauge gauge =  Gauge.values()[resultSet.getInt("gauge")];
+                Scale scale = Scale.values()[resultSet.getInt("scale")];
+                if(resultSet.getString("product_code").startsWith("L")){
+                    String locomotiveSQL = "SELECT * FROM Locomotive WHERE product_code=?";
+                    PreparedStatement preparedStatementLocomotive = connection.prepareStatement(locomotiveSQL);
+                    preparedStatementLocomotive.setString(1, resultSet.getString("product_code"));
+                    
+                    ResultSet resultSetLocomotive = preparedStatementLocomotive.executeQuery();
+                    resultSetLocomotive.next();
+                    String eraCode = resultSetLocomotive.getString("era_code");
+                    ControlType controlType = ControlType.values()[resultSetLocomotive.getInt("control_type")];
+                    products.add(new Locomotive(productCode, productName, manufacturerName, retailPrice, stock, gauge, scale, eraCode, controlType));
+                }
+            }
+        } catch(SQLException e){
+            e.printStackTrace();
+        }
+    }
+
+    public void initController(){
+        try{
             String selectSQL = "SELECT * FROM Products";
             PreparedStatement preparedStatement = connection.prepareStatement(selectSQL);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -57,45 +96,25 @@ public class Inventory {
                     ChipType chipType = ChipType.values()[resultSetController.getInt("chip_type")];
                     products.add(new Controller(productCode, productName, manufacturerName, retailPrice, stock, gauge, scale, chipType));
                 }
-                if(resultSet.getString("product_code").startsWith("L")){
-                    String locomotiveSQL = "SELECT * FROM Locomotive WHERE product_code=?";
-                    PreparedStatement preparedStatementLocomotive = connection.prepareStatement(locomotiveSQL);
-                    preparedStatementLocomotive.setString(1, resultSet.getString("product_code"));
-                    
-                    ResultSet resultSetLocomotive = preparedStatementLocomotive.executeQuery();
-                    resultSetLocomotive.next();
-                    String eraCode = resultSetLocomotive.getString("era_code");
-                    ControlType controlType = ControlType.values()[resultSetLocomotive.getInt("control_type")];
-                    products.add(new Locomotive(productCode, productName, manufacturerName, retailPrice, stock, gauge, scale, eraCode, controlType));
-                }
-                if(resultSet.getString("product_code").startsWith("P")){
-                    String trackPackSQL = "SELECT * FROM Track_Pack WHERE product_code=?";
-                    PreparedStatement preparedStatementTrackPack = connection.prepareStatement(trackPackSQL);
-                    preparedStatementTrackPack.setString(1, resultSet.getString("product_code"));
-                    
-                    ResultSet resultSetTrackPack = preparedStatementTrackPack.executeQuery();
-                    resultSetTrackPack.next();
-                    ArrayList<ProductPair> tracks = new ArrayList<ProductPair>();
-                    fillArrayList(tracks, productCode);
-                    products.add(new TrackPack(productCode, productName, manufacturerName, retailPrice, stock, gauge, scale, tracks));
-                }
-                if(resultSet.getString("product_code").startsWith("M")){
-                    String trainSetSQL = "SELECT * FROM Train_Set WHERE product_code=?";
-                    PreparedStatement preparedStatementTrainSet = connection.prepareStatement(trainSetSQL);
-                    preparedStatementTrainSet.setString(1, resultSet.getString("product_code"));
-                    
-                    ResultSet resultSetTrainSet = preparedStatementTrainSet.executeQuery();
-                    resultSetTrainSet.next();
-                    String eraCode = resultSetTrainSet.getString("era_code");
-                    Controller controller = (Controller) getProduct(resultSetTrainSet.getString("controller_product_code"));
-                    ArrayList<ProductPair> locomotives = new ArrayList<ProductPair>();
-                    fillArrayList(locomotives, productCode);
-                    ArrayList<ProductPair> rollingStocks = new ArrayList<ProductPair>();
-                    fillArrayList(rollingStocks, productCode);
-                    ArrayList<ProductPair> trackPacks = new ArrayList<ProductPair>();
-                    fillArrayList(trackPacks, productCode);
-                    products.add(new TrainSet(productCode, productName, manufacturerName, retailPrice, stock, gauge, scale, eraCode, controller, locomotives, rollingStocks, trackPacks));
-                }
+            }
+        } catch(SQLException e){
+            e.printStackTrace();
+        }
+    }
+ 
+    public void initRollingStock(){
+        try{
+            String selectSQL = "SELECT * FROM Products";
+            PreparedStatement preparedStatement = connection.prepareStatement(selectSQL);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while(resultSet.next()){
+                String productCode = resultSet.getString("product_code");
+                String productName = resultSet.getString("product_name");
+                String manufacturerName = resultSet.getString("manufacturer_name");
+                int retailPrice = resultSet.getInt("retail_price");
+                int stock = resultSet.getInt("stock");
+                Gauge gauge =  Gauge.values()[resultSet.getInt("gauge")];
+                Scale scale = Scale.values()[resultSet.getInt("scale")];
                 if(resultSet.getString("product_code").startsWith("S")){
                     String rollingStockSQL = "SELECT * FROM Rolling_Stock WHERE product_code=?";
                     PreparedStatement preparedStatementRollingStock = connection.prepareStatement(rollingStockSQL);
@@ -106,6 +125,25 @@ public class Inventory {
                     String eraCode = resultSetRollingStock.getString("era_code");
                     products.add(new RollingStock(productCode, productName, manufacturerName, retailPrice, stock, gauge, scale, eraCode));
                 }
+            }
+        } catch(SQLException e){
+            e.printStackTrace();
+        }
+    }
+
+    public void initTrack(){
+        try{
+            String selectSQL = "SELECT * FROM Products";
+            PreparedStatement preparedStatement = connection.prepareStatement(selectSQL);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while(resultSet.next()){
+                String productCode = resultSet.getString("product_code");
+                String productName = resultSet.getString("product_name");
+                String manufacturerName = resultSet.getString("manufacturer_name");
+                int retailPrice = resultSet.getInt("retail_price");
+                int stock = resultSet.getInt("stock");
+                Gauge gauge =  Gauge.values()[resultSet.getInt("gauge")];
+                Scale scale = Scale.values()[resultSet.getInt("scale")];
                 if(resultSet.getString("product_code").startsWith("R")){
                     String trackSQL = "SELECT * FROM Track WHERE product_code=?";
                     PreparedStatement preparedStatementTrack = connection.prepareStatement(trackSQL);
@@ -117,15 +155,81 @@ public class Inventory {
                     products.add(new Track(productCode, productName, manufacturerName, retailPrice, stock, gauge, scale, curveRadius, trackType));
                 }
             }
-        } catch (SQLException e){
+        } catch(SQLException e){
             e.printStackTrace();
         }
     }
 
-    public void fillArrayList(ArrayList<ProductPair> arrayList, String productCode){
-        if (productCode.startsWith("R")){
+    public void initTrackPack(){
+        try{
+            String selectSQL = "SELECT * FROM Products";
+            PreparedStatement preparedStatement = connection.prepareStatement(selectSQL);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while(resultSet.next()){
+                String productCode = resultSet.getString("product_code");
+                String productName = resultSet.getString("product_name");
+                String manufacturerName = resultSet.getString("manufacturer_name");
+                int retailPrice = resultSet.getInt("retail_price");
+                int stock = resultSet.getInt("stock");
+                Gauge gauge =  Gauge.values()[resultSet.getInt("gauge")];
+                Scale scale = Scale.values()[resultSet.getInt("scale")];
+                if(resultSet.getString("product_code").startsWith("P")){
+                    String trackPackSQL = "SELECT * FROM Track_Pack WHERE product_code=?";
+                    PreparedStatement preparedStatementTrackPack = connection.prepareStatement(trackPackSQL);
+                    preparedStatementTrackPack.setString(1, resultSet.getString("product_code"));
+                    
+                    ResultSet resultSetTrackPack = preparedStatementTrackPack.executeQuery();
+                    resultSetTrackPack.next();
+                    ArrayList<ProductPair> tracks = new ArrayList<ProductPair>();
+                    fillArrayList(tracks, productCode, ProductType.TRACK);
+                    products.add(new TrackPack(productCode, productName, manufacturerName, retailPrice, stock, gauge, scale, tracks));
+                }
+            }
+        } catch(SQLException e){
+            e.printStackTrace();
+        }
+    }
+
+    public void initTrainSet(){
+        try{
+            String selectSQL = "SELECT * FROM Products";
+            PreparedStatement preparedStatement = connection.prepareStatement(selectSQL);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while(resultSet.next()){
+                String productCode = resultSet.getString("product_code");
+                String productName = resultSet.getString("product_name");
+                String manufacturerName = resultSet.getString("manufacturer_name");
+                int retailPrice = resultSet.getInt("retail_price");
+                int stock = resultSet.getInt("stock");
+                Gauge gauge =  Gauge.values()[resultSet.getInt("gauge")];
+                Scale scale = Scale.values()[resultSet.getInt("scale")];
+                if(resultSet.getString("product_code").startsWith("M")){
+                    String trainSetSQL = "SELECT * FROM Train_Set WHERE product_code=?";
+                    PreparedStatement preparedStatementTrainSet = connection.prepareStatement(trainSetSQL);
+                    preparedStatementTrainSet.setString(1, resultSet.getString("product_code"));
+                    ResultSet resultSetTrainSet = preparedStatementTrainSet.executeQuery();
+                    resultSetTrainSet.next();
+                    String eraCode = resultSetTrainSet.getString("era_code");
+                    Controller controller = (Controller) getProduct(resultSetTrainSet.getString("controller_product_code"));
+                    ArrayList<ProductPair> locomotives = new ArrayList<ProductPair>();
+                    fillArrayList(locomotives, productCode, ProductType.LOCOMOTIVE);
+                    ArrayList<ProductPair> rollingStocks = new ArrayList<ProductPair>();
+                    fillArrayList(rollingStocks, productCode, ProductType.ROLLINGSTOCK);
+                    ArrayList<ProductPair> trackPacks = new ArrayList<ProductPair>();
+                    fillArrayList(trackPacks, productCode, ProductType.TRACKPACK);
+                    products.add(new TrainSet(productCode, productName, manufacturerName, retailPrice, stock, gauge, scale, eraCode, controller, locomotives, rollingStocks, trackPacks));
+                }
+            }
+        } catch(SQLException e){
+            e.printStackTrace();
+        }
+
+    }
+
+    public void fillArrayList(ArrayList<ProductPair> arrayList, String productCode, ProductType productType){
+        if (productCode.startsWith("P")){
             try {
-                String selectSQL = "SELECT * FROM Track_Pack_Linker WHERE track_pack_product_code=?";
+                String selectSQL = "SELECT * FROM Track_Linker WHERE track_pack_product_code=?";
                 PreparedStatement preparedStatement = connection.prepareStatement(selectSQL);
                 preparedStatement.setString(1, productCode);
                 ResultSet resultSet = preparedStatement.executeQuery();
@@ -134,43 +238,48 @@ public class Inventory {
                 }
             } catch (SQLException e){
                 e.printStackTrace();
-            }    
+            }
         }
-        if (productCode.startsWith("S")){
-            try {
-                String selectSQL = "SELECT * FROM Rolling_Stock_Linker WHERE train_set_product_code=?";
-                PreparedStatement preparedStatement = connection.prepareStatement(selectSQL);
-                preparedStatement.setString(1, productCode);
-                ResultSet resultSet = preparedStatement.executeQuery();
-                while(resultSet.next()){
-                    arrayList.add(new ProductPair(getProduct(resultSet.getString("rolling_stock_linker")), resultSet.getInt("quantity")));
+
+        if (productCode.startsWith("M")){
+            if (productType == ProductType.TRACKPACK){
+                try {
+                    String selectSQL = "SELECT * FROM Track_Pack_Linker WHERE train_set_product_code=?";
+                    PreparedStatement preparedStatement = connection.prepareStatement(selectSQL);
+                    preparedStatement.setString(1, productCode);
+                    ResultSet resultSet = preparedStatement.executeQuery();
+                    while(resultSet.next()){
+                        arrayList.add(new ProductPair(getProduct(resultSet.getString("track_pack_product_code")), resultSet.getInt("quantity")));
+                    }
+                } catch (SQLException e){
+                    e.printStackTrace();
+                }    
+            }
+            if (productType == ProductType.ROLLINGSTOCK){
+                try {
+                    String selectSQL = "SELECT * FROM Rolling_Stock_Linker WHERE train_set_product_code=?";
+                    PreparedStatement preparedStatement = connection.prepareStatement(selectSQL);
+                    preparedStatement.setString(1, productCode);
+                    ResultSet resultSet = preparedStatement.executeQuery();
+                    while(resultSet.next()){
+                        arrayList.add(new ProductPair(getProduct(resultSet.getString("rolling_stock_product_code")), resultSet.getInt("quantity")));
+                    }
+                } catch (SQLException e){
+                    e.printStackTrace();
                 }
-            } catch (SQLException e){
-                e.printStackTrace();
-            }        }
-        if (productCode.startsWith("P")){
-            try {
-                String selectSQL = "SELECT * FROM Track_Pack_Linker WHERE train_set_product_code=?";
-                PreparedStatement preparedStatement = connection.prepareStatement(selectSQL);
-                preparedStatement.setString(1, productCode);
-                ResultSet resultSet = preparedStatement.executeQuery();
-                while(resultSet.next()){
-                    arrayList.add(new ProductPair(getProduct(resultSet.getString("track_pack_product_code")), resultSet.getInt("quantity")));
+            }
+            if (productType == ProductType.LOCOMOTIVE){
+                try {
+                    String selectSQL = "SELECT * FROM Locomotive_Linker WHERE train_set_product_code=?";
+                    PreparedStatement preparedStatement = connection.prepareStatement(selectSQL);
+                    preparedStatement.setString(1, productCode);
+                    ResultSet resultSet = preparedStatement.executeQuery();
+                    while(resultSet.next()){
+                        arrayList.add(new ProductPair(getProduct(resultSet.getString("locomotive_product_code")), resultSet.getInt("quantity")));
+                    }
+                } catch (SQLException e){
+                    e.printStackTrace();
                 }
-            } catch (SQLException e){
-                e.printStackTrace();
-            }        }
-        if (productCode.startsWith("L")){
-            try {
-                String selectSQL = "SELECT * FROM Locomotive_Linker WHERE train_set_product_code=?";
-                PreparedStatement preparedStatement = connection.prepareStatement(selectSQL);
-                preparedStatement.setString(1, productCode);
-                ResultSet resultSet = preparedStatement.executeQuery();
-                while(resultSet.next()){
-                    arrayList.add(new ProductPair(getProduct(resultSet.getString("locomotive_product_code")), resultSet.getInt("quantity")));
-                }
-            } catch (SQLException e){
-                e.printStackTrace();
             }
         }
     }
@@ -218,7 +327,6 @@ public class Inventory {
     public Product getProduct(String productCode){ //Assumes that there is a valid product since it should be called only after validProduct is called
         for (Product product : products) {
             if (product.getProductCode().equals(productCode)) {
-                System.out.println("Product Found");
                 return product;
             }
         }

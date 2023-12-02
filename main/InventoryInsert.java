@@ -44,7 +44,7 @@ public class InventoryInsert {
             preparedStatement.setInt(7, product.getScale().ordinal());
 
             int rowsAffected  = preparedStatement.executeUpdate();
-            System.out.println(rowsAffected + " rows(s) inserted successfully");
+            System.out.println(rowsAffected + " row(s) inserted successfully - " + product.getProductCode());
 
             if(product.getProductType() == ProductType.CONTROLLER){
                 INSTANCE.insertController((Controller) product);
@@ -82,7 +82,7 @@ public class InventoryInsert {
             preparedStatement.setInt(2, controller.GetChipType().ordinal());
 
             int rowsAffected  = preparedStatement.executeUpdate();
-            System.out.println(rowsAffected + " rows(s) inserted successfully");
+            System.out.println(rowsAffected + " row(s) inserted successfully - " + controller.getProductCode());
         }
         catch (SQLException e1){
             e1.printStackTrace();
@@ -100,7 +100,7 @@ public class InventoryInsert {
             preparedStatement.setString(3, locomotive.getEraCode());
 
             int rowsAffected  = preparedStatement.executeUpdate();
-            System.out.println(rowsAffected + " rows(s) inserted successfully");
+            System.out.println(rowsAffected + " row(s) inserted successfully - " + locomotive.getProductCode());
         }
         catch (SQLException e1){
             e1.printStackTrace();
@@ -117,7 +117,7 @@ public class InventoryInsert {
             preparedStatement.setString(2, rollingStock.getEraCode());
 
             int rowsAffected  = preparedStatement.executeUpdate();
-            System.out.println(rowsAffected + " rows(s) inserted successfully");
+            System.out.println(rowsAffected + " row(s) inserted successfully - " + rollingStock.getProductCode());
         }
         catch (SQLException e1){
             e1.printStackTrace();
@@ -133,7 +133,7 @@ public class InventoryInsert {
             preparedStatement.setInt(3, track.getCurveRadius().ordinal());
 
             int rowsAffected  = preparedStatement.executeUpdate();
-            System.out.println(rowsAffected + " rows(s) inserted successfully");
+            System.out.println(rowsAffected + " row(s) inserted successfully - " + track.getProductCode());
         }
         catch (SQLException e1){
             e1.printStackTrace();
@@ -148,7 +148,7 @@ public class InventoryInsert {
             preparedStatement.setString(1, trackPack.getProductCode());
 
             int rowsAffected  = preparedStatement.executeUpdate();
-            System.out.println(rowsAffected + " rows(s) inserted successfully");
+            System.out.println(rowsAffected + " row(s) inserted successfully - " + trackPack.getProductCode());
             INSTANCE.insertTrackList(trackPack.getTracks(), trackPack);
         }
         catch (SQLException e1){
@@ -165,7 +165,7 @@ public class InventoryInsert {
             preparedStatement.setString(3, trainSet.getEraCode());
 
             int rowsAffected  = preparedStatement.executeUpdate();
-            System.out.println(rowsAffected + " rows(s) inserted successfully");
+            System.out.println(rowsAffected + " row(s) inserted successfully - " + trainSet.getProductCode());
 
             INSTANCE.insertLocomotiveList(trainSet.getLocomotives(), trainSet);
             INSTANCE.insertRollingStockList(trainSet.getRollingStocks(), trainSet);
@@ -185,7 +185,7 @@ public class InventoryInsert {
                 preparedStatement.setString(2, product.getProductCode());
                 preparedStatement.setInt(3, productPair.getQuantity());
                 int rowsAffected  = preparedStatement.executeUpdate();
-                System.out.println(rowsAffected + " rows(s) inserted successfully");
+                System.out.println(rowsAffected + " row(s) inserted successfully - " + product.getProductCode() + ", " + productPair.getProduct().getProductCode());
             }
             catch (SQLException e1){
                 e1.printStackTrace();
@@ -201,7 +201,7 @@ public class InventoryInsert {
                 preparedStatement.setString(2, productPair.getProduct().getProductCode());
                 preparedStatement.setInt(3, productPair.getQuantity());
                 int rowsAffected  = preparedStatement.executeUpdate();
-                System.out.println(rowsAffected + " rows(s) inserted successfully");
+                System.out.println(rowsAffected + " row(s) inserted successfully - " + product.getProductCode() + ", " + productPair.getProduct().getProductCode());
             }
             catch (SQLException e1){
                 e1.printStackTrace();
@@ -217,7 +217,7 @@ public class InventoryInsert {
                 preparedStatement.setString(2, productPair.getProduct().getProductCode());
                 preparedStatement.setInt(3, productPair.getQuantity());
                 int rowsAffected  = preparedStatement.executeUpdate();
-                System.out.println(rowsAffected + " rows(s) inserted successfully");
+                System.out.println(rowsAffected + " row(s) inserted successfully - " + product.getProductCode() + ", " + productPair.getProduct().getProductCode());
             }
             catch (SQLException e1){
                 e1.printStackTrace();
@@ -234,7 +234,7 @@ public class InventoryInsert {
                 preparedStatement.setString(2, productPair.getProduct().getProductCode());
                 preparedStatement.setInt(3, productPair.getQuantity());
                 int rowsAffected  = preparedStatement.executeUpdate();
-                System.out.println(rowsAffected + " rows(s) inserted successfully");
+                System.out.println(rowsAffected + " row(s) inserted successfully - " + product.getProductCode() + ", " + productPair.getProduct().getProductCode());
             }
             catch (SQLException e1){
                 e1.printStackTrace();
