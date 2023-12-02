@@ -79,15 +79,14 @@ public class Login {
     	
     	try {
 	    	//Query SQL database to fetch information on user
-	    	String sql = "SELECT email, password_hash FROM Accounts";
+	    	String sql = "SELECT email, password_hash FROM Accounts WHERE email = '" + username + "'";
 	    	PreparedStatement statement = connection.prepareStatement(sql);
 	    	ResultSet resultSet = statement.executeQuery(sql);
 	    	
 	    	if (resultSet.next()) {
-	    		String email = resultSet.getString("email");
 	    		String storedPassword = resultSet.getString("password_hash");
 	    		
-	    		if (verifyPassword(password, storedPassword)) {
+	    		if (verifyPassword(password, storedPassword, username, connection)) {
 	    			//ADD OPENING OF HOME PAGE
 	    			System.out.println("Login Successful");
 	    			return true;
@@ -103,29 +102,15 @@ public class Login {
     	return false;
     }
     
-    private static Boolean verifyPassword(char[] enteredPassword, String storedPassword) {
+    private static Boolean verifyPassword(char[] enteredPassword, String storedPassword, String username, Connection connection) {
     	try {
-            String hashedEnteredPassword = String.valueOf(enteredPassword);
-            return hashedEnteredPassword.equals("123");
+    		String hashedEnteredPassword = HashedPasswordGenerator.hashPassword(enteredPassword, username, connection);
+    		System.out.println(hashedEnteredPassword);
+            return hashedEnteredPassword.equals(storedPassword);
         } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
     }
 
-
-
-    private static void openHomePage(String username) {
-        JFrame homeFrame = new JFrame("Home Page");
-        homeFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        homeFrame.setSize(300, 150);
-
-        JPanel panel = new JPanel();
-        homeFrame.add(panel);
-
-        JLabel welcomeLabel = new JLabel("Welcome, " + username + "!");
-        panel.add(welcomeLabel);
-
-        homeFrame.setVisible(true);
-    }
 }

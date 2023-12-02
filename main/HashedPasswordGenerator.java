@@ -1,17 +1,18 @@
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+import java.security.*;
 import java.sql.*;
 
 public class HashedPasswordGenerator {
-    private static final String SALT = "MyStaticSalt"; // Replace with your own static salt
 
-    public static String hashPassword(char[] password) {
+    public static String hashPassword(char[] password, String username, Connection connection) {
         try {
             // Create a MessageDigest instance for SHA-256
             MessageDigest md = MessageDigest.getInstance("SHA-256");
+            
+            String salt = getSalt(username, connection);
+            System.out.println(salt);
 
             // Concatenate the salt and password bytes
-            byte[] saltedPasswordBytes = concatenateBytes(SALT.getBytes(), new String(password).getBytes());
+            byte[] saltedPasswordBytes = concatenateBytes(salt.getBytes(), new String(password).getBytes());
 
             // Update the digest with the salted password bytes
             md.update(saltedPasswordBytes);
@@ -39,40 +40,30 @@ public class HashedPasswordGenerator {
         return combined;
     }
     
-    public static Boolean getSalt(String username) {
-    	//Database Details
-        String urlDB = "jdbc:mysql://stusql.dcs.shef.ac.uk:3306/team075";
-        String usernameDB = "team075";
-        String passwordDB = "mood6Phah";
-        //Try To Establish Connection With DB
+
+	public static String getSalt(String username, Connection connection) {
         try {
-            Connection connection = DriverManager.getConnection(urlDB, usernameDB, passwordDB); 
-            System.out.println("Successfully connected to the database.");
-            
-            String sql = "SELECT password_salt FROM Accounts WHERE email = ?";
+            String sql = "SELECT password_salt FROM Accounts WHERE email = '" + username + "'";
             PreparedStatement statement = connection.prepareStatement(sql);
-            statement.setString(1, username);
 	    	ResultSet resultSet = statement.executeQuery(sql);
 	    	
 	    	if (resultSet.next()) {
-	    		return true;
+	    		String salt = resultSet.getString("password_salt");
+	    		return salt;
 	    	}else {
-	    		return false;
+	    		return "";
 	    	}
             
         } catch (SQLException e) {
-            System.out.println("Error in connecting to the database");
-        }finally {
-        	return false;
+            e.printStackTrace();
         }
+        return "";
     }
-
-    public static void main(String[] args) {
-  
-        char[] password = "asd@456".toCharArray();
-        String hashedPassword = hashPassword(password);
-
-        System.out.println("Original Password: " + String.valueOf(password));
-        System.out.println("Hashed Password: " + hashedPassword);
-    }
+    
+    public static String getNewSalt() {
+    	SecureRandom RANDOM = new SecureRandom();
+        byte[] salt = new byte[16];
+        RANDOM.nextBytes(salt);
+        return String.valueOf(salt);
+      }
 }
