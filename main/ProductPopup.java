@@ -5,10 +5,10 @@ import java.awt.event.ActionListener;
 
 class ProductPopup extends JFrame {
 
-    private SelectedCategoryScreen parentScreen;
+    private ProductRecords parentScreen;
     private Product product;
     private JTextField orderNumber;
-    public ProductPopup(Product product, SelectedCategoryScreen parentScreen) {
+    public ProductPopup(Product product, ProductRecords parentScreen) {
         this.product = product;
         this.parentScreen = parentScreen;
 

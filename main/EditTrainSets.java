@@ -1,6 +1,5 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
@@ -8,7 +7,6 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
@@ -22,7 +20,7 @@ public class EditTrainSets extends JFrame {
     String passwordDB = "mood6Phah";
     Connection connection;
     //SQL
-    Statement getAllTrainSetstmt;
+    PreparedStatement getAllTrainSetstmt;
     ResultSet TrainSetListResultSet;
     Vector<String> TrainSetVector = new Vector<String>();
     Vector<String> productInformationVector = new Vector<String>();
@@ -47,9 +45,9 @@ public class EditTrainSets extends JFrame {
         //GET LIST OF TRACKS
         try {
             connection = DriverManager.getConnection(urlDB, usernameDB, passwordDB);
-            getAllTrainSetstmt = connection.createStatement();
+            getAllTrainSetstmt = connection.prepareStatement("SELECT * FROM Products INNER JOIN Train_Set ON Products.product_code = Train_Set.product_code");
             //Get All Track Products
-            TrainSetListResultSet = getAllTrainSetstmt.executeQuery("SELECT * FROM Products INNER JOIN Train_Set ON Products.product_code = Train_Set.product_code");
+            TrainSetListResultSet = getAllTrainSetstmt.executeQuery();
             
             while (TrainSetListResultSet.next()) {
                 String row = TrainSetListResultSet.getString("product_code") + ", " + TrainSetListResultSet.getString("controller_product_code") + ", " + TrainSetListResultSet.getString("era_code");
@@ -214,6 +212,17 @@ public class EditTrainSets extends JFrame {
                 					if (newGauge == null) {
                 						break;
                 					}
+                					switch (newGauge) {
+                					case "OO":
+                						newGauge = "1";
+                						break;
+                					case "TT":
+                						newGauge = "2";
+                						break;
+                					case "N":
+                						newGauge = "3";
+                						break;
+                					}
                 					PreparedStatement editProductGaugestmt = connection.prepareStatement("UPDATE Products SET gauge = '" + newGauge +"' WHERE product_code ='" + selectedValueProductCode + "'");
                 					editProductGaugestmt.executeUpdate();
                 					dispose();
@@ -224,6 +233,17 @@ public class EditTrainSets extends JFrame {
                 					String[] scaleChoices = {"1/76", "1/120", "1/148"};
                 					String newScale = (String) JOptionPane.showInputDialog(null, "Select New Gauge", "Edit Existing Track Product", JOptionPane.QUESTION_MESSAGE, null, scaleChoices, scaleChoices[0]);
                 					if (newScale == null) {
+                						break;
+                					}
+                					switch (newScale) {
+                					case "1/76":
+                						newScale = "1";
+                						break;
+                					case "1/120":
+                						newScale = "2";
+                						break;
+                					case "1/148":
+                						newScale = "3";
                 						break;
                 					}
                 					PreparedStatement editProductScalestmt = connection.prepareStatement("UPDATE Products SET scale = '" + newScale +"' WHERE product_code ='" + selectedValueProductCode + "'");
@@ -295,9 +315,31 @@ public class EditTrainSets extends JFrame {
                             				String[] gaugeChoices = {"OO", "TT", "N"};
                             				String newProductGauge = (String) JOptionPane.showInputDialog(null, "Select Gauge", "Add New Track Product", JOptionPane.QUESTION_MESSAGE, null, gaugeChoices, gaugeChoices[0]);
                             				if (newProductGauge != null) {
+                            					switch (newProductGauge) {
+                            					case "OO":
+                            						newProductGauge = "1";
+                            						break;
+                            					case "TT":
+                            						newProductGauge = "2";
+                            						break;
+                            					case "N":
+                            						newProductGauge = "3";
+                            						break;
+                            					}
                             					String[] scaleChoices = {"1/76", "1/120", "1/148"};
                                 				String newProductScale = (String) JOptionPane.showInputDialog(null, "Select Scale", "Add New Track Product", JOptionPane.QUESTION_MESSAGE, null, scaleChoices, scaleChoices[0]);
                                 				if (newProductScale != null) {
+                                					switch (newProductScale) {
+                                					case "1/76":
+                                						newProductScale = "1";
+                                						break;
+                                					case "1/120":
+                                						newProductScale = "2";
+                                						break;
+                                					case "1/148":
+                                						newProductScale = "3";
+                                						break;
+                                					}
                                 					try {
                                 					String newProductControllerCode = (String) JOptionPane.showInputDialog(null, "Select Controller Code", "Add New Train Set Product", JOptionPane.INFORMATION_MESSAGE);
                                 					PreparedStatement getControllerCodesstmt = connection.prepareStatement("SELECT product_code FROM Products WHERE product_code LIKE 'C%'");
@@ -367,9 +409,9 @@ public class EditTrainSets extends JFrame {
             							    			                productInformationVector.clear();
             							    			                trainSetList.clearSelection();
             							    			                productInformationList.clearSelection();
-            							    			                getAllTrainSetstmt = connection.createStatement();
+            							    			                getAllTrainSetstmt = connection.prepareStatement("SELECT * FROM Products INNER JOIN Train_Set ON Products.product_code = Train_Set.product_code");
             							    			                //Get All Track Products
-            							    			                TrainSetListResultSet = getAllTrainSetstmt.executeQuery("SELECT * FROM Products INNER JOIN Train_Set ON Products.product_code = Train_Set.product_code");
+            							    			                TrainSetListResultSet = getAllTrainSetstmt.executeQuery();
             							    			                while (TrainSetListResultSet.next()) {
             							    			                    String row = TrainSetListResultSet.getString("product_code") + ", " + TrainSetListResultSet.getString("controller_product_code") + ", " + TrainSetListResultSet.getString("era_code");
             							    			                    String productRow = TrainSetListResultSet.getString("product_name") + ", £" + TrainSetListResultSet.getString("retail_price") + ", " + TrainSetListResultSet.getString("stock") + ", " + TrainSetListResultSet.getString("gauge") + ", " + TrainSetListResultSet.getString("scale");
@@ -477,9 +519,9 @@ public class EditTrainSets extends JFrame {
     			                productInformationVector.clear();
     			                trainSetList.clearSelection();
     			                productInformationList.clearSelection();
-    			                getAllTrainSetstmt = connection.createStatement();
+    			                getAllTrainSetstmt = connection.prepareStatement("SELECT * FROM Products INNER JOIN Train_Set ON Products.product_code = Train_Set.product_code");
     			                //Get All Track Products
-    			                TrainSetListResultSet = getAllTrainSetstmt.executeQuery("SELECT * FROM Products INNER JOIN Train_Set ON Products.product_code = Train_Set.product_code");
+    			                TrainSetListResultSet = getAllTrainSetstmt.executeQuery();
     			                
     			                while (TrainSetListResultSet.next()) {
     			                    String row = TrainSetListResultSet.getString("product_code") + ", " + TrainSetListResultSet.getString("controller_product_code" + ", " + TrainSetListResultSet.getString("era_code"));

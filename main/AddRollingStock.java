@@ -4,7 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class AddRollingStock extends JFrame {
-    private AddProduct parentScreen;
+    private ProductRecords parentScreen;
     
     private JTextArea productCodeTextArea = new JTextArea();
     private JTextArea productNameTextArea = new JTextArea();
@@ -16,7 +16,7 @@ public class AddRollingStock extends JFrame {
     private JTextArea eraCodeTextArea = new JTextArea();
     private boolean isEditing = false;
 
-    public AddRollingStock(AddProduct parentScreen) {
+    public AddRollingStock(ProductRecords parentScreen) {
         this.parentScreen = parentScreen;
         setTitle("Rolling Stock");
         setSize(600, 600);
@@ -115,17 +115,66 @@ public class AddRollingStock extends JFrame {
                                                 (Gauge) gaugeComboBox.getSelectedItem(), (Scale) scaleComboBox.getSelectedItem(), 
                                                 eraCodeText));
             parentScreen.setVisible(true);
-            parentScreen.getParentScreen().searchProducts();
+            parentScreen.searchProducts();
             this.dispose();
         } else if (isEditing && validProductName && validManufacturerName && validRetailPrice && validStock && validGauge && validScale && validEraCode) {
-            Inventory.getInstance().updateProduct(new RollingStock(productCodeText, productNameText, manufacturerNameText, 
+            InventoryUpdate.getInstance().updateProduct(new RollingStock(productCodeText, productNameText, manufacturerNameText, 
                                                 Integer.parseInt(retailPriceText), Integer.parseInt(stockText), 
                                                 (Gauge) gaugeComboBox.getSelectedItem(), (Scale) scaleComboBox.getSelectedItem(), 
                                                 eraCodeText));
             parentScreen.setVisible(true);
-            parentScreen.getParentScreen().searchProducts();
+            parentScreen.searchProducts();
             this.dispose();
         }
+        if (!isEditing && !validProductCode){
+            JOptionPane.showMessageDialog(null,
+            "Invalid Produce code.",
+            "Incorrect Inputs",
+            JOptionPane.WARNING_MESSAGE);
+        }
+        if (!validProductName){
+            JOptionPane.showMessageDialog(null,
+            "Invalid Product Name.",
+            "Incorrect Inputs",
+            JOptionPane.WARNING_MESSAGE);
+        }
+        if (!validManufacturerName){
+            JOptionPane.showMessageDialog(null,
+            "Invalid Manufacturer Name.",
+            "Incorrect Inputs",
+            JOptionPane.WARNING_MESSAGE);
+        }
+        if (!validRetailPrice){
+            JOptionPane.showMessageDialog(null,
+            "Invalid Retail Price.",
+            "Incorrect Inputs",
+            JOptionPane.WARNING_MESSAGE);
+        }
+        if (!validStock){
+            JOptionPane.showMessageDialog(null,
+            "Invalid Stock.",
+            "Incorrect Inpits",
+            JOptionPane.WARNING_MESSAGE);
+        } 
+        if (!validGauge){
+            JOptionPane.showMessageDialog(null,
+            "Invalid Gauge.",
+            "Incorrect Inputs",
+            JOptionPane.WARNING_MESSAGE);
+        } 
+        if (!validScale){
+            JOptionPane.showMessageDialog(null,
+            "Invalid Scale.",
+            "Incorrect Inputs",
+            JOptionPane.WARNING_MESSAGE);
+        } 
+        if (!validEraCode){
+            JOptionPane.showMessageDialog(null,
+            "Invalid Era Code.",
+            "Incorrect Inputs",
+            JOptionPane.WARNING_MESSAGE);
+        }
+    
     }
 
     public void editProduct(RollingStock product){

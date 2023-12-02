@@ -102,7 +102,10 @@ public class StaffDashboard extends JFrame {
         viewRollingStockCategoryButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-            	//Rolling Stock not set up in database
+            	EditRollingStock editRollingStock = new EditRollingStock();
+            	editRollingStock.setLocationRelativeTo(null);
+            	editRollingStock.setVisible(true);
+            	setVisible(false);
             }
         });
         JButton viewTrainSetsCategoryButton = new JButton("Train Sets");
@@ -144,21 +147,5 @@ public class StaffDashboard extends JFrame {
         add(productCategoryPanel, BorderLayout.CENTER);
         add(footerPanel, BorderLayout.SOUTH);
         setVisible(true);
-    }
-
-    
-    public static void main(String[] args) {
-    	//Database Details
-        String urlDB = "jdbc:mysql://stusql.dcs.shef.ac.uk:3306/team075";
-        String usernameDB = "team075";
-        String passwordDB = "mood6Phah";
-        //Try To Establish Connection With DB
-        try {
-            Connection connection = DriverManager.getConnection(urlDB, usernameDB, passwordDB); 
-            System.out.println("Successfully connected to the database.");
-        } catch (SQLException e) {
-            System.out.println("Error in connecting to the database");
-        }
-        new StaffDashboard();
-    }   
+    }  
 }

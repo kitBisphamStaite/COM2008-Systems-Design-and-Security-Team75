@@ -1,6 +1,5 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
@@ -8,11 +7,9 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
-
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -23,7 +20,7 @@ public class EditTracks extends JFrame {
     String passwordDB = "mood6Phah";
     Connection connection;
     //SQL
-    Statement getAllTrackstmt;
+    PreparedStatement getAllTrackstmt;
     ResultSet TrackListResultSet;
     Vector<String> TrackVector = new Vector<String>();
     Vector<String> productInformationVector = new Vector<String>();
@@ -46,9 +43,9 @@ public class EditTracks extends JFrame {
         //GET LIST OF TRACKS
         try {
             connection = DriverManager.getConnection(urlDB, usernameDB, passwordDB);
-            getAllTrackstmt = connection.createStatement();
+            getAllTrackstmt = connection.prepareStatement("SELECT * FROM Products INNER JOIN Track ON Products.product_code = Track.product_code");
             //Get All Track Products
-            TrackListResultSet = getAllTrackstmt.executeQuery("SELECT * FROM Products INNER JOIN Track ON Products.product_code = Track.product_code");
+            TrackListResultSet = getAllTrackstmt.executeQuery();
             
             while (TrackListResultSet.next()) {
                 String row = TrackListResultSet.getString("product_code") + ", " + TrackListResultSet.getString("track_type") + ", " + TrackListResultSet.getString("curve_radius");
@@ -173,6 +170,32 @@ public class EditTracks extends JFrame {
                 					if (newProductTrackType == null) {
                 						break;
                 					}
+                					switch (newProductTrackType) {
+                					case "SINGLE_STRAIGHT":
+                						newProductTrackType = "1";
+                						break;
+                					case "DOUBLE_STRAIGHT":
+                						newProductTrackType = "2";
+                						break;
+                					case "SINGLE_CURVE":
+                						newProductTrackType = "3";
+                						break;
+                					case "DOUBLE_CURVE":
+                						newProductTrackType = "4";
+                						break;
+                					case "LEFT_HAND_POINT":
+                						newProductTrackType = "5";
+                						break;
+                					case "RIGHT_HAND_POINT":
+                						newProductTrackType = "6";
+                						break;
+                					case "LEFT_HAND_CROSSOVER":
+                						newProductTrackType = "7";
+                						break;
+                					case "RIGHT_HAND_CROSSOVER":
+                						newProductTrackType = "8";
+                						break;
+                					}
                 					PreparedStatement editProductTrackTypestmt = connection.prepareStatement("UPDATE Track SET track_type = '" + newProductTrackType +"' WHERE product_code ='" + selectedValueProductCode + "'");
                 					editProductTrackTypestmt.executeUpdate();
                 					dispose();
@@ -185,6 +208,21 @@ public class EditTracks extends JFrame {
                 					if (newProductCurveRadius == null) {
                 						break;
                 					}
+                					switch (newProductCurveRadius) {
+                					case "NONE":
+                						newProductCurveRadius = "1";
+                						break;
+                					case "FIRST":
+                						newProductCurveRadius = "2";
+                						break;
+                					case "SECOND":
+                						newProductCurveRadius = "3";
+                						break;
+                					case "THIRD":
+                						newProductCurveRadius = "4";
+                						break;
+                					}
+
                 					PreparedStatement editProductCurveRadiusstmt = connection.prepareStatement("UPDATE Track SET curve_radius = '" + newProductCurveRadius +"' WHERE product_code ='" + selectedValueProductCode + "'");
                 					editProductCurveRadiusstmt.executeUpdate();
                 					dispose();
@@ -237,6 +275,17 @@ public class EditTracks extends JFrame {
                 					if (newGauge == null) {
                 						break;
                 					}
+                					switch (newGauge) {
+                					case "OO":
+                						newGauge = "1";
+                						break;
+                					case "TT":
+                						newGauge = "2";
+                						break;
+                					case "N":
+                						newGauge = "3";
+                						break;
+                					}
                 					PreparedStatement editProductGaugestmt = connection.prepareStatement("UPDATE Products SET gauge = '" + newGauge +"' WHERE product_code ='" + selectedValueProductCode + "'");
                 					editProductGaugestmt.executeUpdate();
                 					dispose();
@@ -247,6 +296,17 @@ public class EditTracks extends JFrame {
                 					String[] scaleChoices = {"1/76", "1/120", "1/148"};
                 					String newScale = (String) JOptionPane.showInputDialog(null, "Select New Gauge", "Edit Existing Track Product", JOptionPane.QUESTION_MESSAGE, null, scaleChoices, scaleChoices[0]);
                 					if (newScale == null) {
+                						break;
+                					}
+                					switch (newScale) {
+                					case "1/76":
+                						newScale = "1";
+                						break;
+                					case "1/120":
+                						newScale = "2";
+                						break;
+                					case "1/148":
+                						newScale = "3";
                 						break;
                 					}
                 					PreparedStatement editProductScalestmt = connection.prepareStatement("UPDATE Products SET scale = '" + newScale +"' WHERE product_code ='" + selectedValueProductCode + "'");
@@ -313,9 +373,49 @@ public class EditTracks extends JFrame {
                                 				if (newProductScale != null) {
                                 					String[] trackTypeChoices = {"SINGLE_STRAIGHT", "DOUBLE_STRAIGHT", "SINGLE_CURVE", "DOUBLE_CURVE", "LEFT_HAND_POINT", "RIGHT_HAND_POINT", "LEFT_HAND_CROSSOVER", "RIGHT_HAND_CROSSOVER"};
                                 					String newProductTrackType = (String) JOptionPane.showInputDialog(null, "Select Track Type", "Add New Track Product", JOptionPane.QUESTION_MESSAGE, null, trackTypeChoices, trackTypeChoices[0]);
+                                					switch (newProductTrackType) {
+                                					case "SINGLE_STRAIGHT":
+                                						newProductTrackType = "1";
+                                						break;
+                                					case "DOUBLE_STRAIGHT":
+                                						newProductTrackType = "2";
+                                						break;
+                                					case "SINGLE_CURVE":
+                                						newProductTrackType = "3";
+                                						break;
+                                					case "DOUBLE_CURVE":
+                                						newProductTrackType = "4";
+                                						break;
+                                					case "LEFT_HAND_POINT":
+                                						newProductTrackType = "5";
+                                						break;
+                                					case "RIGHT_HAND_POINT":
+                                						newProductTrackType = "6";
+                                						break;
+                                					case "LEFT_HAND_CROSSOVER":
+                                						newProductTrackType = "7";
+                                						break;
+                                					case "RIGHT_HAND_CROSSOVER":
+                                						newProductTrackType = "8";
+                                						break;
+                                					}
                                 					if (newProductTrackType != null) {
                                 						String[] curveRadiusChoices = {"NONE", "FIRST", "SECOND", "THIRD"};
                                     					String newProductCurveRadius= (String) JOptionPane.showInputDialog(null, "Select Curve Radius", "Add New Track Product", JOptionPane.QUESTION_MESSAGE, null, curveRadiusChoices, curveRadiusChoices[0]);
+                                    					switch (newProductCurveRadius) {
+                                    					case "NONE":
+                                    						newProductCurveRadius = "1";
+                                    						break;
+                                    					case "FIRST":
+                                    						newProductCurveRadius = "2";
+                                    						break;
+                                    					case "SECOND":
+                                    						newProductCurveRadius = "3";
+                                    						break;
+                                    					case "THIRD":
+                                    						newProductCurveRadius = "4";
+                                    						break;
+                                    					}
                                         					try {
                                         						String newProductCode = null;
                                         						PreparedStatement getProductCodesstmt = connection.prepareStatement("SELECT product_code FROM Products WHERE product_code LIKE 'R%'");
@@ -373,9 +473,9 @@ public class EditTracks extends JFrame {
         							    			                productInformationVector.clear();
         							    			                trackList.clearSelection();
         							    			                productInformationList.clearSelection();
-        							    			                getAllTrackstmt = connection.createStatement();
+        							    			                getAllTrackstmt = connection.prepareStatement("SELECT * FROM Products INNER JOIN Track ON Products.product_code = Track.product_code");
         							    			                //Get All Track Products
-        							    			                TrackListResultSet = getAllTrackstmt.executeQuery("SELECT * FROM Products INNER JOIN Track ON Products.product_code = Track.product_code");
+        							    			                TrackListResultSet = getAllTrackstmt.executeQuery();
         							    			                
         							    			                while (TrackListResultSet.next()) {
         							    			                    String row = TrackListResultSet.getString("product_code") + ", " + TrackListResultSet.getString("track_type") + ", " + TrackListResultSet.getString("curve_radius");
@@ -483,9 +583,9 @@ public class EditTracks extends JFrame {
     			                productInformationVector.clear();
     			                trackList.clearSelection();
     			                productInformationList.clearSelection();
-    			                getAllTrackstmt = connection.createStatement();
+    			                getAllTrackstmt = connection.prepareStatement("SELECT * FROM Products INNER JOIN Track ON Products.product_code = Track.product_code");
     			                //Get All Track Products
-    			                TrackListResultSet = getAllTrackstmt.executeQuery("SELECT * FROM Products INNER JOIN Track ON Products.product_code = Track.product_code");
+    			                TrackListResultSet = getAllTrackstmt.executeQuery();
     			                
     			                while (TrackListResultSet.next()) {
     			                    String row = TrackListResultSet.getString("product_code") + ", " + TrackListResultSet.getString("track_type") + ", " + TrackListResultSet.getString("curve_radius");

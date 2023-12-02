@@ -86,5 +86,4 @@ public class TrainSet extends Product {
             trackPacks.add(new ProductPair(trackPack, quantity));
         }
     }
-    
 }

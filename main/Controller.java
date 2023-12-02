@@ -14,5 +14,4 @@ public class Controller extends Product{
     public ChipType GetChipType(){
         return this.chipType;
     }
-
 }

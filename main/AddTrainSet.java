@@ -5,7 +5,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 public class AddTrainSet extends JFrame {
-    private AddProduct parentScreen;
+    private ProductRecords parentScreen;
     private JTextArea productCodeTextArea = new JTextArea();
     private JTextArea productNameTextArea = new JTextArea();
     private JTextArea manufacturerNameTextArea = new JTextArea();
@@ -26,7 +26,7 @@ public class AddTrainSet extends JFrame {
     private JList<ProductPair> trackPackListUI;
     private boolean isEditing = false;
 
-    public AddTrainSet(AddProduct parentScreen) {
+    public AddTrainSet(ProductRecords parentScreen) {
         this.parentScreen = parentScreen;
         setTitle("Train Set");
         setSize(600, 600);
@@ -248,14 +248,87 @@ public class AddTrainSet extends JFrame {
         if (!isEditing && validProductCode && validProductName && validManufacturerName && validRetailPrice && validStock && validGauge && validScale && validEraCode && validController && validLocomotiveList && validRollingStockList && validTrackPackList) {
             Inventory.getInstance().addProduct(new TrainSet(productCodeText, productNameText, manufacturerNameText, Integer.parseInt(retailPriceText), Integer.parseInt(stockText), (Gauge) gaugeComboBox.getSelectedItem(), (Scale) scaleComboBox.getSelectedItem(), eraCodeText ,(Controller) Inventory.getInstance().getProduct(controllerProductCodeTextArea.getText()) , locomotiveList, rollingStockList,trackPackList));
             parentScreen.setVisible(true);
-            parentScreen.getParentScreen().searchProducts();
+            parentScreen.searchProducts();
             this.dispose();
         } else if (isEditing && validProductName && validManufacturerName && validRetailPrice && validStock && validGauge && validScale && validEraCode && validController && validLocomotiveList && validRollingStockList && validTrackPackList) {
-            Inventory.getInstance().updateProduct(new TrainSet(productCodeText, productNameText, manufacturerNameText, Integer.parseInt(retailPriceText), Integer.parseInt(stockText), (Gauge) gaugeComboBox.getSelectedItem(), (Scale) scaleComboBox.getSelectedItem(), eraCodeText ,(Controller) Inventory.getInstance().getProduct(controllerProductCodeTextArea.getText()), locomotiveList, rollingStockList,trackPackList));
+            InventoryUpdate.getInstance().updateProduct(new TrainSet(productCodeText, productNameText, manufacturerNameText, Integer.parseInt(retailPriceText), Integer.parseInt(stockText), (Gauge) gaugeComboBox.getSelectedItem(), (Scale) scaleComboBox.getSelectedItem(), eraCodeText ,(Controller) Inventory.getInstance().getProduct(controllerProductCodeTextArea.getText()), locomotiveList, rollingStockList,trackPackList));
             parentScreen.setVisible(true);
-            parentScreen.getParentScreen().searchProducts();
+            parentScreen.searchProducts();
             this.dispose();
         }
+        if (!isEditing && !validProductCode){
+            JOptionPane.showMessageDialog(null,
+            "Invalid Produce code.",
+            "Incorrect Inputs",
+            JOptionPane.WARNING_MESSAGE);
+        }
+        if (!validProductName){
+            JOptionPane.showMessageDialog(null,
+            "Invalid Product Name.",
+            "Incorrect Inputs",
+            JOptionPane.WARNING_MESSAGE);
+        }
+        if (!validManufacturerName){
+            JOptionPane.showMessageDialog(null,
+            "Invalid Manufacturer Name.",
+            "Incorrect Inputs",
+            JOptionPane.WARNING_MESSAGE);
+        }
+        if (!validRetailPrice){
+            JOptionPane.showMessageDialog(null,
+            "Invalid Retail Price.",
+            "Incorrect Inputs",
+            JOptionPane.WARNING_MESSAGE);
+        }
+        if (!validStock){
+            JOptionPane.showMessageDialog(null,
+            "Invalid Stock.",
+            "Incorrect Inpits",
+            JOptionPane.WARNING_MESSAGE);
+        }
+        if (!validGauge){
+            JOptionPane.showMessageDialog(null,
+            "Invalid Gauge.",
+            "Incorrect Inputs",
+            JOptionPane.WARNING_MESSAGE);
+        }
+        if (!validScale){
+            JOptionPane.showMessageDialog(null,
+            "Invalid Scale.",
+            "Incorrect Inputs",
+            JOptionPane.WARNING_MESSAGE);
+        } 
+        if (!validEraCode){
+            JOptionPane.showMessageDialog(null,
+            "Invalid Era Code.",
+            "Incorrect Inputs",
+            JOptionPane.WARNING_MESSAGE);
+        }
+        if (!validController){
+            JOptionPane.showMessageDialog(null,
+            "Invalid Controller Product Code.",
+            "Incorrect Inputs",
+            JOptionPane.WARNING_MESSAGE);
+        }
+        if (!validLocomotiveList){
+            JOptionPane.showMessageDialog(null,
+            "Invalid Locomotive List.",
+            "Incorrect Inputs",
+            JOptionPane.WARNING_MESSAGE);
+        }
+        if (!validRollingStockList){
+            JOptionPane.showMessageDialog(null,
+            "Invalid Rolling Stock List.",
+            "Incorrect Inputs",
+            JOptionPane.WARNING_MESSAGE);
+        }
+        if (!validTrackPackList){
+            JOptionPane.showMessageDialog(null,
+            "Invalid Track Pack List.",
+            "Incorrect Inputs",
+            JOptionPane.WARNING_MESSAGE);
+        }
+
     }
 
     public void editProduct(TrainSet product){

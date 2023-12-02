@@ -4,7 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class AddTrack extends JFrame {
-    private AddProduct parentScreen;
+    private ProductRecords parentScreen;
     private JTextArea productCodeTextArea = new JTextArea();
     private JTextArea productNameTextArea = new JTextArea();
     private JTextArea manufacturerNameTextArea = new JTextArea();
@@ -16,7 +16,7 @@ public class AddTrack extends JFrame {
     private JComboBox<TrackType> trackTypeComboBox = new JComboBox<TrackType>(TrackType.values());
     private boolean isEditing = false;
 
-    public AddTrack(AddProduct parentScreen) {
+    public AddTrack(ProductRecords parentScreen) {
         this.parentScreen = parentScreen;
         setTitle("Track");
         setSize(600, 600);
@@ -48,8 +48,6 @@ public class AddTrack extends JFrame {
                 addProduct();
             }        
         });
-
-
         
         tempPanel1.add(new JLabel("productCodeTextArea (Product Code Should Start with R):"));
         tempPanel1.add(productCodeTextArea);
@@ -117,17 +115,73 @@ public class AddTrack extends JFrame {
                                                 (Gauge) gaugeComboBox.getSelectedItem(), (Scale) scaleComboBox.getSelectedItem(), 
                                                 (CurveRadius) curveRadiusComboBox.getSelectedItem(), (TrackType) trackTypeComboBox.getSelectedItem()));
             parentScreen.setVisible(true);
-            parentScreen.getParentScreen().searchProducts();
+            parentScreen.searchProducts();
             this.dispose();
         } else if(isEditing && validProductName && validManufacturerName && validRetailPrice && validStock && validGauge && validScale && validCurveRadius && validTrackType){
-            Inventory.getInstance().updateProduct(new Track(productCodeText, productNameText, manufacturerNameText, 
+            InventoryUpdate.getInstance().updateProduct(new Track(productCodeText, productNameText, manufacturerNameText, 
                                                 Integer.parseInt(retailPriceText), Integer.parseInt(stockText), 
                                                 (Gauge) gaugeComboBox.getSelectedItem(), (Scale) scaleComboBox.getSelectedItem(), 
                                                 (CurveRadius) curveRadiusComboBox.getSelectedItem(), (TrackType) trackTypeComboBox.getSelectedItem()));
             parentScreen.setVisible(true);
-            parentScreen.getParentScreen().searchProducts();
+            parentScreen.searchProducts();
             this.dispose();
         }
+        if (!isEditing && !validProductCode){
+            JOptionPane.showMessageDialog(null,
+            "Invalid Produce code.",
+            "Incorrect Inputs",
+            JOptionPane.WARNING_MESSAGE);
+        }
+        if (!validProductName){
+            JOptionPane.showMessageDialog(null,
+            "Invalid Product Name.",
+            "Incorrect Inputs",
+            JOptionPane.WARNING_MESSAGE);
+        }
+        if (!validManufacturerName){
+            JOptionPane.showMessageDialog(null,
+            "Invalid Manufacturer Name.",
+            "Incorrect Inputs",
+            JOptionPane.WARNING_MESSAGE);
+        }
+        if (!validRetailPrice){
+            JOptionPane.showMessageDialog(null,
+            "Invalid Retail Price.",
+            "Incorrect Inputs",
+            JOptionPane.WARNING_MESSAGE);
+        }
+        if (!validStock){
+            JOptionPane.showMessageDialog(null,
+            "Invalid Stock.",
+            "Incorrect Inpits",
+            JOptionPane.WARNING_MESSAGE);
+        }
+        if (!validGauge){
+            JOptionPane.showMessageDialog(null,
+            "Invalid Gauge.",
+            "Incorrect Inputs",
+            JOptionPane.WARNING_MESSAGE);
+        }
+        if (!validScale){
+            JOptionPane.showMessageDialog(null,
+            "Invalid Scale.",
+            "Incorrect Inputs",
+            JOptionPane.WARNING_MESSAGE);
+        }
+        if (!validCurveRadius){
+            JOptionPane.showMessageDialog(null,
+            "Invalid Curve Radius.",
+            "Incorrect Inputs",
+            JOptionPane.WARNING_MESSAGE);
+        }
+        if (!validTrackType){
+            JOptionPane.showMessageDialog(null,
+            "Invalid Track Type.",
+            "Incorrect Inputs",
+            JOptionPane.WARNING_MESSAGE);
+        }
+
+
     }
 
     public void editProduct(Track product){
