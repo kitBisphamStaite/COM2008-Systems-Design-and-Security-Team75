@@ -73,8 +73,8 @@ public class Login {
                 
                 if (verify) {
                 	setUserType(username, connection);
-                	System.out.println(userType);
-                	panel.removeAll();
+                	loginFrame.dispose();
+                	Home.main(null);
                 }else {
                 	unsuccessfulLoginLabel.setText("Incorrect email or password.");
                 }
