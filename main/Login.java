@@ -5,6 +5,7 @@ import java.sql.*;
 
 
 public class Login {
+	public static String userType;
     public static void main(String[] args) {
     	//Database Details
         String urlDB = "jdbc:mysql://stusql.dcs.shef.ac.uk:3306/team075";
@@ -23,19 +24,19 @@ public class Login {
     private static void createLoginFrame(Connection connection) {
         JFrame loginFrame = new JFrame("Login Page");
         loginFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        loginFrame.setSize(350, 150);
+        loginFrame.setSize(410, 150);
 
         JPanel panel = new JPanel();
         loginFrame.add(panel);
-        placeComponents(panel, connection);
+        placeComponents(loginFrame, panel, connection);
 
         loginFrame.setVisible(true);
     }
 
-    private static void placeComponents(JPanel panel, Connection connection) {
+    private static void placeComponents(JFrame loginFrame, JPanel panel, Connection connection) {
         panel.setLayout(null);
 
-        JLabel userLabel = new JLabel("Username:");
+        JLabel userLabel = new JLabel("Email:");
         userLabel.setBounds(10, 20, 80, 25);
         panel.add(userLabel);
 
@@ -55,8 +56,12 @@ public class Login {
         loginButton.setBounds(10, 80, 80, 25);
         panel.add(loginButton);
         
+        JButton registerButton = new JButton("Register");
+        registerButton.setBounds(100, 80, 90, 25);
+        panel.add(registerButton);
+        
         JLabel unsuccessfulLoginLabel = new JLabel();
-        unsuccessfulLoginLabel.setBounds(100, 80, 200, 25);
+        unsuccessfulLoginLabel.setBounds(200, 80, 200, 25);
         panel.add(unsuccessfulLoginLabel);
 
         loginButton.addActionListener(new ActionListener() {
@@ -67,12 +72,24 @@ public class Login {
                 Boolean verify = verifyLogin(username, password, connection);
                 
                 if (verify) {
+                	setUserType(username, connection);
+                	System.out.println(userType);
                 	panel.removeAll();
                 }else {
                 	unsuccessfulLoginLabel.setText("Incorrect email or password.");
                 }
             }
         });
+        
+        registerButton.addActionListener(new ActionListener() {
+        	@Override
+            public void actionPerformed(ActionEvent e) {
+        		loginFrame.dispose();
+                Register.main(null);
+                
+            }
+        });
+        
     }
     
     private static Boolean verifyLogin(String username, char[] password, Connection connection) {
@@ -105,12 +122,30 @@ public class Login {
     private static Boolean verifyPassword(char[] enteredPassword, String storedPassword, String username, Connection connection) {
     	try {
     		String hashedEnteredPassword = HashedPasswordGenerator.hashPassword(enteredPassword, username, connection);
-    		System.out.println(hashedEnteredPassword);
             return hashedEnteredPassword.equals(storedPassword);
         } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
+    }
+    public static String setUserType(String username, Connection connection) {
+    	try {
+    		String sql = "SELECT type FROM Accounts WHERE email = '" + username + "'";
+    		PreparedStatement statement = connection.prepareStatement(sql);
+	    	statement.executeQuery(sql);
+	    	ResultSet resultSet = statement.executeQuery(sql);
+	    	
+	    	if (resultSet.next()) {
+	    		userType = resultSet.getString("type");
+	    		}
+    	} catch (SQLException e) {
+    		e.printStackTrace();
+    	}
+    	return "";
+    }
+    
+    public static String getUserType() {
+    	return userType;
     }
 
 }
