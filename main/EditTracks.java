@@ -1,6 +1,5 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
@@ -8,11 +7,9 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
-
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -23,7 +20,7 @@ public class EditTracks extends JFrame {
     String passwordDB = "mood6Phah";
     Connection connection;
     //SQL
-    Statement getAllTrackstmt;
+    PreparedStatement getAllTrackstmt;
     ResultSet TrackListResultSet;
     Vector<String> TrackVector = new Vector<String>();
     Vector<String> productInformationVector = new Vector<String>();
@@ -46,9 +43,9 @@ public class EditTracks extends JFrame {
         //GET LIST OF TRACKS
         try {
             connection = DriverManager.getConnection(urlDB, usernameDB, passwordDB);
-            getAllTrackstmt = connection.createStatement();
+            getAllTrackstmt = connection.prepareStatement("SELECT * FROM Products INNER JOIN Track ON Products.product_code = Track.product_code");
             //Get All Track Products
-            TrackListResultSet = getAllTrackstmt.executeQuery("SELECT * FROM Products INNER JOIN Track ON Products.product_code = Track.product_code");
+            TrackListResultSet = getAllTrackstmt.executeQuery();
             
             while (TrackListResultSet.next()) {
                 String row = TrackListResultSet.getString("product_code") + ", " + TrackListResultSet.getString("track_type") + ", " + TrackListResultSet.getString("curve_radius");
@@ -476,9 +473,9 @@ public class EditTracks extends JFrame {
         							    			                productInformationVector.clear();
         							    			                trackList.clearSelection();
         							    			                productInformationList.clearSelection();
-        							    			                getAllTrackstmt = connection.createStatement();
+        							    			                getAllTrackstmt = connection.prepareStatement("SELECT * FROM Products INNER JOIN Track ON Products.product_code = Track.product_code");
         							    			                //Get All Track Products
-        							    			                TrackListResultSet = getAllTrackstmt.executeQuery("SELECT * FROM Products INNER JOIN Track ON Products.product_code = Track.product_code");
+        							    			                TrackListResultSet = getAllTrackstmt.executeQuery();
         							    			                
         							    			                while (TrackListResultSet.next()) {
         							    			                    String row = TrackListResultSet.getString("product_code") + ", " + TrackListResultSet.getString("track_type") + ", " + TrackListResultSet.getString("curve_radius");
@@ -586,9 +583,9 @@ public class EditTracks extends JFrame {
     			                productInformationVector.clear();
     			                trackList.clearSelection();
     			                productInformationList.clearSelection();
-    			                getAllTrackstmt = connection.createStatement();
+    			                getAllTrackstmt = connection.prepareStatement("SELECT * FROM Products INNER JOIN Track ON Products.product_code = Track.product_code");
     			                //Get All Track Products
-    			                TrackListResultSet = getAllTrackstmt.executeQuery("SELECT * FROM Products INNER JOIN Track ON Products.product_code = Track.product_code");
+    			                TrackListResultSet = getAllTrackstmt.executeQuery();
     			                
     			                while (TrackListResultSet.next()) {
     			                    String row = TrackListResultSet.getString("product_code") + ", " + TrackListResultSet.getString("track_type") + ", " + TrackListResultSet.getString("curve_radius");

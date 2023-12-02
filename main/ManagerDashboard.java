@@ -1,6 +1,5 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
@@ -8,20 +7,18 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Vector;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.DefaultListModel;
 
 public class ManagerDashboard extends JFrame {	
 	String selectedValue;
 	String selectedValueEmail;
 	ResultSet staffListResultSet;
 	Connection connection;
-	Statement getAllStaffstmt;
+	PreparedStatement getAllStaffstmt;
 	Vector<String> staffVector = new Vector<String>();
     String urlDB = "jdbc:mysql://stusql.dcs.shef.ac.uk:3306/team075";
     String usernameDB = "team075";
@@ -31,9 +28,9 @@ public class ManagerDashboard extends JFrame {
         //GET LIST OF STAFF ACCOUNTS AND CREATE A LIST WITH THEM
         try {
             connection = DriverManager.getConnection(urlDB, usernameDB, passwordDB);
-            getAllStaffstmt = connection.createStatement();
+            getAllStaffstmt = connection.prepareStatement("SELECT * FROM Accounts WHERE type='STAFF'");
             //Get All Accounts of Type STAFF
-            staffListResultSet = getAllStaffstmt.executeQuery("SELECT * FROM Accounts WHERE type='STAFF'");
+            staffListResultSet = getAllStaffstmt.executeQuery();
 
             while (staffListResultSet.next()) {
                 String row = staffListResultSet.getString("email") + ", " + staffListResultSet.getString("forename") + ", " + staffListResultSet.getString("surname");
@@ -91,9 +88,9 @@ public class ManagerDashboard extends JFrame {
 			            if (rowsUpdated > 0) {
 			                System.out.println("User demoted successfully.");
 			                staffVector.clear();
-			                getAllStaffstmt = connection.createStatement();
+			                getAllStaffstmt = connection.prepareStatement("SELECT * FROM Accounts WHERE type='STAFF'");
 			                //Get All Accounts of Type STAFF
-			                staffListResultSet = getAllStaffstmt.executeQuery("SELECT * FROM Accounts WHERE type='STAFF'");
+			                staffListResultSet = getAllStaffstmt.executeQuery();
 			                while (staffListResultSet.next()) {
 			                    String row = staffListResultSet.getString("email") + ", " + staffListResultSet.getString("forename") + ", " + staffListResultSet.getString("surname");
 			                    staffVector.add(row);
@@ -115,21 +112,22 @@ public class ManagerDashboard extends JFrame {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                 	try {
-                		System.out.println(promoteCustomerInputBox.getText());
 						PreparedStatement promoteUsertmt = connection.prepareStatement("UPDATE Accounts SET type = 'STAFF' WHERE email ='" + promoteCustomerInputBox.getText() + "' AND type='CUSTOMER'");
 			            int rowsUpdated = promoteUsertmt.executeUpdate();
 			            if (rowsUpdated > 0) {
 			            	staffVector.clear();
 			                System.out.println("User was promoted successfully");
-			                getAllStaffstmt = connection.createStatement();
+			                getAllStaffstmt = connection.prepareStatement("SELECT * FROM Accounts WHERE type='STAFF'");
 			                //Get All Accounts of Type STAFF
-			                staffListResultSet = getAllStaffstmt.executeQuery("SELECT * FROM Accounts WHERE type='STAFF'");
+			                staffListResultSet = getAllStaffstmt.executeQuery();
 			                while (staffListResultSet.next()) {
 			                    String row = staffListResultSet.getString("email") + ", " + staffListResultSet.getString("forename") + ", " + staffListResultSet.getString("surname");
 			                    staffVector.add(row);
 			                }
 			                repaint();
 			                JOptionPane.showMessageDialog(null, "Successfully promoted user");
+			            } else {
+			            	JOptionPane.showMessageDialog(null, "User could not be promoted. Please ensure you have entered the email correctly.");
 			            }
 					} catch (SQLException e2) {
 						e2.printStackTrace();

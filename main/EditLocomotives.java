@@ -23,7 +23,7 @@ public class EditLocomotives extends JFrame {
     String passwordDB = "mood6Phah";
     Connection connection;
     //SQL
-    Statement getAllLocomotivestmt;
+    PreparedStatement getAllLocomotivestmt;
     ResultSet locomotiveListResultSet;
     Vector<String> locomotiveVector = new Vector<String>();
     Vector<String> productInformationVector = new Vector<String>();
@@ -45,9 +45,9 @@ public class EditLocomotives extends JFrame {
         //GET LIST OF LOCOMOTIVES
         try {
             connection = DriverManager.getConnection(urlDB, usernameDB, passwordDB);
-            getAllLocomotivestmt = connection.createStatement();
+            getAllLocomotivestmt = connection.prepareStatement("SELECT * FROM Products INNER JOIN Locomotive ON Products.product_code = Locomotive.product_code");
             //Get All Locomotive Products
-            locomotiveListResultSet = getAllLocomotivestmt.executeQuery("SELECT * FROM Products INNER JOIN Locomotive ON Products.product_code = Locomotive.product_code");
+            locomotiveListResultSet = getAllLocomotivestmt.executeQuery();
             
             while (locomotiveListResultSet.next()) {
                 String row = locomotiveListResultSet.getString("product_code") + ", " + locomotiveListResultSet.getString("product_name") + ", " + locomotiveListResultSet.getString("era_code");
@@ -437,9 +437,9 @@ public class EditLocomotives extends JFrame {
         							    			                productInformationVector.clear();
         							    			                locomotiveList.clearSelection();
         							    			                productInformationList.clearSelection();
-        							    			                getAllLocomotivestmt = connection.createStatement();
+        							    			                getAllLocomotivestmt = connection.prepareStatement("SELECT * FROM Products INNER JOIN Locomotive ON Products.product_code = Locomotive.product_code");
         							    			                //Get All Locomotive Products
-        							    			                locomotiveListResultSet = getAllLocomotivestmt.executeQuery("SELECT * FROM Products INNER JOIN Locomotive ON Products.product_code = Locomotive.product_code");
+        							    			                locomotiveListResultSet = getAllLocomotivestmt.executeQuery();
         							    			                
         							    			                while (locomotiveListResultSet.next()) {
         							    			                    String row = locomotiveListResultSet.getString("product_code") + ", " + locomotiveListResultSet.getString("product_name") + ", " + locomotiveListResultSet.getString("era_code");
@@ -549,9 +549,9 @@ public class EditLocomotives extends JFrame {
     			                productInformationVector.clear();
     			                locomotiveList.clearSelection();
     			                productInformationList.clearSelection();
-    			                getAllLocomotivestmt = connection.createStatement();
+    			                getAllLocomotivestmt = connection.prepareStatement("SELECT * FROM Products INNER JOIN Locomotive ON Products.product_code = Locomotive.product_code");
     			                //Get All Locomotive Products
-    			                locomotiveListResultSet = getAllLocomotivestmt.executeQuery("SELECT * FROM Products INNER JOIN Locomotive ON Products.product_code = Locomotive.product_code");
+    			                locomotiveListResultSet = getAllLocomotivestmt.executeQuery();
     			                
     			                while (locomotiveListResultSet.next()) {
     			                    String row = locomotiveListResultSet.getString("product_code") + ", " + locomotiveListResultSet.getString("product_name") + ", " + locomotiveListResultSet.getString("era_code");

@@ -1,6 +1,5 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
@@ -8,7 +7,6 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
@@ -22,7 +20,7 @@ public class EditControllers extends JFrame {
     String passwordDB = "mood6Phah";
     Connection connection;
     //SQL
-    Statement getAllControllerstmt;
+    PreparedStatement getAllControllerstmt;
     ResultSet ControllerListResultSet;
     Vector<String> ControllerVector = new Vector<String>();
     Vector<String> productInformationVector = new Vector<String>();
@@ -46,9 +44,9 @@ public class EditControllers extends JFrame {
         //GET LIST OF TRACKS
         try {
             connection = DriverManager.getConnection(urlDB, usernameDB, passwordDB);
-            getAllControllerstmt = connection.createStatement();
+            getAllControllerstmt = connection.prepareStatement("SELECT * FROM Products INNER JOIN Controller ON Products.product_code = Controller.product_code");
             //Get All Track Products
-            ControllerListResultSet = getAllControllerstmt.executeQuery("SELECT * FROM Products INNER JOIN Controller ON Products.product_code = Controller.product_code");
+            ControllerListResultSet = getAllControllerstmt.executeQuery();
             
             while (ControllerListResultSet.next()) {
                 String row = ControllerListResultSet.getString("product_code") + ", " + ControllerListResultSet.getString("chip_type");
@@ -416,9 +414,9 @@ public class EditControllers extends JFrame {
         							    			                productInformationVector.clear();
         							    			                controllerList.clearSelection();
         							    			                productInformationList.clearSelection();
-        							    			                getAllControllerstmt = connection.createStatement();
+        							    			                getAllControllerstmt = connection.prepareStatement("SELECT * FROM Products INNER JOIN Controller ON Products.product_code = Controller.product_code");
         							    			                //Get All Track Products
-        							    			                ControllerListResultSet = getAllControllerstmt.executeQuery("SELECT * FROM Products INNER JOIN Controller ON Products.product_code = Controller.product_code");
+        							    			                ControllerListResultSet = getAllControllerstmt.executeQuery();
         							    			                
         							    			                while (ControllerListResultSet.next()) {
         							    			                    String row = ControllerListResultSet.getString("product_code") + ", " + ControllerListResultSet.getString("chip_type");
@@ -521,9 +519,9 @@ public class EditControllers extends JFrame {
     			                productInformationVector.clear();
     			                controllerList.clearSelection();
     			                productInformationList.clearSelection();
-    			                getAllControllerstmt = connection.createStatement();
+    			                getAllControllerstmt = connection.prepareStatement("SELECT * FROM Products INNER JOIN Controller ON Products.product_code = Controller.product_code");
     			                //Get All Track Products
-    			                ControllerListResultSet = getAllControllerstmt.executeQuery("SELECT * FROM Products INNER JOIN Controller ON Products.product_code = Controller.product_code");
+    			                ControllerListResultSet = getAllControllerstmt.executeQuery();
     			                
     			                while (ControllerListResultSet.next()) {
     			                    String row = ControllerListResultSet.getString("product_code") + ", " + ControllerListResultSet.getString("chip_type");
