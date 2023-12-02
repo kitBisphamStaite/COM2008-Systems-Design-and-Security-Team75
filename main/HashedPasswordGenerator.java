@@ -9,7 +9,6 @@ public class HashedPasswordGenerator {
             MessageDigest md = MessageDigest.getInstance("SHA-256");
             
             String salt = getSalt(username, connection);
-            System.out.println(salt);
 
             // Concatenate the salt and password bytes
             byte[] saltedPasswordBytes = concatenateBytes(salt.getBytes(), new String(password).getBytes());
