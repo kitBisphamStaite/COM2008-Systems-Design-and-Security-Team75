@@ -15,9 +15,9 @@ public class ProductValidator {
         return INSTANCE;
     }
 
-    public boolean validProductCode(String productCode, ProductType productType){
+    public boolean validProductCode(String productCode, ProductType productType, boolean isEditing){
         if (productCode != null && productCode != "") {
-            if (Inventory.getInstance().isNotProduct(productCode)) {
+            if (Inventory.getInstance().isNotProduct(productCode) || isEditing) {
                 if (productCode.length() > 3 && productCode.length() < 6) {
                     if (productType == ProductType.CONTROLLER && productCode.startsWith("C")) {
                         return true;                        

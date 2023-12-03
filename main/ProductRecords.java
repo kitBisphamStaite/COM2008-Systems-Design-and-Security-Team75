@@ -141,6 +141,7 @@ public class ProductRecords extends JFrame {
         bottomPanel.add(returnHomeButton);
 
         JScrollPane productScrollPane = new JScrollPane(productListUI);
+        productScrollPane.setMinimumSize(getMinimumSize());
         productListUI.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
         productListUI.addListSelectionListener(new ListSelectionListener(){
@@ -188,7 +189,7 @@ public class ProductRecords extends JFrame {
                 try {
                     Connection connection = DriverManager.getConnection(urlDB, usernameDB, passwordDB);
     		        listModel = new DefaultListModel<>();
-    		        PreparedStatement getAllBasketOrderstmt = connection.prepareStatement("SELECT * FROM Orders WHERE status='BASKET' AND customer_id=" + Login.getUserID() + "ORDER BY date_ordered");
+    		        PreparedStatement getAllBasketOrderstmt = connection.prepareStatement("SELECT * FROM Orders WHERE status='BASKET' AND customer_id=" + Login.getUserID() + " ORDER BY date_ordered");
         	        ResultSet basketOrdersResultSet = getAllBasketOrderstmt.executeQuery();
 
                     if (basketOrdersResultSet.next()) {
@@ -223,23 +224,28 @@ public class ProductRecords extends JFrame {
                     } else{
                         PreparedStatement getAllOrderstmt = connection.prepareStatement("SELECT * FROM Orders");
                         ResultSet getAllOrderSet = getAllOrderstmt.executeQuery();
-                        getAllOrderSet.last();
-                        int order_number = getAllOrderSet.getRow();
+                        int order_number = 0;
+                        while (getAllOrderSet.next()) {
+                            order_number++;
+                        }
                         java.sql.Date sqlDate = new Date(System.currentTimeMillis());
 
                         String insertSQL = "INSERT INTO Orders (order_number, customer_id, date_order, cost, status) VALUES (?, ?, ?, ?, ?)";
                         PreparedStatement insertStatement = connection.prepareStatement(insertSQL);
                         insertStatement.setInt(1, order_number);
                         insertStatement.setInt(2, Login.getUserID());
-                        insertStatement.setDate(1, sqlDate);
+                        insertStatement.setDate(3, sqlDate);
                         insertStatement.setInt(4, product.getRetailPrice()*quantity);
                         insertStatement.setString(5, "'BASKET'");
+                        insertStatement.executeUpdate();
 
                         insertSQL = "INSERT INTO Order_Lines (order_number, product_code, quantity) VALUES (?, ?, ?)";
                         insertStatement = connection.prepareStatement(insertSQL);
                         insertStatement.setInt(1, order_number);
                         insertStatement.setString(2, product.getProductCode());
                         insertStatement.setInt(3, quantity);
+                        insertStatement.executeUpdate();
+
                     }
                 }catch (SQLException e){
                     e.printStackTrace();
