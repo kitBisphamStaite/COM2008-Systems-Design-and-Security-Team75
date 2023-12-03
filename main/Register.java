@@ -186,7 +186,7 @@ public class Register {
     		String hashedPassword = HashedPasswordGenerator.hashPassword(password, username, passwordSalt, connection);
     		
     		//Create SQL statement and insert new account into database
-    		String sql = "INSERT INTO Accounts (account_id, forename, surname, email, password_hash, password_salt) VALUES ('" + accountID	 + "', '" + forename + "', '" + surname + "', '" + username + "', '" + hashedPassword + "', '" + passwordSalt +"');";
+    		String sql = "INSERT INTO Accounts (account_id, forename, surname, email, password_hash, password_salt, type) VALUES ('" + accountID	 + "', '" + forename + "', '" + surname + "', '" + username + "', '" + hashedPassword + "', '" + passwordSalt + "', 'CUSTOMER');";
     		Statement statement = connection.createStatement();
     		statement.executeUpdate(sql);
     	} catch (SQLException e) {

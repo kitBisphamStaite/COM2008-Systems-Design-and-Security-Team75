@@ -141,6 +141,8 @@ public class ProductRecords extends JFrame {
         bottomPanel.add(returnHomeButton);
 
         JScrollPane productScrollPane = new JScrollPane(productListUI);
+        
+        productScrollPane.setMinimumSize(new Dimension(400,600));
         productListUI.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
         productListUI.addListSelectionListener(new ListSelectionListener(){
@@ -394,6 +396,8 @@ public class ProductRecords extends JFrame {
         this.dispose();
         if (userIsStaff){
             new StaffDashboard();
+        } else {
+        	new Home();
         }
     }
 
