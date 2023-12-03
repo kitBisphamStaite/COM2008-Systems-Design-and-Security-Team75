@@ -32,10 +32,17 @@ public class StaffDashboard extends JFrame {
         viewManagerDashboardButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ManagerDashboard managerDashboardScreen = new ManagerDashboard();
-                managerDashboardScreen.setLocationRelativeTo(null);
-                managerDashboardScreen.setVisible(true);
-                setVisible(false);
+            	if (Login.getUserType() == "MANAGER") {
+                    ManagerDashboard managerDashboardScreen = new ManagerDashboard();
+                    managerDashboardScreen.setLocationRelativeTo(null);
+                    managerDashboardScreen.setVisible(true);
+                    setVisible(false);
+            	} else {
+            		JOptionPane.showMessageDialog(null, "Error - Insufficient permissions. Only manager may access this area.");
+            	}
+            	
+            	
+
             }
         });
         //*HEADER LABELS
