@@ -5,7 +5,11 @@ import java.sql.*;
 
 
 public class Login {
+	
 	public static String userType;
+	public static int userID;
+	
+	
     public static void main(String[] args) {
     	//Database Details
         String urlDB = "jdbc:mysql://stusql.dcs.shef.ac.uk:3306/team075";
@@ -73,6 +77,7 @@ public class Login {
                 
                 if (verify) {
                 	setUserType(username, connection);
+                	setUserID(username,connection);
                 	loginFrame.dispose();
                 	Home.main(null);
                 }else {
@@ -128,7 +133,7 @@ public class Login {
             return false;
         }
     }
-    public static String setUserType(String username, Connection connection) {
+    public static void setUserType(String username, Connection connection) {
     	try {
     		String sql = "SELECT type FROM Accounts WHERE email = '" + username + "'";
     		PreparedStatement statement = connection.prepareStatement(sql);
@@ -141,11 +146,29 @@ public class Login {
     	} catch (SQLException e) {
     		e.printStackTrace();
     	}
-    	return "";
     }
     
     public static String getUserType() {
     	return userType;
+    }
+    
+    private static void setUserID(String username, Connection connection) {
+    	try {
+    		String sql = "SELECT account_id FROM Accounts WHERE email = '" + username + "'";
+    		PreparedStatement statement = connection.prepareStatement(sql);
+	    	statement.executeQuery(sql);
+	    	ResultSet resultSet = statement.executeQuery(sql);
+	    	
+	    	if (resultSet.next()) {
+	    		userID = resultSet.getInt("account_id");
+	    		}
+    	} catch (SQLException e) {
+    		e.printStackTrace();
+    	}
+    }
+    
+    public static int getUserID() {
+    	return userID;
     }
 
 }
