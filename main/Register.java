@@ -199,9 +199,15 @@ public class Register {
     		int accountID = getLength(connection);
     		
     		//Create SQL statement and insert new bank details into database
-    		String sql = "INSERT INTO Bank_Details (customer_id, card_number, holder_name, card_name, expiry_date, security_code) VALUES ('" + accountID + "', '" + cardNumber + "', '" + cardName + "', '" + cardType + "', '" + date + "', '" + securityCode +"');";
-    		Statement statement = connection.createStatement();
-    		statement.executeUpdate(sql);
+    		PreparedStatement insertBankDetailsStmt = connection.prepareStatement(
+					"INSERT INTO Bank_Details (customer_id, card_number, holder_name, card_name, expiry_date, security_code) VALUES (?, ?, ?, ?, ?, ?)");
+			insertBankDetailsStmt.setInt(1, accountID);
+			insertBankDetailsStmt.setString(2, (cardNumber.equals("") ? null : cardNumber));
+			insertBankDetailsStmt.setString(3, (cardName.equals("") ? null : cardName));
+			insertBankDetailsStmt.setString(4, (cardType.equals("") ? null : cardType));
+			insertBankDetailsStmt.setString(5, (date.equals("") ? null : date));
+			insertBankDetailsStmt.setString(6, (securityCode.equals("") ? null : securityCode));
+			insertBankDetailsStmt.execute();
     	} catch (SQLException e) {
     		e.printStackTrace();
     	}
