@@ -40,9 +40,6 @@ public class StaffDashboard extends JFrame {
             	} else {
             		JOptionPane.showMessageDialog(null, "Error - Insufficient permissions. Only manager may access this area.");
             	}
-            	
-            	
-
             }
         });
         //*HEADER LABELS
