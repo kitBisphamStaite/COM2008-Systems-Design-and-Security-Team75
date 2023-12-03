@@ -27,7 +27,7 @@ public class EditAccountPage {
     private static void createEditAccountFrame(Connection connection) {
     	JFrame registerFrame = new JFrame("Edit Account Page");
         registerFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        registerFrame.setSize(410, 370);
+        registerFrame.setSize(410, 400);
 
         JPanel panel = new JPanel();
         registerFrame.add(panel);
@@ -146,6 +146,10 @@ public class EditAccountPage {
             editButton.setBounds(10, 290, 110, 25);
             panel.add(editButton);
             
+            JButton homeButton = new JButton("Home");
+            homeButton.setBounds(10, 320, 110, 25);
+            panel.add(homeButton);
+            
             if (accountDetails.next()) {
                 forenameText.setText(accountDetails.getString("forename"));
                 surnameText.setText(accountDetails.getString("surname"));
@@ -163,6 +167,14 @@ public class EditAccountPage {
             unsuccessfulRegisterLabel.setBounds(200, 290, 200, 25);
             panel.add(unsuccessfulRegisterLabel);
             
+            homeButton.addActionListener(new ActionListener() {
+            	@Override
+            	 public void actionPerformed(ActionEvent e) {
+            		registerFrame.dispose();
+            		Home.main(null);
+            	}
+            });
+            	
             editButton.addActionListener(new ActionListener() {
             	@Override
                 public void actionPerformed(ActionEvent e) {
