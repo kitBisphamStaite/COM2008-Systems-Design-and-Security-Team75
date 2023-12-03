@@ -12,6 +12,8 @@ import java.sql.ResultSet;
 
 public class Home extends JFrame {	
     public Home() {
+    	String accountType = Login.getUserType();
+    	
     	//Set Up Frame
         setTitle("Staff Dashboard");
         setSize(1024, 768);
@@ -22,6 +24,7 @@ public class Home extends JFrame {
         //Create Header and Footer Panels
         JPanel headerPanel = new JPanel(new BorderLayout());
         JPanel footerPanel = new JPanel(new GridLayout(0,2));
+        JPanel mainPanel = new JPanel(new BorderLayout());
         
         //Create Header Panel Items
         //*Buttons
@@ -33,6 +36,37 @@ public class Home extends JFrame {
                 setVisible(false);
             }
         });
+        
+        JButton staffDashboard = new JButton("StaffDashboard");
+        staffDashboard.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            	setVisible(false);
+            	StaffDashboard staffDashboardScreen = new StaffDashboard();
+            	staffDashboardScreen.setLocationRelativeTo(null);
+            	staffDashboardScreen.setVisible(true);
+            }
+        });
+        
+        
+        JButton basket = new JButton("Basket");
+        basket.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            	setVisible(false);
+            	ViewBasket.main(null);
+            }
+        });
+        
+        JButton productSearch = new JButton("Product Search");
+        productSearch.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            	ProductRecords.main(null);
+            	setVisible(false);
+            }
+        });
+        
         //*HEADER LABELS
         JLabel trainsOfSheffieldHeader = new JLabel("Trains Of Sheffield - Home");
         trainsOfSheffieldHeader.setHorizontalAlignment(JLabel.CENTER);
@@ -41,9 +75,19 @@ public class Home extends JFrame {
         headerPanel.add(backButton, BorderLayout.WEST);
         headerPanel.add(trainsOfSheffieldHeader, BorderLayout.CENTER);
         
+        //Add Items To Main Panel
+        System.out.println(accountType);
+        if (accountType.equals("CUSTOMER")) {
+        	mainPanel.add(basket, BorderLayout.EAST);
+        }else {
+        	mainPanel.add(staffDashboard, BorderLayout.EAST);
+        }
+        mainPanel.add(productSearch, BorderLayout.WEST);
+        
         //Add Panels To Frame
         add(headerPanel, BorderLayout.NORTH);
-        add(footerPanel, BorderLayout.CENTER);
+        add(footerPanel, BorderLayout.SOUTH);
+        add(mainPanel, BorderLayout.CENTER);
         setVisible(true);
     }
 

@@ -21,6 +21,7 @@ public class ViewBasket extends JFrame {
 	private String orderNumber;
 	private DefaultListModel<OrderLine> listModel;
 	private Integer costOfBasket = 0;
+	private String accountId;
 	
 	
 	JList orderLinesUI;
@@ -36,8 +37,8 @@ public class ViewBasket extends JFrame {
     String passwordDB = "mood6Phah";
 	
     public ViewBasket() {
-    	//Connect to DB
-    	createConnection();
+    	//Get logged in account id
+    	accountId = String.valueOf(Login.getUserID());
     	
     	//Set Up Frame
         setTitle("View Basket");
@@ -57,8 +58,8 @@ public class ViewBasket extends JFrame {
         backButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-            	//Take user back to the main screen - Sets the StaffDashboard frame to be invisible
-                setVisible(false);
+            	setVisible(false);
+            	Home.main(null);
             }
         });
         
@@ -88,9 +89,8 @@ public class ViewBasket extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
 	        	 if (orderLinesUI.getSelectedValue() != null) {
-//                   editProductDetails(orderLinesUI.getSelectedValue());
-	        		 System.out.println("sweet");
-	        		 System.out.println(orderLinesUI.getSelectedValue());
+//	        		 Object orderLine = orderLinesUI.getSelectedValue();
+//	        		 String ordernum = orderLine.getOrderNumber();
 	             }
             }
         });
@@ -139,15 +139,15 @@ public class ViewBasket extends JFrame {
     
     public void makeBasketList() {
     	try {
+    		createConnection();
     		listModel = new DefaultListModel<>();
-    		getAllBasketOrderstmt = connection.prepareStatement("SELECT * FROM Orders WHERE status='BASKET' AND customer_id=? ORDER BY date_ordered");
+    		getAllBasketOrderstmt = connection.prepareStatement("SELECT * FROM Orders WHERE status='BASKET' AND customer_id=?");
             getAllBasketOrderLinestmt = connection.prepareStatement("SELECT * FROM Order_Lines WHERE order_number=?");
-        	String customer_id = "4";
         	costOfBasket=0;
         	
-        	getAllBasketOrderstmt.setString(1, customer_id);
+        	getAllBasketOrderstmt.setString(1, accountId);
         	basketOrdersResultSet = getAllBasketOrderstmt.executeQuery();
-        	while (basketOrdersResultSet.next()) {
+        	if (basketOrdersResultSet.next()) {
         		orderNumber = basketOrdersResultSet.getString("order_number");
         		costOfBasket = basketOrdersResultSet.getInt("cost");
         		
