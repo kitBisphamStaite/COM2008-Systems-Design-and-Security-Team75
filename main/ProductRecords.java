@@ -196,7 +196,9 @@ public class ProductRecords extends JFrame {
                         int orderNumber = basketOrdersResultSet.getInt("order_number");
                         int orderPrice = basketOrdersResultSet.getInt("cost");
 
-                        PreparedStatement getAllBasketOrderLinestmt = connection.prepareStatement("SELECT * FROM Order_Lines WHERE order_number=" + orderNumber + ", product_code=" + product.getProductCode());
+                        PreparedStatement getAllBasketOrderLinestmt = connection.prepareStatement("SELECT * FROM Order_Lines WHERE order_number=? AND product_code=?");
+                        getAllBasketOrderLinestmt.setInt(1, orderNumber);
+                        getAllBasketOrderLinestmt.setString(2, product.getProductCode());
                         ResultSet basketOrderLinesResultSet = getAllBasketOrderLinestmt.executeQuery();
                         if (basketOrderLinesResultSet.next()) {
                             int currentQuantity = basketOrderLinesResultSet.getInt("quantity");
@@ -213,6 +215,8 @@ public class ProductRecords extends JFrame {
                             insertStatement.setInt(1, orderNumber);
                             insertStatement.setString(2, product.getProductCode());
                             insertStatement.setInt(3, quantity);
+                            insertStatement.executeUpdate();
+                            
 
                             String updateSQL = "UPDATE Orders SET cost=? WHERE order_number =" + orderNumber;
                             PreparedStatement updateStatement = connection.prepareStatement(updateSQL); 
@@ -230,13 +234,13 @@ public class ProductRecords extends JFrame {
                         }
                         java.sql.Date sqlDate = new Date(System.currentTimeMillis());
 
-                        String insertSQL = "INSERT INTO Orders (order_number, customer_id, date_order, cost, status) VALUES (?, ?, ?, ?, ?)";
+                        String insertSQL = "INSERT INTO Orders (order_number, customer_id, date_ordered, cost, status) VALUES (?, ?, ?, ?, ?)";
                         PreparedStatement insertStatement = connection.prepareStatement(insertSQL);
                         insertStatement.setInt(1, order_number);
                         insertStatement.setInt(2, Login.getUserID());
                         insertStatement.setDate(3, sqlDate);
                         insertStatement.setInt(4, product.getRetailPrice()*quantity);
-                        insertStatement.setString(5, "'BASKET'");
+                        insertStatement.setString(5, "BASKET");
                         insertStatement.executeUpdate();
 
                         insertSQL = "INSERT INTO Order_Lines (order_number, product_code, quantity) VALUES (?, ?, ?)";
@@ -408,7 +412,7 @@ public class ProductRecords extends JFrame {
         goBackButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                changeProductDetails(productListUI.getSelectedValue());
+                Home.main(null);
             }
         });
 
