@@ -15,7 +15,7 @@ public class Home extends JFrame {
     	String accountType = Login.getUserType();
     	
     	//Set Up Frame
-        setTitle("Staff Dashboard");
+        setTitle("Home");
         setSize(1024, 768);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
