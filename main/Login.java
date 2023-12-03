@@ -133,7 +133,7 @@ public class Login {
             return false;
         }
     }
-    public static void setUserType(String username, Connection connection) {
+    private static void setUserType(String username, Connection connection) {
     	try {
     		String sql = "SELECT type FROM Accounts WHERE email = '" + username + "'";
     		PreparedStatement statement = connection.prepareStatement(sql);
