@@ -182,5 +182,4 @@ public class Login {
     public static int getUserID() {
     	return userID;
     }
-
 }

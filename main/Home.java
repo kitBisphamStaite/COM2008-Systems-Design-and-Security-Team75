@@ -62,7 +62,7 @@ public class Home extends JFrame {
         productSearch.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-            	ProductRecords.main(null);
+            	new ProductRecords(!Login.getUserType().equals("CUSTOMER"));
             	setVisible(false);
             }
         });
