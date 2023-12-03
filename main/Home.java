@@ -28,7 +28,7 @@ public class Home extends JFrame {
         
         //Create Header Panel Items
         //*Buttons
-        JButton backButton = new JButton("Back");
+        JButton backButton = new JButton("LogOut");
         backButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -45,6 +45,15 @@ public class Home extends JFrame {
             	StaffDashboard staffDashboardScreen = new StaffDashboard();
             	staffDashboardScreen.setLocationRelativeTo(null);
             	staffDashboardScreen.setVisible(true);
+            }
+        });
+        
+        JButton accountSettings = new JButton("Account Settings");
+        staffDashboard.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            	setVisible(false);
+            	EditAccountPage.main(null);
             }
         });
         
@@ -83,6 +92,7 @@ public class Home extends JFrame {
         	mainPanel.add(staffDashboard, BorderLayout.EAST);
         }
         mainPanel.add(productSearch, BorderLayout.WEST);
+        mainPanel.add(accountSettings, BorderLayout.SOUTH);
         
         //Add Panels To Frame
         add(headerPanel, BorderLayout.NORTH);
