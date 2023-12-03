@@ -26,10 +26,12 @@ public class Login {
     }
 
     private static void createLoginFrame(Connection connection) {
+    	//Set up frame
         JFrame loginFrame = new JFrame("Login Page");
         loginFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         loginFrame.setSize(410, 150);
-
+        
+        //Set up panel
         JPanel panel = new JPanel();
         loginFrame.add(panel);
         placeComponents(loginFrame, panel, connection);
@@ -38,6 +40,7 @@ public class Login {
     }
 
     private static void placeComponents(JFrame loginFrame, JPanel panel, Connection connection) {
+    	//Add all components to panel
         panel.setLayout(null);
 
         JLabel userLabel = new JLabel("Email:");
@@ -73,11 +76,15 @@ public class Login {
             public void actionPerformed(ActionEvent e) {
                 String username = userText.getText();
                 char[] password = passwordText.getPassword();
-                Boolean verify = verifyLogin(username, password, connection);
                 
+                //Verify login details
+                Boolean verify = verifyLogin(username, password, connection);
                 if (verify) {
+                	//Creates global variables of user type and user ID
                 	setUserType(username, connection);
                 	setUserID(username,connection);
+                	
+                	//Redirect to Home page
                 	loginFrame.dispose();
                 	Home.main(null);
                 }else {
@@ -89,6 +96,7 @@ public class Login {
         registerButton.addActionListener(new ActionListener() {
         	@Override
             public void actionPerformed(ActionEvent e) {
+        		//Redirect to Register page
         		loginFrame.dispose();
                 Register.main(null);
                 
@@ -108,15 +116,13 @@ public class Login {
 	    	if (resultSet.next()) {
 	    		String storedPassword = resultSet.getString("password_hash");
 	    		
+	    		//Validation check if password entered matches with password in database
 	    		if (verifyPassword(password, storedPassword, username, connection)) {
-	    			//ADD OPENING OF HOME PAGE
-	    			System.out.println("Login Successful");
 	    			return true;
 	    		}else {
 	    			System.out.println("Login Unsuccessful");
 	    			return false;
 	    		}
-	    		
 	    	}
     	} catch (SQLException e) {
     		e.printStackTrace();
@@ -126,6 +132,7 @@ public class Login {
     
     private static Boolean verifyPassword(char[] enteredPassword, String storedPassword, String username, Connection connection) {
     	try {
+    		//Hash and salt entered password. Check if entered password is the same as stored password
     		String hashedEnteredPassword = HashedPasswordGenerator.hashPassword(enteredPassword, username, connection);
             return hashedEnteredPassword.equals(storedPassword);
         } catch (Exception e) {
@@ -133,14 +140,17 @@ public class Login {
             return false;
         }
     }
+    
     private static void setUserType(String username, Connection connection) {
     	try {
+    		//Create SQL statement and query database
     		String sql = "SELECT type FROM Accounts WHERE email = '" + username + "'";
     		PreparedStatement statement = connection.prepareStatement(sql);
 	    	statement.executeQuery(sql);
 	    	ResultSet resultSet = statement.executeQuery(sql);
 	    	
 	    	if (resultSet.next()) {
+	    		//Sets userType to user_type in database
 	    		userType = resultSet.getString("type");
 	    		}
     	} catch (SQLException e) {
@@ -154,12 +164,14 @@ public class Login {
     
     private static void setUserID(String username, Connection connection) {
     	try {
+    		//Create SQL statement and query database
     		String sql = "SELECT account_id FROM Accounts WHERE email = '" + username + "'";
     		PreparedStatement statement = connection.prepareStatement(sql);
 	    	statement.executeQuery(sql);
 	    	ResultSet resultSet = statement.executeQuery(sql);
 	    	
 	    	if (resultSet.next()) {
+	    		//Sets userType to user_type in database
 	    		userID = resultSet.getInt("account_id");
 	    		}
     	} catch (SQLException e) {
