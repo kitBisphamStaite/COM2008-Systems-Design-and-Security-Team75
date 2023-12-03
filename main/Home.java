@@ -77,6 +77,16 @@ public class Home extends JFrame {
             }
         });
         
+        JButton pastOrders = new JButton("Past Orders");
+        pastOrders.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            	dispose();
+            	new PastOrders();
+            	
+            }
+        });
+        
         //*HEADER LABELS
         JLabel trainsOfSheffieldHeader = new JLabel("Trains Of Sheffield - Home");
         trainsOfSheffieldHeader.setHorizontalAlignment(JLabel.CENTER);
@@ -89,6 +99,7 @@ public class Home extends JFrame {
         System.out.println(accountType);
         if (accountType.equals("CUSTOMER")) {
         	mainPanel.add(basket, BorderLayout.EAST);
+        	mainPanel.add(pastOrders, BorderLayout.NORTH);
         }else {
         	mainPanel.add(staffDashboard, BorderLayout.EAST);
         }
