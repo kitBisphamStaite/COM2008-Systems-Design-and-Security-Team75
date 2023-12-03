@@ -92,10 +92,8 @@ public class PastOrders extends JFrame {
             backButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    StaffDashboard staffDashboardScreen = new StaffDashboard();
-                    staffDashboardScreen.setLocationRelativeTo(null);
-                    staffDashboardScreen.setVisible(true);
-                    setVisible(false);
+                	dispose();
+                    Home.main(null);
                 }
             });
             //*Trains Of Sheffield Header
