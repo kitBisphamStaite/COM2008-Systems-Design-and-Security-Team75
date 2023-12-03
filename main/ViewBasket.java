@@ -20,7 +20,7 @@ public class ViewBasket extends JFrame {
 	private PreparedStatement updateOrder;
 	private String orderNumber;
 	private DefaultListModel<OrderLine> listModel;
-	private Integer costOfBasket = 0;
+	private Integer costOfBasket;
 	private String accountId;
 	
 	
@@ -37,6 +37,8 @@ public class ViewBasket extends JFrame {
     String passwordDB = "mood6Phah";
 	
     public ViewBasket() {
+    	//Create connection
+    	createConnection();
     	//Get logged in account id
     	accountId = String.valueOf(Login.getUserID());
     	
@@ -89,8 +91,44 @@ public class ViewBasket extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
 	        	 if (orderLinesUI.getSelectedValue() != null) {
-//	        		 Object orderLine = orderLinesUI.getSelectedValue();
-//	        		 String ordernum = orderLine.getOrderNumber();
+	        		 Integer selectedIndex = orderLinesUI.getSelectedIndex();
+	        		 OrderLine selectedOrderLine = listModel.get(selectedIndex);
+	        		 String selectedOrderNum = selectedOrderLine.getOrderNumber();
+	        		 String selectedProduct = selectedOrderLine.getProduct();
+	        		 
+	        		 try {
+	        			 //Delete selected
+	        			 PreparedStatement deleteStmt = connection.prepareStatement("DELETE FROM Order_Lines WHERE (order_number = ?) and (product_code = ?)");
+	        			 deleteStmt.setString(1, selectedOrderNum);
+	        			 deleteStmt.setString(2, selectedProduct);
+	        			 deleteStmt.execute();
+	        			 deleteStmt.close();
+	        			 
+	        			 //GetProduct cost
+	        			 PreparedStatement getProductCost = connection.prepareStatement("SELECT retail_price FROM Products WHERE product_code = ?");
+	        			 getProductCost.setString(1, selectedProduct);
+	        			 ResultSet productResultSet = getProductCost.executeQuery();
+	        			 Integer productCost = 0;
+	        			 if (productResultSet.next()) {
+	        				 productCost = productResultSet.getInt("retail_price");
+	        			 }
+	        			 
+	        			 //Calculate new cost
+	        			 int newCost = costOfBasket - (productCost * selectedOrderLine.getQuantity());
+	        			 
+	        			 //Update cost
+	        			 PreparedStatement updateCost = connection.prepareStatement("UPDATE Orders SET cost=? WHERE (order_number = ?)");
+	        			 updateCost.setInt(1, newCost);
+	        			 updateCost.setString(2, selectedOrderNum);
+	        			 updateCost.execute();
+	        			 
+	        			 costOfBasket = newCost;
+	        			 resetViewBasketAndFooterPanels();
+	        		 }catch (SQLException ex) {
+	        	        	//ERROR IN CONNECTING TO DATABASE
+	        	            ex.printStackTrace();
+	        	        }
+	        		 
 	             }
             }
         });
@@ -102,17 +140,17 @@ public class ViewBasket extends JFrame {
         //Add Items To Header Panel
         headerPanel.add(backButton, BorderLayout.WEST);
         headerPanel.add(trainsOfSheffieldHeader, BorderLayout.CENTER);
+        //Create ViewBasket and Footer Panels
+        resetViewBasketAndFooterPanels();
         
         //Add Panels To Frame
         add(headerPanel, BorderLayout.NORTH);
         add(footerPanel, BorderLayout.SOUTH);
         add(viewBasketPanel, BorderLayout.CENTER);
         
-        //Create ViewBasket and Footer Panels
-        resetViewBasketAndFooterPanels();
+        
         
         setVisible(true);
-    	
     }
     
     public void resetViewBasketAndFooterPanels(){
@@ -139,7 +177,6 @@ public class ViewBasket extends JFrame {
     
     public void makeBasketList() {
     	try {
-    		createConnection();
     		listModel = new DefaultListModel<>();
     		getAllBasketOrderstmt = connection.prepareStatement("SELECT * FROM Orders WHERE status='BASKET' AND customer_id=?");
             getAllBasketOrderLinestmt = connection.prepareStatement("SELECT * FROM Order_Lines WHERE order_number=?");
@@ -183,7 +220,6 @@ public class ViewBasket extends JFrame {
     }
     
     public static void main(String[] args) {
-    	
         new ViewBasket();
     }   
 }
