@@ -33,7 +33,7 @@ public class Home extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
             	//Take user back to the main screen - Sets the StaffDashboard frame to be invisible
-                setVisible(false);
+            	dispose();
             }
         });
         
@@ -41,7 +41,7 @@ public class Home extends JFrame {
         staffDashboard.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-            	setVisible(false);
+            	dispose();
             	StaffDashboard staffDashboardScreen = new StaffDashboard();
             	staffDashboardScreen.setLocationRelativeTo(null);
             	staffDashboardScreen.setVisible(true);
@@ -49,10 +49,10 @@ public class Home extends JFrame {
         });
         
         JButton accountSettings = new JButton("Account Settings");
-        staffDashboard.addActionListener(new ActionListener() {
+        accountSettings.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-            	setVisible(false);
+            	dispose();
             	EditAccountPage.main(null);
             }
         });
@@ -62,7 +62,7 @@ public class Home extends JFrame {
         basket.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-            	setVisible(false);
+            	dispose();
             	ViewBasket.main(null);
             }
         });
