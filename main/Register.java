@@ -163,7 +163,7 @@ public class Register {
     
     public static void createNewAccount(String forename, String surname, String username, char[] password, Connection connection) {
     	try {
-    		Integer accountID = getLength(connection) + 1;
+    		int accountID = getLength(connection) + 1;
     		String passwordSalt = HashedPasswordGenerator.getNewSalt();
     		String hashedPassword = HashedPasswordGenerator.hashPassword(password, username, passwordSalt, connection);
     		System.out.println(passwordSalt);
@@ -177,7 +177,7 @@ public class Register {
     
     public static void createNewBankAccount(String cardNumber, String cardName, String cardType, String date, String securityCode, Connection connection) {
     	try {
-    		Integer accountID = getLength(connection);
+    		int accountID = getLength(connection);
     		String sql = "INSERT INTO Bank_Details (customer_id, card_number, holder_name, card_name, expiry_date, security_code) VALUES ('" + accountID + "', '" + cardNumber + "', '" + cardName + "', '" + cardType + "', '" + date + "', '" + securityCode +"');";
     		Statement statement = connection.createStatement();
     		statement.executeUpdate(sql);
@@ -186,8 +186,8 @@ public class Register {
     	}
     }
     
-    private static Integer getLength(Connection connection) {
-    	Integer count = 0;
+    private static int getLength(Connection connection) {
+    	int count = 0;
     	try {
     		String sql = "SELECT * FROM Accounts;";
     		PreparedStatement statement = connection.prepareStatement(sql);
