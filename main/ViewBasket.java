@@ -241,8 +241,29 @@ public class ViewBasket extends JFrame {
     		PreparedStatement getBankDetails = connection.prepareStatement("SELECT * FROM Bank_Details WHERE customer_id=?");
     		getBankDetails.setString(1, accountId);
     		ResultSet bankDetails = getBankDetails.executeQuery();
-    		if (!bankDetails.next()) {
-    			return "No Bank details avablible please add them in edit account";
+    		if (bankDetails.next()) {
+    			String cardNumber = bankDetails.getString("card_number");
+    			if (bankDetails.wasNull()) {
+    				return "Bank Details need updating";
+    			}
+    			String holderName = bankDetails.getString("holder_name");
+    			if (bankDetails.wasNull()) {
+    				return "Bank Details need updating";
+    			}
+    			String cardName = bankDetails.getString("card_name");
+    			if (bankDetails.wasNull()) {
+    				return "Bank Details need updating";
+    			}
+    			String expiryDate = bankDetails.getString("expiry_date");
+    			if (bankDetails.wasNull()) {
+    				return "Bank Details need updating";
+    			}
+    			String securityCode = bankDetails.getString("security_code");
+    			if (bankDetails.wasNull()) {
+    				return "Bank Details need updating";
+    			}
+    		}else{
+    			return "No Bank details avablible please add them in account settings";
     		}
     		
     	}catch (SQLException e) {
