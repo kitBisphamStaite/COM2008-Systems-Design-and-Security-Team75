@@ -93,82 +93,52 @@ public class AddController extends JFrame{
         Boolean validProductName = ProductValidator.getInstance().validProductName(productNameText);
 
         String manufacturerNameText = manufacturerNameTextArea.getText().strip();
-        boolean validManufacturerName = ProductValidator.getInstance().validManufacturerName(manufacturerNameText);
+        Boolean validManufacturerName = ProductValidator.getInstance().validManufacturerName(manufacturerNameText);
 
         String retailPriceText = retailPriceTextArea.getText().strip();
-        boolean validRetailPrice = ProductValidator.getInstance().validRetailPrice(retailPriceText);
+        Boolean validRetailPrice = ProductValidator.getInstance().validRetailPrice(retailPriceText);
 
         String stockText = stockTextArea.getText().strip();
-        boolean validStock = ProductValidator.getInstance().validStock(stockText);
+        Boolean validStock = ProductValidator.getInstance().validStock(stockText);
 
         Boolean validGauge = ProductValidator.getInstance().validGauge((Gauge) gaugeComboBox.getSelectedItem());
         Boolean validScale = ProductValidator.getInstance().validScale((Scale) scaleComboBox.getSelectedItem());
         Boolean validChipType = ProductValidator.getInstance().validChipType((ChipType) chipTypeComboBox.getSelectedItem());
 
         if (!isEditing && validProductCode && validProductName && validManufacturerName && validRetailPrice && validStock && validGauge && validScale && validChipType) {
-            Inventory.getInstance().addProduct(new Controller(productCodeText, productNameText, manufacturerNameText, 
-                                                Integer.parseInt(retailPriceText), Integer.parseInt(stockText), 
-                                                (Gauge) gaugeComboBox.getSelectedItem(), (Scale) scaleComboBox.getSelectedItem(), 
-                                                (ChipType) chipTypeComboBox.getSelectedItem()));
+            Inventory.getInstance().addProduct(new Controller(productCodeText, productNameText, manufacturerNameText, Integer.parseInt(retailPriceText), Integer.parseInt(stockText), (Gauge) gaugeComboBox.getSelectedItem(), (Scale) scaleComboBox.getSelectedItem(), (ChipType) chipTypeComboBox.getSelectedItem()));
             parentScreen.setVisible(true);
             parentScreen.searchProducts();
             this.dispose();
         } else if (isEditing && validProductName && validManufacturerName && validRetailPrice && validStock && validGauge && validScale && validChipType) {
-            InventoryUpdate.getInstance().updateProduct(new Controller(productCodeText, productNameText, manufacturerNameText, 
-                                                Integer.parseInt(retailPriceText), Integer.parseInt(stockText), 
-                                                (Gauge) gaugeComboBox.getSelectedItem(), (Scale) scaleComboBox.getSelectedItem(), 
-                                                (ChipType) chipTypeComboBox.getSelectedItem()));
+            InventoryUpdate.getInstance().updateProduct(new Controller(productCodeText, productNameText, manufacturerNameText, Integer.parseInt(retailPriceText), Integer.parseInt(stockText), (Gauge) gaugeComboBox.getSelectedItem(), (Scale) scaleComboBox.getSelectedItem(), (ChipType) chipTypeComboBox.getSelectedItem()));
             parentScreen.setVisible(true);
             parentScreen.searchProducts();
             this.dispose();
         } 
         if (!isEditing && !validProductCode){
-            JOptionPane.showMessageDialog(null,
-            "Invalid Produce code.",
-            "Incorrect Inputs",
-            JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(null,"Invalid Product code.","Incorrect Inputs",JOptionPane.WARNING_MESSAGE);
         } 
         if (!validProductName){
-            JOptionPane.showMessageDialog(null,
-            "Invalid Product Name.",
-            "Incorrect Inputs",
-            JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(null,"Invalid Product Name.","Incorrect Inputs",JOptionPane.WARNING_MESSAGE);
         } 
         if (!validManufacturerName){
-            JOptionPane.showMessageDialog(null,
-            "Invalid Manufacturer Name.",
-            "Incorrect Inputs",
-            JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(null,"Invalid Manufacturer Name.","Incorrect Inputs",JOptionPane.WARNING_MESSAGE);
         } 
         if (!validRetailPrice){
-            JOptionPane.showMessageDialog(null,
-            "Invalid Retail Price.",
-            "Incorrect Inputs",
-            JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(null,"Invalid Retail Price.","Incorrect Inputs",JOptionPane.WARNING_MESSAGE);
         } 
         if (!validStock){
-            JOptionPane.showMessageDialog(null,
-            "Invalid Stock.",
-            "Incorrect Inpits",
-            JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(null,"Invalid Stock.","Incorrect Inpits",JOptionPane.WARNING_MESSAGE);
         } 
         if (!validGauge){
-            JOptionPane.showMessageDialog(null,
-            "Invalid Gauge.",
-            "Incorrect Inputs",
-            JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(null,"Invalid Gauge.","Incorrect Inputs",JOptionPane.WARNING_MESSAGE);
         } 
         if (!validScale){
-            JOptionPane.showMessageDialog(null,
-            "Invalid Scale.",
-            "Incorrect Inputs",
-            JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(null,"Invalid Scale.","Incorrect Inputs",JOptionPane.WARNING_MESSAGE);
         } 
         if (!validChipType){
-            JOptionPane.showMessageDialog(null,
-            "Invalid Chip Type.",
-            "Incorrect Inputs",
-            JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(null,"Invalid Chip Type.","Incorrect Inputs",JOptionPane.WARNING_MESSAGE);
         }
     }
 
