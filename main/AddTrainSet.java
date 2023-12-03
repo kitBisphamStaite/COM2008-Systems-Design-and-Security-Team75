@@ -219,7 +219,7 @@ public class AddTrainSet extends JFrame {
 
     private void addProduct(){
         String productCodeText = productCodeTextArea.getText().strip();
-        Boolean validProductCode = ProductValidator.getInstance().validProductCode(productCodeText, ProductType.CONTROLLER);
+        Boolean validProductCode = ProductValidator.getInstance().validProductCode(productCodeText, ProductType.TRAINSET, isEditing);
 
         String productNameText = productNameTextArea.getText().strip();
         Boolean validProductName = ProductValidator.getInstance().validProductName(productNameText);

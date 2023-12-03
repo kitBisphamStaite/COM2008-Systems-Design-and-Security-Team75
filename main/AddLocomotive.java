@@ -92,7 +92,7 @@ public class AddLocomotive extends JFrame{
 
     private void addProduct(){
         String productCodeText = productCodeTextArea.getText().strip();
-        Boolean validProductCode = ProductValidator.getInstance().validProductCode(productCodeText, ProductType.CONTROLLER);
+        Boolean validProductCode = ProductValidator.getInstance().validProductCode(productCodeText, ProductType.LOCOMOTIVE, isEditing);
 
         String productNameText = productNameTextArea.getText().strip();
         Boolean validProductName = ProductValidator.getInstance().validProductName(productNameText);
