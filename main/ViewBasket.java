@@ -12,16 +12,13 @@ import java.sql.Statement;
 import java.util.Vector;
 
 public class ViewBasket extends JFrame {
-	private ResultSet basketOrdersResultSet;
-	private ResultSet basketOrderLinesResultSet;
 	private Connection connection;
-	private PreparedStatement getAllBasketOrderstmt;
-	private PreparedStatement getAllBasketOrderLinestmt;
-	private PreparedStatement updateOrder;
 	private String orderNumber;
 	private DefaultListModel<OrderLine> listModel;
 	private Integer costOfBasket;
 	private String accountId;
+	private String stockMessage;
+	private String purchaseMessage;
 	
 	
 	JList orderLinesUI;
@@ -37,6 +34,7 @@ public class ViewBasket extends JFrame {
     String passwordDB = "mood6Phah";
 	
     public ViewBasket() {
+    	purchaseMessage = "";
     	//Create connection
     	createConnection();
     	//Get logged in account id
@@ -71,13 +69,19 @@ public class ViewBasket extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
             	try {
-            		if (listModel.size() != 0) {
-	            		updateOrder = connection.prepareStatement("UPDATE Orders SET status='PENDING' WHERE (order_number = ?)");
-	            		updateOrder.setString(1, orderNumber);
-	            		updateOrder.execute();
-	            		updateOrder.close();
-	            		resetViewBasketAndFooterPanels();
+            		stockMessage = validateStock();
+            		if (stockMessage == "") {
+            			if (listModel.size() != 0) {
+            				PreparedStatement updateOrder = connection.prepareStatement("UPDATE Orders SET status='PENDING' WHERE (order_number = ?)");
+    	            		updateOrder.setString(1, orderNumber);
+    	            		updateOrder.execute();
+    	            		updateOrder.close();
+    	            		updateProductsStock();
+    	            		purchaseMessage = "Purchase Reseved Thank you so much for your new order";
+    	            		resetViewBasketAndFooterPanels();
+                		}
             		}
+            		
             	}catch (SQLException ex) {
                 	//ERROR IN CONNECTING TO DATABASE
                     ex.printStackTrace();
@@ -161,6 +165,21 @@ public class ViewBasket extends JFrame {
     	//Get Basket
     	makeBasketList();
     	
+    	//Display stockMessage
+    	stockMessage = validateStock();
+    	if (stockMessage!="") {
+    		JLabel stockLable = new JLabel("Unable to make purchas because "+stockMessage);
+    		stockLable.setForeground(Color.red);
+    		viewBasketPanel.add(stockLable, BorderLayout.SOUTH);
+    	}
+    	
+    	//Display purchaseMessage
+    	if (purchaseMessage != "") {
+    		JLabel purchaseLable = new JLabel(purchaseMessage);
+    		purchaseLable.setForeground(Color.green);
+    		viewBasketPanel.add(purchaseLable, BorderLayout.SOUTH);
+    	}
+    	
     	//Display Order Lines
     	orderLinesUI = new JList<>(listModel);
     	orderLinesUI.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -178,18 +197,18 @@ public class ViewBasket extends JFrame {
     public void makeBasketList() {
     	try {
     		listModel = new DefaultListModel<>();
-    		getAllBasketOrderstmt = connection.prepareStatement("SELECT * FROM Orders WHERE status='BASKET' AND customer_id=?");
-            getAllBasketOrderLinestmt = connection.prepareStatement("SELECT * FROM Order_Lines WHERE order_number=?");
+    		PreparedStatement getAllBasketOrderstmt = connection.prepareStatement("SELECT * FROM Orders WHERE status='BASKET' AND customer_id=?");
+    		PreparedStatement getAllBasketOrderLinestmt = connection.prepareStatement("SELECT * FROM Order_Lines WHERE order_number=?");
         	costOfBasket=0;
         	
         	getAllBasketOrderstmt.setString(1, accountId);
-        	basketOrdersResultSet = getAllBasketOrderstmt.executeQuery();
+        	ResultSet basketOrdersResultSet = getAllBasketOrderstmt.executeQuery();
         	if (basketOrdersResultSet.next()) {
         		orderNumber = basketOrdersResultSet.getString("order_number");
         		costOfBasket = basketOrdersResultSet.getInt("cost");
         		
         		getAllBasketOrderLinestmt.setString(1,orderNumber);
-        		basketOrderLinesResultSet = getAllBasketOrderLinestmt.executeQuery();
+        		ResultSet basketOrderLinesResultSet = getAllBasketOrderLinestmt.executeQuery();
         		while (basketOrderLinesResultSet.next()) {
         			Integer quantity = basketOrderLinesResultSet.getInt("quantity");
         			String productCode = basketOrderLinesResultSet.getString("product_code");
@@ -207,6 +226,63 @@ public class ViewBasket extends JFrame {
             e.printStackTrace();
         }
     	 
+    }
+    
+    public String validateStock() {
+    	try {
+    		for(int i=0; i<listModel.size(); i++) {
+    			//Get quantity
+        		OrderLine nextOrderLine = listModel.get(i);
+        		Integer quantity = nextOrderLine.getQuantity();
+        		String productCode =  nextOrderLine.getProduct();
+        		
+        		//GetStock
+        		PreparedStatement getProductDetails = connection.prepareStatement("SELECT product_name, stock FROM Products WHERE product_code=?");
+        		getProductDetails.setString(1, productCode);
+        		ResultSet productDetails = getProductDetails.executeQuery();
+        		if (productDetails.next()) {
+        			Integer stock = productDetails.getInt("stock");
+        			String prodName = productDetails.getString("product_name");
+        			//Validate
+        			if (stock < quantity) {
+        				return (prodName+" only has "+stock+" items left in stock.");
+        			}
+        		}
+        	}
+    	}catch (SQLException e) {
+        	//ERROR IN CONNECTING TO DATABASE
+            e.printStackTrace();
+        }
+    	
+    	return "";
+    }
+    
+    public void updateProductsStock() {
+    	try {
+    		for(int i=0; i<listModel.size(); i++) {
+    			//Get quantity
+        		OrderLine nextOrderLine = listModel.get(i);
+        		Integer quantity = nextOrderLine.getQuantity();
+        		String productCode =  nextOrderLine.getProduct();
+        		
+        		//Get Stock
+        		PreparedStatement getProductDetails = connection.prepareStatement("SELECT stock FROM Products WHERE product_code=?");
+        		getProductDetails.setString(1, productCode);
+        		ResultSet productDetails = getProductDetails.executeQuery();
+        		if (productDetails.next()) {
+        			Integer stock = productDetails.getInt("stock");
+        			
+        			//Update Stock
+            		PreparedStatement updateProductStock = connection.prepareStatement("UPDATE Products SET stock=? WHERE (product_code = ?)");
+            		updateProductStock.setInt(1, stock-quantity);
+            		updateProductStock.setString(2, productCode);
+            		updateProductStock.execute();
+        		}
+        	}
+    	}catch (SQLException e) {
+        	//ERROR IN CONNECTING TO DATABASE
+            e.printStackTrace();
+        }
     }
     
     void createConnection() {
