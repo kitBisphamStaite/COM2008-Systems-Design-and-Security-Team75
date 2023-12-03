@@ -1,4 +1,7 @@
 import java.util.ArrayList;
+
+import javax.swing.JOptionPane;
+
 //SQL Packages
 import java.sql.PreparedStatement;
 import java.sql.Connection;
@@ -312,7 +315,6 @@ public class Inventory {
         } catch (SQLException e){
             e.printStackTrace();
         }
-        System.out.println("Added Product");
     }
 
     public boolean isNotProduct(String productCode){
@@ -330,7 +332,8 @@ public class Inventory {
                 return product;
             }
         }
-        System.out.println("Product Not Found");
+        
+        JOptionPane.showMessageDialog(null,"404 Product Not Found.","Product Not Found",JOptionPane.WARNING_MESSAGE);
         return null;
     }
 

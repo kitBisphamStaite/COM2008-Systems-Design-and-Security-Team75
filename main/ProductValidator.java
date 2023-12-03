@@ -1,5 +1,7 @@
 import java.util.ArrayList;
 
+import javax.swing.JOptionPane;
+
 public class ProductValidator {
     private static ProductValidator INSTANCE;
     
@@ -30,16 +32,17 @@ public class ProductValidator {
                     } else if (productType == ProductType.TRAINSET && productCode.startsWith("M")) {
                         return true;
                     } else {
-                        System.out.println("Incorrect Product Type");
+                        JOptionPane.showMessageDialog(null,"Incorrect Product Type.","Invalid Product code",JOptionPane.WARNING_MESSAGE);
                     }
                 } else {
-                    System.out.println("Incorrect Length");
+                    JOptionPane.showMessageDialog(null,"Incorrect Product Code Length.","Invalid Product code",JOptionPane.WARNING_MESSAGE);
                 }
             } else {
-                System.out.println("Already a product");
+                JOptionPane.showMessageDialog(null,"Product Code already exists.","Invalid Product code",JOptionPane.WARNING_MESSAGE);
             }
         } else {
-            System.out.println("Not a valid String input");
+            JOptionPane.showMessageDialog(null,"Invalid String input.","Invalid Product code",JOptionPane.WARNING_MESSAGE);
+
         }
         return false;
     }

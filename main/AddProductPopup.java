@@ -81,8 +81,11 @@ public class AddProductPopup extends JFrame {
             //InventoryUpdate.getInstance().updateProduct();
             goBack();
         }
-        else{
-            System.out.println("Invalid Product Code and Quantity - AddProductPopup");
+        if (!validQuantity) {
+            JOptionPane.showMessageDialog(null,"Invalid Quantity.","Incorrect Inputs",JOptionPane.WARNING_MESSAGE);
+        }
+        if (!validProduct) {
+            JOptionPane.showMessageDialog(null,"Invalid Product code.","Incorrect Inputs",JOptionPane.WARNING_MESSAGE);
         }
     }
 }

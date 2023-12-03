@@ -63,8 +63,11 @@ public class AddTrackPopup extends JFrame {
             parentScreen.addTrackFromButton(new ProductPair(productFinal, quantityFinal));
             goBack();
         }
-        else{
-            System.out.println("Invalid Product Code and Quantity - AddTrackPopup");
+        if (!validQuantity) {
+            JOptionPane.showMessageDialog(null,"Invalid Quantity.","Incorrect Inputs",JOptionPane.WARNING_MESSAGE);
+        }
+        if (!validProduct) {
+            JOptionPane.showMessageDialog(null,"Invalid Product code.","Incorrect Inputs",JOptionPane.WARNING_MESSAGE);
         }
     }
 }

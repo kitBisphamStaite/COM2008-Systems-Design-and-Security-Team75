@@ -7,6 +7,13 @@ import javax.swing.event.ListSelectionListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.SQLException;
+import java.sql.DriverManager;
+
 public class ProductRecords extends JFrame {
     private List<Product> productList;
     private DefaultListModel<Product> listModel;
@@ -18,6 +25,11 @@ public class ProductRecords extends JFrame {
     private JComboBox<Scale> scaleComboBox;
     private boolean userIsStaff;
     JPanel detailsPanel = new JPanel();
+	
+    //Database Details
+    String urlDB = "jdbc:mysql://stusql.dcs.shef.ac.uk:3306/team075";
+    String usernameDB = "team075";
+    String passwordDB = "mood6Phah";
 
     public ProductRecords(boolean userIsStaff) {
         //Determines the user
@@ -81,17 +93,17 @@ public class ProductRecords extends JFrame {
             bottomPanel.add(editProductButton);
             bottomPanel.add(deleteProductButton);
         } else{
-            JButton productButton = new JButton("View Product");
+            JButton productButton = new JButton("Add Product to Basket");
             productButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     if (productListUI.getSelectedValue() != null) {
-                        openProductDetails(productListUI.getSelectedValue());
+                        addProductToBastket(productListUI.getSelectedValue());
                     }
                 }
             });
     
-            JButton orderPageButton = new JButton("View Orders");
+            JButton orderPageButton = new JButton("View Basket");
             orderPageButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -128,7 +140,6 @@ public class ProductRecords extends JFrame {
 
         bottomPanel.add(returnHomeButton);
 
-
         JScrollPane productScrollPane = new JScrollPane(productListUI);
         productListUI.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
@@ -160,6 +171,84 @@ public class ProductRecords extends JFrame {
         setSize(1600, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
+    }
+
+    private void openOrderPage(){
+        ViewBasket viewBasket = new ViewBasket();
+        viewBasket.setVisible(true);
+        this.setVisible(false);
+    }
+
+    private void addProductToBastket(Product product){
+        String quantityTemp = JOptionPane.showInputDialog("How much " + product.getProductName() + " do you want?");
+
+        if (ProductValidator.getInstance().validQuantity(quantityTemp)) {
+            if (Integer.parseInt(quantityTemp) <= product.getStock()) {
+                int quantity = Integer.parseInt(quantityTemp);
+                try {
+                    Connection connection = DriverManager.getConnection(urlDB, usernameDB, passwordDB);
+    		        listModel = new DefaultListModel<>();
+    		        PreparedStatement getAllBasketOrderstmt = connection.prepareStatement("SELECT * FROM Orders WHERE status='BASKET' AND customer_id=" + Login.getUserID() + "ORDER BY date_ordered");
+        	        ResultSet basketOrdersResultSet = getAllBasketOrderstmt.executeQuery();
+
+                    if (basketOrdersResultSet.next()) {
+                        int orderNumber = basketOrdersResultSet.getInt("order_number");
+                        int orderPrice = basketOrdersResultSet.getInt("cost");
+
+                        PreparedStatement getAllBasketOrderLinestmt = connection.prepareStatement("SELECT * FROM Order_Lines WHERE order_number=" + orderNumber + ", product_code=" + product.getProductCode());
+                        ResultSet basketOrderLinesResultSet = getAllBasketOrderLinestmt.executeQuery();
+                        if (basketOrderLinesResultSet.next()) {
+                            int currentQuantity = basketOrderLinesResultSet.getInt("quantity");
+                            int finalQuantity = quantity + currentQuantity;
+
+                            String updateSQL = "UPDATE Order_Lines SET quantity=? WHERE order_number =?, product_code=?";
+                            PreparedStatement preparedStatement = connection.prepareStatement(updateSQL);
+                
+                            preparedStatement.setInt(1, finalQuantity);
+                            preparedStatement.executeUpdate();
+                        } else {
+                            String insertSQL = "INSERT INTO Order_Lines (order_number, product_code, quantity) VALUES (?, ?, ?)";
+                            PreparedStatement insertStatement = connection.prepareStatement(insertSQL);
+                            insertStatement.setInt(1, orderNumber);
+                            insertStatement.setString(2, product.getProductCode());
+                            insertStatement.setInt(3, quantity);
+
+                            String updateSQL = "UPDATE Orders SET cost=? WHERE order_number =" + orderNumber;
+                            PreparedStatement updateStatement = connection.prepareStatement(updateSQL); 
+                
+                            int newPrice = orderPrice + product.getRetailPrice()*quantity;
+                            updateStatement.setInt(1, newPrice);
+                            updateStatement.executeUpdate();
+                        }
+                    } else{
+                        PreparedStatement getAllOrderstmt = connection.prepareStatement("SELECT * FROM Orders");
+                        ResultSet getAllOrderSet = getAllOrderstmt.executeQuery();
+                        getAllOrderSet.last();
+                        int order_number = getAllOrderSet.getRow();
+                        java.sql.Date sqlDate = new Date(System.currentTimeMillis());
+
+                        String insertSQL = "INSERT INTO Orders (order_number, customer_id, date_order, cost, status) VALUES (?, ?, ?, ?, ?)";
+                        PreparedStatement insertStatement = connection.prepareStatement(insertSQL);
+                        insertStatement.setInt(1, order_number);
+                        insertStatement.setInt(2, Login.getUserID());
+                        insertStatement.setDate(1, sqlDate);
+                        insertStatement.setInt(4, product.getRetailPrice()*quantity);
+                        insertStatement.setString(5, "'BASKET'");
+
+                        insertSQL = "INSERT INTO Order_Lines (order_number, product_code, quantity) VALUES (?, ?, ?)";
+                        insertStatement = connection.prepareStatement(insertSQL);
+                        insertStatement.setInt(1, order_number);
+                        insertStatement.setString(2, product.getProductCode());
+                        insertStatement.setInt(3, quantity);
+                    }
+                }catch (SQLException e){
+                    e.printStackTrace();
+                }
+            } else {
+                JOptionPane.showMessageDialog(null,"Not Enought Stock.","Invalid Input",JOptionPane.WARNING_MESSAGE);            }
+        } else {
+           JOptionPane.showMessageDialog(null,"Invalid Quantity input.","Invalid Quantity",JOptionPane.WARNING_MESSAGE);
+        }
     }
 
     public void changeProductDetails(Product product){
@@ -260,11 +349,9 @@ public class ProductRecords extends JFrame {
         detailsPanel.add(locomotives);
         detailsPanel.add(rollingStocks);
         detailsPanel.add(trackPacks);
-
     }
 
     private void editProductDetails(Product product) {
-        System.out.println("Edit Product");
         if (product.getProductType() == ProductType.CONTROLLER) {
             AddController addProduct = new AddController(this);
             addProduct.editProduct((Controller) product);
@@ -308,7 +395,6 @@ public class ProductRecords extends JFrame {
         if (userIsStaff){
             new StaffDashboard();
         }
-        System.out.println("Return Home");
     }
 
     private void addProduct(){
@@ -427,17 +513,6 @@ public class ProductRecords extends JFrame {
             InventoryDelete.getInstance().deleteProduct(product);
         }
         searchProducts();
-    }
-
-    private void openProductDetails(Product product) {
-        ProductPopup detailsScreen = new ProductPopup(product, this);
-        detailsScreen.setVisible(true);
-        this.setVisible(false);
-    }
-
-    private void openOrderPage(){
-        System.out.println("Open order page");
-        //Sends you to the basket page, which someone else is making
     }
 
     public void searchProducts() {

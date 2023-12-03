@@ -80,8 +80,6 @@ public class InventoryUpdate {
         if (updatedProduct.getProductType() == ProductType.TRAINSET){
             updateTrainSet((TrainSet) oldProduct, (TrainSet) updatedProduct);
         }
-        //then need to sort out the database connection
-        System.out.println("Updated Product");
         updatedProduct = null; //Will be removed by java
     }
 
@@ -105,8 +103,6 @@ public class InventoryUpdate {
         } catch (SQLException e){
             e.printStackTrace();
         }
-
-        System.out.println("updateController");
     }
     
     public void updateLocomotive(Locomotive oldProduct, Locomotive updatedProduct){
@@ -130,8 +126,6 @@ public class InventoryUpdate {
         } catch (SQLException e){
             e.printStackTrace();
         }
-        
-        System.out.println("updateLocomotive");
     }
     
     public void updateRollingStock(RollingStock oldProduct, RollingStock updatedProduct){
@@ -154,8 +148,6 @@ public class InventoryUpdate {
         } catch (SQLException e){
             e.printStackTrace();
         }
-
-        System.out.println("updateRollingStock");
     }
     
     public void updateTrack(Track oldProduct, Track updatedProduct){
@@ -179,8 +171,6 @@ public class InventoryUpdate {
         } catch (SQLException e){
             e.printStackTrace();
         }
-        
-        System.out.println("updateTrack");
     }
     
     public void updateTrackPack(TrackPack oldProduct, TrackPack updatedProduct){
@@ -188,7 +178,6 @@ public class InventoryUpdate {
 
         InventoryDelete.getInstance().deleteTrackList(oldProduct);
         InventoryInsert.getInstance().insertTrackList(updatedProduct.getTracks(), updatedProduct);
-        System.out.println("updateTrackPack");
     }
 
     public void updateTrainSet(TrainSet oldProduct, TrainSet updatedProduct){
@@ -220,7 +209,5 @@ public class InventoryUpdate {
         InventoryInsert.getInstance().insertLocomotiveList(updatedProduct.getLocomotives(), updatedProduct);
         InventoryInsert.getInstance().insertRollingStockList(updatedProduct.getRollingStocks(), updatedProduct);
         InventoryInsert.getInstance().insertTrackPackList(updatedProduct.getTrackPacks(), updatedProduct);
-
-        System.out.println("updateTrainSet");
     }
 }
