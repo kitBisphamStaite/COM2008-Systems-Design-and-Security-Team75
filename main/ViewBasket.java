@@ -70,7 +70,7 @@ public class ViewBasket extends JFrame {
             public void actionPerformed(ActionEvent e) {
             	try {
             		stockMessage = validateStock();
-            		if (stockMessage == "") {
+            		if (stockMessage == "" && validateBankDetails() == "") {
             			if (listModel.size() != 0) {
             				PreparedStatement updateOrder = connection.prepareStatement("UPDATE Orders SET status='PENDING' WHERE (order_number = ?)");
     	            		updateOrder.setString(1, orderNumber);
@@ -180,6 +180,14 @@ public class ViewBasket extends JFrame {
     		viewBasketPanel.add(purchaseLable, BorderLayout.SOUTH);
     	}
     	
+    	//Display bank details message
+    	String bankMessage = validateBankDetails();
+    	if (bankMessage != "") {
+    		JLabel bankMessageLable = new JLabel(bankMessage);
+    		bankMessageLable.setForeground(Color.red);
+    		viewBasketPanel.add(bankMessageLable, BorderLayout.SOUTH);
+    	}
+    	
     	//Display Order Lines
     	orderLinesUI = new JList<>(listModel);
     	orderLinesUI.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -226,6 +234,22 @@ public class ViewBasket extends JFrame {
             e.printStackTrace();
         }
     	 
+    }
+    
+    public String validateBankDetails() {
+    	try {
+    		PreparedStatement getBankDetails = connection.prepareStatement("SELECT * FROM Bank_Details WHERE customer_id=?");
+    		getBankDetails.setString(1, accountId);
+    		ResultSet bankDetails = getBankDetails.executeQuery();
+    		if (!bankDetails.next()) {
+    			return "No Bank details avablible please add them in edit account";
+    		}
+    		
+    	}catch (SQLException e) {
+        	//ERROR IN CONNECTING TO DATABASE
+            e.printStackTrace();
+        }
+    	return "";
     }
     
     public String validateStock() {
