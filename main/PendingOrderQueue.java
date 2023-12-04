@@ -93,7 +93,7 @@ public class PendingOrderQueue extends JFrame {
                     StaffDashboard staffDashboardScreen = new StaffDashboard();
                     staffDashboardScreen.setLocationRelativeTo(null);
                     staffDashboardScreen.setVisible(true);
-                    setVisible(false);
+                    dispose();
                 }
             });
             //*Trains Of Sheffield Header

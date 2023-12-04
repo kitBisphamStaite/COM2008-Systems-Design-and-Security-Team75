@@ -25,7 +25,8 @@ public class StaffDashboard extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
             	//Take user back to the main screen - Sets the StaffDashboard frame to be invisible
-                setVisible(false);
+            	dispose();
+            	Home.main(null);
             }
         });
         JButton viewManagerDashboardButton = new JButton("Manager Dashboard");
@@ -36,7 +37,7 @@ public class StaffDashboard extends JFrame {
                     ManagerDashboard managerDashboardScreen = new ManagerDashboard();
                     managerDashboardScreen.setLocationRelativeTo(null);
                     managerDashboardScreen.setVisible(true);
-                    setVisible(false);
+                    dispose();
             	} else {
             		JOptionPane.showMessageDialog(null, "Error - Insufficient permissions. Only manager may access this area.");
             	}
@@ -60,7 +61,7 @@ public class StaffDashboard extends JFrame {
             	PendingOrderQueue pendingOrderQueue = new PendingOrderQueue();
             	pendingOrderQueue.setLocationRelativeTo(null);
             	pendingOrderQueue.setVisible(true);
-                setVisible(false);
+            	dispose();
             }
         });
         
@@ -75,7 +76,7 @@ public class StaffDashboard extends JFrame {
             	ProductRecords productRecords = new ProductRecords(true);
             	productRecords.setLocationRelativeTo(null);
             	productRecords.setVisible(true);
-                setVisible(false);
+            	dispose();
                 
             }
         });

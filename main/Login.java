@@ -21,7 +21,7 @@ public class Login {
             System.out.println("Successfully connected to the database.");
             createLoginFrame(connection);
         } catch (SQLException e) {
-            System.out.println("Error in connecting to the database");
+        	e.printStackTrace();
         }
     }
 

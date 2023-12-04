@@ -169,7 +169,7 @@ public class ProductRecords extends JFrame {
     private void openOrderPage(){
         ViewBasket viewBasket = new ViewBasket();
         viewBasket.setVisible(true);
-        this.setVisible(false);
+        this.dispose();
     }
 
     private void addProductToBastket(Product product){
