@@ -147,7 +147,7 @@ public class PastOrders extends JFrame {
             	
 
             	try {
-            		getCustomerAddressstmt = connection.prepareStatement("SELECT * FROM Addresses WHERE address_id='" + selectedOrderCustomerID + "'");
+            		getCustomerAddressstmt = connection.prepareStatement("SELECT * FROM Addresses WHERE account_id='" + selectedOrderCustomerID + "'");
             		getAllCustomerDetailstmt = connection.prepareStatement("SELECT * FROM Accounts WHERE account_id='" + selectedOrderCustomerID + "'");
             		pendingOrderCustomerAddressResultSet = getCustomerAddressstmt.executeQuery();
             		pendingOrderCustomerDetailsResultSet = getAllCustomerDetailstmt.executeQuery();

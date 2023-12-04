@@ -147,7 +147,7 @@ public class PendingOrderQueue extends JFrame {
             	
 
             	try {
-            		getCustomerAddressstmt = connection.prepareStatement("SELECT * FROM Addresses WHERE address_id='" + selectedOrderCustomerID + "'");
+            		getCustomerAddressstmt = connection.prepareStatement("SELECT * FROM Addresses WHERE account_id='" + selectedOrderCustomerID + "'");
             		getAllCustomerDetailstmt = connection.prepareStatement("SELECT * FROM Accounts WHERE account_id='" + selectedOrderCustomerID + "'");
             		pendingOrderCustomerAddressResultSet = getCustomerAddressstmt.executeQuery();
             		pendingOrderCustomerDetailsResultSet = getAllCustomerDetailstmt.executeQuery();
@@ -346,116 +346,119 @@ public class PendingOrderQueue extends JFrame {
                 				
                 				PreparedStatement getCurrentStock = connection.prepareStatement("SELECT stock FROM Products WHERE product_code ='" + selectedValueProduct + "'");
                 				ResultSet currentStockResult = getCurrentStock.executeQuery();
-                				int currentStock = Integer.parseInt(currentStockResult.getString("stock"));
-                				if (currentStock - (Integer.parseInt(selectedValueQuantity)) < 0) {
-                					JOptionPane.showMessageDialog(null, "Cannot fulfill order - Not enough stock.");
-                				} else {
-                    				System.out.println(currentStockResult);
-                        			PreparedStatement fulfillOrderstmt = connection.prepareStatement("UPDATE Orders SET status = 'FULFILLED' WHERE order_number ='" + selectedOrderNumber + "'");
-                        			PreparedStatement decreaseStockstmt = connection.prepareStatement("UPDATE Products SET stock = stock - '" + selectedValueQuantity + "' WHERE product_code = '" + selectedValueProduct + "'");
-                        			decreaseStockstmt.executeUpdate();
-                        			int rowsUpdated = fulfillOrderstmt.executeUpdate();
-                        			if (rowsUpdated == 1) {
-            			                System.out.println("Order successfully fulfilled.");
-            			                //REFRESH LIST WITH UPDATED VALUES
-            			                
-            			                pendingOrdersVector.clear();
-            			                orderProductsVector.clear();
-            			                pendingOrderAddressVector.clear();
-            			                pendingOrderCustomerDetailVector.clear();
-            			                pendingOrderList.clearSelection();
-            			                pendingOrderCustomerDetailList.clearSelection();
-            			                pendingOrderCustomerAddressList.clearSelection();
-            			                
-            			                
-            			                getAllPendingOrderstmt = connection.prepareStatement("SELECT * FROM Orders WHERE status='PENDING' ORDER BY date_ordered");
-            			                //Get All Orders of status PENDING
-            			                pendingOrdersResultSet = getAllPendingOrderstmt.executeQuery();
-            			                while (pendingOrdersResultSet.next()) {
-            			                    String row = pendingOrdersResultSet.getString("order_number") + ", £" + pendingOrdersResultSet.getString("cost") + ", " + pendingOrdersResultSet.getString("date_ordered") + ", " + pendingOrdersResultSet.getString("customer_id");
-            			                    pendingOrdersVector.add(row);
-            			                }
-            			                JList<String> pendingOrderList = new JList<String>(pendingOrdersVector);
-            			                pendingOrderList.setSelectedIndex(0);
-            			                selectedOrder = pendingOrderList.getSelectedValue();
-            			                if (selectedOrder != null) {
-            				                int firstCommaIndex = selectedOrder.indexOf(",");
-            				                selectedOrderNumber = selectedOrder.substring(0, firstCommaIndex);
-            				                int secondCommaIndex = selectedOrder.indexOf(",", firstCommaIndex + 1);
-            				                selectedOrderCost = selectedOrder.substring(firstCommaIndex + 3, secondCommaIndex);
-            				                int thirdCommaIndex = selectedOrder.indexOf(",", secondCommaIndex + 1);
-            				                selectedOrderDate = selectedOrder.substring(secondCommaIndex + 2, thirdCommaIndex);
-            				                selectedOrderCustomerID = selectedOrder.substring(thirdCommaIndex + 2, selectedOrder.length());
-            				                
-            				            	try {
-            				            		getCustomerAddressstmt = connection.prepareStatement("SELECT * FROM Addresses WHERE address_id='" + selectedOrderCustomerID + "'");
-            				            		getAllCustomerDetailstmt = connection.prepareStatement("SELECT * FROM Accounts WHERE account_id='" + selectedOrderCustomerID + "'");
-            				            		pendingOrderCustomerAddressResultSet = getCustomerAddressstmt.executeQuery();
-            				            		pendingOrderCustomerDetailsResultSet = getAllCustomerDetailstmt.executeQuery();
-            				            		while (pendingOrderCustomerDetailsResultSet.next() && pendingOrderCustomerAddressResultSet.next()) {
-            					                    String row = pendingOrderCustomerDetailsResultSet.getString("forename") + pendingOrderCustomerDetailsResultSet.getString("surname") + ", " + pendingOrderCustomerDetailsResultSet.getString("email");
-            					                    String row2 = pendingOrderCustomerAddressResultSet.getString("house_number") + " " + pendingOrderCustomerAddressResultSet.getString("road") + ", " + pendingOrderCustomerAddressResultSet.getString("city") + ", " + pendingOrderCustomerAddressResultSet.getString("postcode");
-            					                    pendingOrderCustomerDetailVector.add(row);
-            					                    pendingOrderAddressVector.add(row2);
-            				            		}
-            				            		JList<String> pendingOrderCustomerDetailList = new JList<String>(pendingOrderCustomerDetailVector);
-            				            		JList<String> pendingOrderCustomerAddressList = new JList<String>(pendingOrderAddressVector);
-            				            		pendingOrderCustomerDetailList.setSelectedIndex(0);
-            				            		pendingOrderCustomerAddressList.setSelectedIndex(0);
-            				            		selectedOrderAddress = pendingOrderCustomerAddressList.getSelectedValue();
-            				            		selectedOrderCustomerDetails = pendingOrderCustomerDetailList.getSelectedValue();
-            				            	} catch(SQLException e3) {
-            				            		e3.printStackTrace();
-            				            	} 
-            				            	//Parse customer details
-            				            	int firstCommaIndexCustomerDetails = selectedOrderCustomerDetails.indexOf(",");
-            				            	selectedOrderCustomerName = selectedOrderCustomerDetails.substring(0, firstCommaIndexCustomerDetails);
-            				            	selectedOrderCustomerEmail = selectedOrderCustomerDetails.substring(firstCommaIndexCustomerDetails + 1, selectedOrderCustomerDetails.length());
-            				                
-            				                
-            				                
+                				while (currentStockResult.next()) {
+                					int currentStock = Integer.parseInt(currentStockResult.getString("stock"));
+                    				if (currentStock - (Integer.parseInt(selectedValueQuantity)) < 0) {
+                    					JOptionPane.showMessageDialog(null, "Cannot fulfill order - Not enough stock.");
+                    				} else {
+                        				System.out.println(currentStockResult);
+                            			PreparedStatement fulfillOrderstmt = connection.prepareStatement("UPDATE Orders SET status = 'FULFILLED' WHERE order_number ='" + selectedOrderNumber + "'");
+                            			PreparedStatement decreaseStockstmt = connection.prepareStatement("UPDATE Products SET stock = stock - '" + selectedValueQuantity + "' WHERE product_code = '" + selectedValueProduct + "'");
+                            			decreaseStockstmt.executeUpdate();
+                            			int rowsUpdated = fulfillOrderstmt.executeUpdate();
+                            			if (rowsUpdated == 1) {
+                			                System.out.println("Order successfully fulfilled.");
+                			                //REFRESH LIST WITH UPDATED VALUES
+                			                
+                			                pendingOrdersVector.clear();
+                			                orderProductsVector.clear();
+                			                pendingOrderAddressVector.clear();
+                			                pendingOrderCustomerDetailVector.clear();
+                			                pendingOrderList.clearSelection();
+                			                pendingOrderCustomerDetailList.clearSelection();
+                			                pendingOrderCustomerAddressList.clearSelection();
+                			                
+                			                
+                			                getAllPendingOrderstmt = connection.prepareStatement("SELECT * FROM Orders WHERE status='PENDING' ORDER BY date_ordered");
+                			                //Get All Orders of status PENDING
+                			                pendingOrdersResultSet = getAllPendingOrderstmt.executeQuery();
+                			                while (pendingOrdersResultSet.next()) {
+                			                    String row = pendingOrdersResultSet.getString("order_number") + ", £" + pendingOrdersResultSet.getString("cost") + ", " + pendingOrdersResultSet.getString("date_ordered") + ", " + pendingOrdersResultSet.getString("customer_id");
+                			                    pendingOrdersVector.add(row);
+                			                }
+                			                JList<String> pendingOrderList = new JList<String>(pendingOrdersVector);
+                			                pendingOrderList.setSelectedIndex(0);
+                			                selectedOrder = pendingOrderList.getSelectedValue();
+                			                if (selectedOrder != null) {
+                				                int firstCommaIndex = selectedOrder.indexOf(",");
+                				                selectedOrderNumber = selectedOrder.substring(0, firstCommaIndex);
+                				                int secondCommaIndex = selectedOrder.indexOf(",", firstCommaIndex + 1);
+                				                selectedOrderCost = selectedOrder.substring(firstCommaIndex + 3, secondCommaIndex);
+                				                int thirdCommaIndex = selectedOrder.indexOf(",", secondCommaIndex + 1);
+                				                selectedOrderDate = selectedOrder.substring(secondCommaIndex + 2, thirdCommaIndex);
+                				                selectedOrderCustomerID = selectedOrder.substring(thirdCommaIndex + 2, selectedOrder.length());
+                				                
+                				            	try {
+                				            		getCustomerAddressstmt = connection.prepareStatement("SELECT * FROM Addresses WHERE address_id='" + selectedOrderCustomerID + "'");
+                				            		getAllCustomerDetailstmt = connection.prepareStatement("SELECT * FROM Accounts WHERE account_id='" + selectedOrderCustomerID + "'");
+                				            		pendingOrderCustomerAddressResultSet = getCustomerAddressstmt.executeQuery();
+                				            		pendingOrderCustomerDetailsResultSet = getAllCustomerDetailstmt.executeQuery();
+                				            		while (pendingOrderCustomerDetailsResultSet.next() && pendingOrderCustomerAddressResultSet.next()) {
+                					                    String row = pendingOrderCustomerDetailsResultSet.getString("forename") + pendingOrderCustomerDetailsResultSet.getString("surname") + ", " + pendingOrderCustomerDetailsResultSet.getString("email");
+                					                    String row2 = pendingOrderCustomerAddressResultSet.getString("house_number") + " " + pendingOrderCustomerAddressResultSet.getString("road") + ", " + pendingOrderCustomerAddressResultSet.getString("city") + ", " + pendingOrderCustomerAddressResultSet.getString("postcode");
+                					                    pendingOrderCustomerDetailVector.add(row);
+                					                    pendingOrderAddressVector.add(row2);
+                				            		}
+                				            		JList<String> pendingOrderCustomerDetailList = new JList<String>(pendingOrderCustomerDetailVector);
+                				            		JList<String> pendingOrderCustomerAddressList = new JList<String>(pendingOrderAddressVector);
+                				            		pendingOrderCustomerDetailList.setSelectedIndex(0);
+                				            		pendingOrderCustomerAddressList.setSelectedIndex(0);
+                				            		selectedOrderAddress = pendingOrderCustomerAddressList.getSelectedValue();
+                				            		selectedOrderCustomerDetails = pendingOrderCustomerDetailList.getSelectedValue();
+                				            	} catch(SQLException e3) {
+                				            		e3.printStackTrace();
+                				            	} 
+                				            	//Parse customer details
+                				            	int firstCommaIndexCustomerDetails = selectedOrderCustomerDetails.indexOf(",");
+                				            	selectedOrderCustomerName = selectedOrderCustomerDetails.substring(0, firstCommaIndexCustomerDetails);
+                				            	selectedOrderCustomerEmail = selectedOrderCustomerDetails.substring(firstCommaIndexCustomerDetails + 1, selectedOrderCustomerDetails.length());
+                				                
+                				                
+                				                
 
-            				                orderNumber.setText("Order Number: " + selectedOrderNumber);
-            				                orderCost.setText("Cost: £" + selectedOrderCost);
-            				                orderDate.setText("Date: " + selectedOrderDate);
-            				                orderCustomerID.setText("CustomerID: " + selectedOrderCustomerID);
-            				                orderCustomerAddress.setText("Customer Address: " + selectedOrderAddress);
-            				                orderCustomerName.setText("Customer Name: " + selectedOrderCustomerName);
-            				                orderCustomerEmail.setText("Customer Email: " + selectedOrderCustomerEmail);
-            				                
-            				                try {
-            				                	//SELECT ALL FROM ORDER LINE WHERE ORDER_NUMBER = selectedOrderNumber
-            				                    getOrderProductstmt = connection.prepareStatement("SELECT * FROM Order_Lines WHERE order_number='" + selectedOrderNumber + "'");
-            				                    //Get All Orders of status PENDING
-            				                    orderProductsResultSet = getOrderProductstmt.executeQuery();
-            				                    while (orderProductsResultSet.next()) {
-            				                        String row = orderProductsResultSet.getString("product_code") + ", " + orderProductsResultSet.getString("quantity");
-            				                        orderProductsVector.add(row);
-            				                    }
-            				                    
-            				                	repaint();
-            				                } catch(SQLException e1) {
-            				                	e1.printStackTrace();
-            				                }
-            				                
-            				                JList currentOrderProductList = new JList<String>(orderProductsVector);
-            				                
-            				                
-            				                
-            				                repaint();
-            			                } else {
-            				                orderNumber.setText("Order Number: ");
-            				                orderCost.setText("Cost: ");
-            				                orderDate.setText("Date: ");
-            				                orderCustomerID.setText("CustomerID: ");
-            				                orderCustomerName.setText("Customer Name: ");
-            				                orderCustomerEmail.setText("Customer Email: ");
-            				                orderCustomerAddress.setText("Customer Address: ");
-            			                	repaint();
-            			                }
-            			                JOptionPane.showMessageDialog(null, "Successfully fulfilled order.");
-                        			}
+                				                orderNumber.setText("Order Number: " + selectedOrderNumber);
+                				                orderCost.setText("Cost: £" + selectedOrderCost);
+                				                orderDate.setText("Date: " + selectedOrderDate);
+                				                orderCustomerID.setText("CustomerID: " + selectedOrderCustomerID);
+                				                orderCustomerAddress.setText("Customer Address: " + selectedOrderAddress);
+                				                orderCustomerName.setText("Customer Name: " + selectedOrderCustomerName);
+                				                orderCustomerEmail.setText("Customer Email: " + selectedOrderCustomerEmail);
+                				                
+                				                try {
+                				                	//SELECT ALL FROM ORDER LINE WHERE ORDER_NUMBER = selectedOrderNumber
+                				                    getOrderProductstmt = connection.prepareStatement("SELECT * FROM Order_Lines WHERE order_number='" + selectedOrderNumber + "'");
+                				                    //Get All Orders of status PENDING
+                				                    orderProductsResultSet = getOrderProductstmt.executeQuery();
+                				                    while (orderProductsResultSet.next()) {
+                				                        String row = orderProductsResultSet.getString("product_code") + ", " + orderProductsResultSet.getString("quantity");
+                				                        orderProductsVector.add(row);
+                				                    }
+                				                    
+                				                	repaint();
+                				                } catch(SQLException e1) {
+                				                	e1.printStackTrace();
+                				                }
+                				                
+                				                JList currentOrderProductList = new JList<String>(orderProductsVector);
+                				                
+                				                
+                				                
+                				                repaint();
+                			                } else {
+                				                orderNumber.setText("Order Number: ");
+                				                orderCost.setText("Cost: ");
+                				                orderDate.setText("Date: ");
+                				                orderCustomerID.setText("CustomerID: ");
+                				                orderCustomerName.setText("Customer Name: ");
+                				                orderCustomerEmail.setText("Customer Email: ");
+                				                orderCustomerAddress.setText("Customer Address: ");
+                			                	repaint();
+                			                }
+                			                JOptionPane.showMessageDialog(null, "Successfully fulfilled order.");
+                            			}
+                    				}
                 				}
+                				
                 				
 
             				} else {

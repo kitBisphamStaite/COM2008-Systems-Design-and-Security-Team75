@@ -58,7 +58,7 @@ public class ViewBasket extends JFrame {
         backButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-            	setVisible(false);
+            	dispose();
             	Home.main(null);
             }
         });

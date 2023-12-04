@@ -81,17 +81,9 @@ public class ProductRecords extends JFrame {
                     addProduct();
                 }
             });
-    
-            JButton deleteProductButton = new JButton("Delete Product");
-            deleteProductButton.addActionListener(new ActionListener(){
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    deleteProduct(productListUI.getSelectedValue());
-                }
-            });
+            
             bottomPanel.add(addProductButton);
             bottomPanel.add(editProductButton);
-            bottomPanel.add(deleteProductButton);
         } else{
             JButton productButton = new JButton("Add Product to Basket");
             productButton.addActionListener(new ActionListener() {
@@ -115,7 +107,7 @@ public class ProductRecords extends JFrame {
         }
 
 
-        JButton returnHomeButton = new JButton("Return to Home");
+        JButton returnHomeButton = new JButton("Back");
         returnHomeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -404,6 +396,9 @@ public class ProductRecords extends JFrame {
         this.dispose();
         if (userIsStaff){
             new StaffDashboard();
+        }else {
+        	dispose();
+        	Home.main(null);
         }
     }
 
