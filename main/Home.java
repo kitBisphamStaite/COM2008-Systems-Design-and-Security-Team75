@@ -100,10 +100,10 @@ public class Home extends JFrame {
         System.out.println(accountType);
         if (accountType.equals("CUSTOMER")) {
         	mainPanel.add(basket, BorderLayout.EAST);
-        	mainPanel.add(pastOrders, BorderLayout.NORTH);
         }else {
         	mainPanel.add(staffDashboard, BorderLayout.EAST);
         }
+        mainPanel.add(pastOrders, BorderLayout.NORTH);
         mainPanel.add(productSearch, BorderLayout.WEST);
         mainPanel.add(accountSettings, BorderLayout.SOUTH);
         

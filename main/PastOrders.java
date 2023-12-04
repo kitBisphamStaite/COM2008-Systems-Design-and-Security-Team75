@@ -52,8 +52,12 @@ public class PastOrders extends JFrame {
         //GET LIST OF past ORDERS
         try {
             connection = DriverManager.getConnection(urlDB, usernameDB, passwordDB);
-            getAllPendingOrderstmt = connection.prepareStatement("SELECT * FROM Orders WHERE (status='PENDING' OR status='FULFILLED' OR status='CONFIRMED') AND customer_id = ? ORDER BY date_ordered");
-            getAllPendingOrderstmt.setInt(1, Login.getUserID());
+            if (Login.getUserType().equals("CUSTOMER")) {
+            	getAllPendingOrderstmt = connection.prepareStatement("SELECT * FROM Orders WHERE (status='PENDING' OR status='FULFILLED' OR status='CONFIRMED') AND customer_id = ? ORDER BY date_ordered");
+            	getAllPendingOrderstmt.setInt(1, Login.getUserID());
+            }else {
+            	getAllPendingOrderstmt = connection.prepareStatement("SELECT * FROM Orders WHERE (status='PENDING' OR status='FULFILLED' OR status='CONFIRMED') ORDER BY date_ordered");
+             }
             ResultSet pastOrders= getAllPendingOrderstmt.executeQuery();
             //Get All Orders of status PENDING
             pastOrders = getAllPendingOrderstmt.executeQuery();
@@ -119,6 +123,11 @@ public class PastOrders extends JFrame {
             JLabel orderCustomerID = new JLabel("Customer ID: ");
             orderCustomerID.setFont(new Font("Dialog", Font.BOLD, 14));
             orderDetailsPanel.add(orderCustomerID);
+            
+            JLabel orderStatus = new JLabel("Status: ");
+            orderStatus.setFont(new Font("Dialog", Font.BOLD, 14));
+            orderDetailsPanel.add(orderStatus);
+    
             
             
             JLabel orderCustomerAddress = new JLabel("Customer Address: ");
@@ -187,6 +196,21 @@ public class PastOrders extends JFrame {
                 orderCustomerAddress.setText("Customer Address: " + selectedOrderAddress);
                 orderCustomerName.setText("Customer Name: " + selectedOrderCustomerName);
                 orderCustomerEmail.setText("Customer Email: " + selectedOrderCustomerEmail);
+                
+                
+                try {
+                	PreparedStatement getStatus = connection.prepareStatement("SELECT status FROM Orders WHERE order_number = ? and customer_id = ?");
+                	getStatus.setString(1, selectedOrderNumber);
+                	getStatus.setString(2, selectedOrderCustomerID);
+                	ResultSet status = getStatus.executeQuery();
+                	if (status.next()) {
+                		orderStatus.setText("Status: "+ status.getString("status"));
+                	}
+                }catch(SQLException e3) {
+            		e3.printStackTrace();
+            	} 
+                
+                
                 
                 try {
                 	//SELECT ALL FROM ORDER LINE WHERE ORDER_NUMBER = selectedOrderNumber
