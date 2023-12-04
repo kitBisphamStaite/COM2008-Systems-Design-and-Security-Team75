@@ -337,5 +337,9 @@ public class Inventory {
         return null;
     }
 
+    public void removeProduct(Product product){
+        products.remove(product);
+    }
+
    
 }

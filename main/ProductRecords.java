@@ -516,6 +516,8 @@ public class ProductRecords extends JFrame {
         String deleteConfirmationName = (String) JOptionPane.showInputDialog(null, "Enter Name");
         if (deleteConfirmationName != null &&  deleteConfirmationName.equals(product.getProductName())){
             InventoryDelete.getInstance().deleteProduct(product);
+            productList.remove(product);
+            Inventory.getInstance().removeProduct(product);
         }
         searchProducts();
     }
