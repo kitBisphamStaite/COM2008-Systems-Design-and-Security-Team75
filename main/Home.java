@@ -34,6 +34,7 @@ public class Home extends JFrame {
             public void actionPerformed(ActionEvent e) {
             	//Take user back to the main screen - Sets the StaffDashboard frame to be invisible
             	dispose();
+            	Login.main(null);
             }
         });
         
