@@ -81,6 +81,10 @@ public class ViewBasket extends JFrame {
     	            		resetViewBasketAndFooterPanels();
                 		}
             		}
+            		if (validateBankDetails() != "") {
+                    	EditBank.main(null);
+                    	dispose();
+            		}
             		
             	}catch (SQLException ex) {
                 	//ERROR IN CONNECTING TO DATABASE
